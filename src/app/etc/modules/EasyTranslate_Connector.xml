@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <EasyTranslate_Connector>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Adminhtml/>
+                <Mage_Catalog/>
+                <Mage_Cms/>
+                <Mage_Core/>
+            </depends>
+        </EasyTranslate_Connector>
+    </modules>
+</config>
