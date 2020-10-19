@@ -144,7 +144,6 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
     protected function _isAllowed(): bool
     {
-        // TODO check path
         return Mage::getSingleton('admin/session')->isAllowed('system/easytranslate');
     }
 }
