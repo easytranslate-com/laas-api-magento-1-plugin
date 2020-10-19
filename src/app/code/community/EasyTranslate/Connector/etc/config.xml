@@ -35,7 +35,7 @@
                 <client_id/>
                 <client_secret backend_model="adminhtml/system_config_backend_encrypted"/>
                 <username/>
-                <password/>
+                <password backend_model="adminhtml/system_config_backend_encrypted"/>
             </api>
             <products>
                 <attributes>name,short_description,description,meta_title,meta_description,url_key</attributes>
