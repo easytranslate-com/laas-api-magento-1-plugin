@@ -240,10 +240,9 @@ $projectQueueTable = $installer->getConnection()
         'nullable' => false,
         'unsigned' => true
     ], 'Store ID')
-    // TODO check if 1024K is a sane value
-    ->addColumn('data', Varien_Db_Ddl_Table::TYPE_TEXT, '1024k', [
+    ->addColumn('content_link', Varien_Db_Ddl_Table::TYPE_TEXT, 256, [
         'nullable' => false,
-    ], 'Data')
+    ], 'Content Link')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Created At')
     ->addColumn('processed_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Processed At')
     ->addForeignKey(
