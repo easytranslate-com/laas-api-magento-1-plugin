@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_easytranslate_project_index>
+        <reference name="content">
+            <block type="easytranslate/adminhtml_project" name="easytranslate.project"/>
+        </reference>
+    </adminhtml_easytranslate_project_index>
+    <adminhtml_easytranslate_project_new>
+        <update handle="adminhtml_easytranslate_project_edit"/>
+    </adminhtml_easytranslate_project_new>
+    <adminhtml_easytranslate_project_edit>
+        <reference name="left">
+            <block type="easytranslate/adminhtml_project_edit_tabs" name="easytranslate.project.edit.tabs">
+                <block type="easytranslate/adminhtml_project_edit_tab_general" name="easytranslate.project.edit.tab.general"/>
+                <action method="addTab">
+                    <name>general</name>
+                    <block>easytranslate.project.edit.tab.general</block>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="easytranslate/adminhtml_project_edit" name="easytranslate.project.edit"/>
+        </reference>
+    </adminhtml_easytranslate_project_edit>
+</layout>
