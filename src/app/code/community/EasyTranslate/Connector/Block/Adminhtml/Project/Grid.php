@@ -69,11 +69,11 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
 
         $this->addColumn('price',
             [
-                'header'        => $this->__('Price'),
-                'index'         => 'price',
-                'type'          => 'price',
-                // TODO check currency
-                'currency_code' => 'USD',
+                'header' => $this->__('Price'),
+                'index'  => 'price',
+                // we cannot use type price due to (potentially) different currencies!
+                'type'   => 'number',
+                // TODO add renderer, which shows currency symbol
             ]
         );
 
