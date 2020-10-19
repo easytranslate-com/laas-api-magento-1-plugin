@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <EasyTranslate_Connector>
+            <version>0.0.1</version>
+        </EasyTranslate_Connector>
+    </modules>
+    <global>
+        <helpers>
+            <easytranslate>
+                <class>EasyTranslate_Connector_Helper</class>
+            </easytranslate>
+        </helpers>
+        <models>
+            <easytranslate>
+                <class>EasyTranslate_Connector_Model</class>
+            </easytranslate>
+        </models>
+    </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <easytranslate>
+                    <files>
+                        <default>EasyTranslate_Connector.csv</default>
+                    </files>
+                </easytranslate>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <easytranslate>
+            <api>
+                <environment>sandbox</environment>
+                <client_id/>
+                <client_secret backend_model="adminhtml/system_config_backend_encrypted"/>
+                <username/>
+                <password backend_model="adminhtml/system_config_backend_encrypted"/>
+            </api>
+            <products>
+                <attributes>name,short_description,description,meta_title,meta_description,url_key</attributes>
+            </products>
+            <categories>
+                <attributes>name,description,meta_title,meta_description,url_key</attributes>
+            </categories>
+            <cms_blocks>
+                <attributes>title,content</attributes>
+            </cms_blocks>
+            <cms_pages>
+                <attributes>title,content,meta_description,content_heading</attributes>
+            </cms_pages>
+        </easytranslate>
+    </default>
+</config>

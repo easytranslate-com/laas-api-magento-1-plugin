@@ -1,0 +1,4 @@
+src/app/code/community/EasyTranslate/Connector/ app/code/community/EasyTranslate/Connector
+src/app/etc/modules/EasyTranslate_Connector.xml app/etc/modules/EasyTranslate_Connector.xml
+src/app/locale/de_DE/EasyTranslate_Connector.csv app/locale/de_DE/EasyTranslate_Connector.csv
+src/app/locale/en_US/EasyTranslate_Connector.csv app/locale/en_US/EasyTranslate_Connector.csv
