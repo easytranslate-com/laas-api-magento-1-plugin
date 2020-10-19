@@ -27,7 +27,6 @@ $projectTable = $installer->getConnection()
     ->addColumn('currency', Varien_Db_Ddl_Table::TYPE_TEXT, 3, [], 'Currency')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Created At')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Updated At')
-    // TODO think about useful indexes
     ->addForeignKey(
         $installer->getFkName('easytranslate/project', 'source_store_id', 'core/store', 'store_id'),
         'source_store_id',
@@ -247,7 +246,6 @@ $projectQueueTable = $installer->getConnection()
     ], 'Data')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Created At')
     ->addColumn('processed_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Processed At')
-    // TODO think about useful indexes
     ->addForeignKey(
         $installer->getFkName('easytranslate/project_queue', 'project_id', 'easytranslate/project',
             'project_id'),
