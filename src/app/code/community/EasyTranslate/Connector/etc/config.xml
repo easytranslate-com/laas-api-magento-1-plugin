@@ -14,8 +14,42 @@
         <models>
             <easytranslate>
                 <class>EasyTranslate_Connector_Model</class>
+                <resourceModel>easytranslate_resource</resourceModel>
             </easytranslate>
+            <easytranslate_resource>
+                <class>EasyTranslate_Connector_Model_Resource</class>
+                <entities>
+                    <project>
+                        <table>easytranslate_project</table>
+                    </project>
+                    <project_target_store>
+                        <table>easytranslate_project_target_store</table>
+                    </project_target_store>
+                    <project_product>
+                        <table>easytranslate_project_product</table>
+                    </project_product>
+                    <project_category>
+                        <table>easytranslate_project_category</table>
+                    </project_category>
+                    <project_cms_block>
+                        <table>easytranslate_project_cms_block</table>
+                    </project_cms_block>
+                    <project_cms_page>
+                        <table>easytranslate_project_cms_page</table>
+                    </project_cms_page>
+                    <project_queue>
+                        <table>easytranslate_project_queue</table>
+                    </project_queue>
+                </entities>
+            </easytranslate_resource>
         </models>
+        <resources>
+            <easytranslate_setup>
+                <setup>
+                    <module>EasyTranslate_Connector</module>
+                </setup>
+            </easytranslate_setup>
+        </resources>
     </global>
     <adminhtml>
         <translate>
