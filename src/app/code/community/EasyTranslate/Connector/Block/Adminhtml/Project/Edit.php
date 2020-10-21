@@ -26,9 +26,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
 
     public function getHeaderText()
     {
-        $model = Mage::registry('current_project');
-        if ($model && $model->getId()) {
-            return Mage::helper('easytranslate')->__('Edit Project "%s" (ID %s)', $model->getName(), $model->getId());
+        $project = Mage::registry('current_project');
+        if ($project && $project->getId()) {
+            return Mage::helper('easytranslate')
+                ->__('Edit Project "%s" (ID %s)', $project->getName(), $project->getId());
         }
 
         return Mage::helper('easytranslate')->__('New Project');
