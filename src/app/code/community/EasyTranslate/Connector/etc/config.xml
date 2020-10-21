@@ -6,6 +6,11 @@
         </EasyTranslate_Connector>
     </modules>
     <global>
+        <blocks>
+            <easytranslate>
+                <class>EasyTranslate_Connector_Block</class>
+            </easytranslate>
+        </blocks>
         <helpers>
             <easytranslate>
                 <class>EasyTranslate_Connector_Helper</class>
@@ -51,7 +56,25 @@
             </easytranslate_setup>
         </resources>
     </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <EasyTranslate_Connector after="Mage_Adminhtml">EasyTranslate_Connector_Adminhtml</EasyTranslate_Connector>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <adminhtml>
+        <layout>
+            <updates>
+                <easytranslate_connector>
+                    <file>easytranslate.xml</file>
+                </easytranslate_connector>
+            </updates>
+        </layout>
         <translate>
             <modules>
                 <easytranslate>

@@ -6,6 +6,10 @@
                 <children>
                     <system>
                         <children>
+                            <easytranslate translate="title" module="easytranslate">
+                                <title>EasyTranslate Projects</title>
+                                <sort_order>45</sort_order>
+                            </easytranslate>
                             <config>
                                 <children>
                                     <easytranslate translate="title" module="easytranslate">
@@ -19,4 +23,15 @@
             </admin>
         </resources>
     </acl>
+    <menu>
+        <system>
+            <children>
+                <easytranslate translate="title" module="easytranslate">
+                    <title>EasyTranslate Projects</title>
+                    <sort_order>45</sort_order>
+                    <action>adminhtml/easytranslate_project</action>
+                </easytranslate>
+            </children>
+        </system>
+    </menu>
 </config>
