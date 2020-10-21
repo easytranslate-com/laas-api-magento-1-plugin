@@ -22,6 +22,7 @@
 "Unable to find a project to delete.","Es wurde kein Projekt zum Löschen gefunden."
 "The project has been deleted.","Das Projekt wurde gelöscht."
 "The project has been saved.","Das Projekt wurde gespeichert."
+"The source store view cannot also be a target store view.","Der Quell-StoreView kann nicht auch ein Ziel-StoreView sein."
 "An error occurred while saving the project.","Beim Speichern des Projekts ist ein Fehler aufgetreten."
 "Project Information","Projektinformation"
 "Name","Name"

@@ -71,9 +71,11 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             $session->setFormData($data);
             $model->save();
             $session->setFormData(false);
-            $session->addSuccess(
-                $this->_getHelper()->__('The project has been saved.')
-            );
+            if (!$this->_validateStoreViews($data)) {
+                $session->addWarning($this->_getHelper()
+                    ->__('The source store view cannot also be a target store view.'));
+            }
+            $session->addSuccess($this->_getHelper()->__('The project has been saved.'));
         } catch (Mage_Core_Exception $e) {
             $session->addError($e->getMessage());
             $redirectBack = true;
@@ -88,6 +90,15 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
 
         return $this->_redirect('*/*/index');
+    }
+
+    protected function _validateStoreViews(array $data): bool
+    {
+        if (!isset($data['source_store_id'], $data['target_stores']) || !is_array($data['target_stores'])) {
+            return true;
+        }
+
+        return !in_array($data['source_store_id'], $data['target_stores'], true);
     }
 
     public function deleteAction()

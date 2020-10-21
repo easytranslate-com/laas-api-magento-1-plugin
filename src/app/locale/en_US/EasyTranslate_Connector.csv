@@ -22,6 +22,7 @@
 "Unable to find a project to delete.","Unable to find a project to delete."
 "The project has been deleted.","The project has been deleted."
 "The project has been saved.","The project has been saved."
+"The source store view cannot also be a target store view.","The source store view cannot also be a target store view."
 "An error occurred while saving the project.","An error occurred while saving the project."
 "Project Information","Project Information"
 "Name","Name"
