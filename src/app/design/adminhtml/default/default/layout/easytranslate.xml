@@ -9,12 +9,22 @@
         <update handle="adminhtml_easytranslate_project_edit"/>
     </adminhtml_easytranslate_project_new>
     <adminhtml_easytranslate_project_edit>
+        <reference name="head">
+            <action method="addJs">
+                <name>easytranslate/grid.js</name>
+            </action>
+        </reference>
         <reference name="left">
             <block type="easytranslate/adminhtml_project_edit_tabs" name="easytranslate.project.edit.tabs">
                 <block type="easytranslate/adminhtml_project_edit_tab_general" name="easytranslate.project.edit.tab.general"/>
+                <block type="easytranslate/adminhtml_project_edit_tab_products" name="easytranslate.project.edit.tab.products"/>
                 <action method="addTab">
                     <name>general</name>
                     <block>easytranslate.project.edit.tab.general</block>
+                </action>
+                <action method="addTab">
+                    <name>products</name>
+                    <block>easytranslate.project.edit.tab.products</block>
                 </action>
             </block>
         </reference>
@@ -22,4 +32,7 @@
             <block type="easytranslate/adminhtml_project_edit" name="easytranslate.project.edit"/>
         </reference>
     </adminhtml_easytranslate_project_edit>
+    <adminhtml_easytranslate_project_productgrid>
+        <block type="easytranslate/adminhtml_project_edit_tab_products" name="easytranslate.project.edit.tab.products" output="toHtml"/>
+    </adminhtml_easytranslate_project_productgrid>
 </layout>
