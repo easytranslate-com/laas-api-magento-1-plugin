@@ -32,18 +32,18 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends 
     protected function _addColumnFilterToCollection(
         $column
     ): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products {
-        if ($column->getId() === 'in_project') {
-            $productIds = $this->_getSelectedProducts();
-            if (empty($productIds)) {
-                $productIds = 0;
-            }
-            if ($column->getFilter()->getValue()) {
-                $this->getCollection()->addFieldToFilter('entity_id', ['in' => $productIds]);
-            } elseif (!empty($productIds)) {
-                $this->getCollection()->addFieldToFilter('entity_id', ['nin' => $productIds]);
-            }
-        } else {
-            parent::_addColumnFilterToCollection($column);
+        if (!$this->getCollection() || $column->getId() !== 'in_project') {
+            return parent::_addColumnFilterToCollection($column);
+        }
+
+        $productIds  = $this->_getSelectedProducts();
+        $filterValue = (int)$column->getFilter()->getValue();
+        if ($filterValue === 1) {
+            // user filtered by in_project "yes"
+            $this->getCollection()->addFieldToFilter('entity_id', ['in' => $productIds]);
+        } elseif ($filterValue === 0 && !empty($productIds)) {
+            // user filtered by in_project "no"
+            $this->getCollection()->addFieldToFilter('entity_id', ['nin' => $productIds]);
         }
 
         return $this;
