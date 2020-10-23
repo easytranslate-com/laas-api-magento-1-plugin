@@ -27,6 +27,14 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
 
     protected function _afterSave(Mage_Core_Model_Abstract $project): EasyTranslate_Connector_Model_Resource_Project
     {
+        $this->_saveProjectStores($project);
+        $this->_saveProjectProducts($project);
+
+        return parent::_afterSave($project);
+    }
+
+    protected function _saveProjectStores(EasyTranslate_Connector_Model_Project $project): void
+    {
         $projectId       = (int)$project->getId();
         $oldTargetStores = $this->_lookupTargetStoreIds($projectId);
         $newTargetStores = $project->getData('target_stores');
@@ -56,8 +64,51 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
 
             $this->_getWriteAdapter()->insertMultiple($table, $data);
         }
+    }
 
-        return parent::_afterSave($project);
+    protected function _saveProjectProducts(EasyTranslate_Connector_Model_Project $project): void
+    {
+        $projectId   = (int)$project->getId();
+        $newProducts = $project->getData('posted_products');
+
+        if ($newProducts === null) {
+            return;
+        }
+
+        $oldProducts = $this->getProducts($project);
+
+        $table  = $this->getTable('easytranslate/project_product');
+        $insert = array_diff($newProducts, $oldProducts);
+        $delete = array_diff($oldProducts, $newProducts);
+
+        if (!empty($delete)) {
+            $cond = [
+                'product_id IN(?)' => $delete,
+                'project_id=?'     => $projectId
+            ];
+            $this->_getWriteAdapter()->delete($table, $cond);
+        }
+
+        if (!empty($insert)) {
+            $data = [];
+            foreach ($insert as $productId) {
+                $data[] = [
+                    'project_id' => $projectId,
+                    'product_id' => (int)$productId
+                ];
+            }
+            $this->_getWriteAdapter()->insertMultiple($table, $data);
+        }
+    }
+
+    public function getProducts(EasyTranslate_Connector_Model_Project $project): array
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getTable('easytranslate/project_product'), ['product_id'])
+            ->where('project_id = :project_id');
+        $bind   = ['project_id' => (int)$project->getId()];
+
+        return $this->_getWriteAdapter()->fetchCol($select, $bind);
     }
 
     protected function _afterLoad(Mage_Core_Model_Abstract $project)

@@ -1,5 +1,6 @@
 src/app/code/community/EasyTranslate/Connector/ app/code/community/EasyTranslate/Connector
 src/app/design/adminhtml/default/default/layout/easytranslate.xml app/design/adminhtml/default/default/layout/easytranslate.xml
 src/app/etc/modules/EasyTranslate_Connector.xml app/etc/modules/EasyTranslate_Connector.xml
+src/js/easytranslate/ js/easytranslate/
 src/app/locale/de_DE/EasyTranslate_Connector.csv app/locale/de_DE/EasyTranslate_Connector.csv
 src/app/locale/en_US/EasyTranslate_Connector.csv app/locale/en_US/EasyTranslate_Connector.csv

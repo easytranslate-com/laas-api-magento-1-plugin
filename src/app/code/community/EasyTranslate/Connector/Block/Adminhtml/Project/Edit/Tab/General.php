@@ -26,6 +26,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             ]);
         }
 
+        $fieldset->addField('included_products', 'hidden', [
+            'name' => 'included_products'
+        ]);
+
         $fieldset->addField('name', 'text', [
             'name'     => 'name',
             'label'    => $this->_getHelper()->__('Name'),
@@ -63,12 +67,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         $field->setRenderer($renderer);
 
         if ($project) {
-            $values = $project->getData();
-            if (isset($values['price'])) {
-                // TODO format price correctly
-                $values['price'] = Mage::app()->getLocale()->currency('USD')->toCurrency($values['price']);
+            $values                      = $project->getData();
+            $values['included_products'] = implode(',', $project->getProducts());
+            if (isset($values['price'], $values['currency'])) {
+                $currency        = Mage::app()->getLocale()->currency($values['currency']);
+                $values['price'] = $currency->toCurrency($values['price']);
             }
-            $form->setValues($project->getData());
+            $form->setValues($values);
         }
         $this->setForm($form);
 

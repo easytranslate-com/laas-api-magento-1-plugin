@@ -12,24 +12,39 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->renderLayout();
     }
 
-    public function newAction()
+    protected function _initProject()
     {
-        return $this->_forward('edit');
+        $this->_title($this->__('System'))
+            ->_title($this->__('EasyTranslate Projects'));
+        $projectId = $this->getRequest()->getParam('project_id', false);
+        $project   = Mage::getModel('easytranslate/project');
+        if ($projectId) {
+            $project->load($projectId);
+            Mage::register('current_project', $project);
+        }
+
+        return $project;
     }
 
-    public function editAction()
+    public function newAction(): void
     {
-        $id      = $this->getRequest()->getParam('project_id');
-        $project = Mage::getModel('easytranslate/project');
+        $this->_forward('edit');
+    }
 
-        if ($id) {
-            $project->load($id);
+    public function editAction(): void
+    {
+        $project = $this->_initProject();
+        if ($project->getId()) {
+            $this->_title($project->getData('name'));
+        } else {
+            $this->_title($this->__('New Project'));
+        }
 
-            if (!$project->getId()) {
-                $this->_getSession()->addError($this->__('This project no longer exists.'));
+        if (!$project->getId() && $this->getRequest()->getParam('project_id')) {
+            $this->_getSession()->addError($this->__('This project no longer exists.'));
+            $this->_redirect('*/*/');
 
-                return $this->_redirect('*/*/');
-            }
+            return;
         }
 
         $data = $this->_getSession()->getFormData(true);
@@ -37,39 +52,40 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             $project->setData($data);
         }
 
-        Mage::register('current_project', $project);
-
         $this->loadLayout();
         $this->_setActiveMenu('system/easytranslate');
         $this->renderLayout();
-
-        return $this;
     }
 
-    public function saveAction()
+    public function saveAction(): void
     {
         $redirectBack = $this->getRequest()->getParam('back', false);
         $data         = $this->getRequest()->getPost();
         if (!$data) {
-            return $this->_redirect('*/*/index');
+            $this->_redirect('*/*/index');
+
+            return;
         }
-        $id      = $this->getRequest()->getParam('project_id');
-        $model   = Mage::getModel('easytranslate/project');
+        $project = $this->_initProject();
         $session = $this->_getSession();
 
-        if ($id) {
-            $model->load($id);
-            if (!$model->getId()) {
-                $session->addError($this->_getHelper()->__('This project no longer exists.'));
+        if (!$project->getId() && $this->getRequest()->getParam('project_id')) {
+            $session->addError($this->_getHelper()->__('This project no longer exists.'));
+            $this->_redirect('*/*/index');
 
-                return $this->_redirect('*/*/index');
-            }
+            return;
         }
 
         try {
-            $model->setData($data);
+            $project->addData($data);
             $session->setFormData($data);
-            $model->save();
+
+            if (isset($data['included_products']) && $project->canEditDetails()) {
+                $products = explode(',', $data['included_products']);
+                $project->setData('posted_products', $products);
+            }
+
+            $project->save();
             $session->setFormData(false);
             if (!$this->_validateStoreViews($data)) {
                 $session->addWarning($this->_getHelper()
@@ -86,10 +102,12 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
 
         if ($redirectBack) {
-            return $this->_redirect('*/*/edit', ['project_id' => $model->getId()]);
+            $this->_redirect('*/*/edit', ['project_id' => $project->getId()]);
+
+            return;
         }
 
-        return $this->_redirect('*/*/index');
+        $this->_redirect('*/*/index');
     }
 
     protected function _validateStoreViews(array $data): bool
@@ -101,10 +119,17 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         return !in_array($data['source_store_id'], $data['target_stores'], true);
     }
 
-    public function deleteAction()
+    public function productGridAction(): void
     {
-        $id = $this->getRequest()->getParam('project_id');
-        if (!$id) {
+        $this->_initProject();
+        $this->loadLayout(false);
+        $this->renderLayout();
+    }
+
+    public function deleteAction(): void
+    {
+        $projectId = $this->getRequest()->getParam('project_id');
+        if (!$projectId) {
             Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()
                 ->__('Unable to find a project to delete.'));
             $this->_redirect('*/*/');
@@ -113,26 +138,27 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
         try {
             $project = Mage::getModel('easytranslate/project');
-            $project->load($id);
+            $project->load($projectId);
             $project->delete();
             Mage::getSingleton('adminhtml/session')->addSuccess($this->_getHelper()
                 ->__('The project has been deleted.'));
             $this->_redirect('*/*/');
         } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-            $this->_redirect('*/*/edit', ['block_id' => $id]);
+            $this->_redirect('*/*/edit', ['block_id' => $projectId]);
         }
     }
 
-    public function massDeleteAction()
+    public function massDeleteAction(): void
     {
         $projectIds = $this->getRequest()->getParam('project_ids');
 
         if (!is_array($projectIds)) {
             Mage::getSingleton('adminhtml/session')->addError(Mage::helper('easytranslate')
                 ->__('Please select project(s).'));
+            $this->_redirect('*/*/index');
 
-            return $this->_redirect('*/*/index');
+            return;
         }
 
         try {
@@ -150,7 +176,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
                 ->addException($e, Mage::helper('adminhtml')->__('An error occurred while deleting record(s).'));
         }
 
-        return $this->_redirect('*/*/index');
+        $this->_redirect('*/*/index');
     }
 
     protected function _isAllowed(): bool
