@@ -14,6 +14,8 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
     protected function _initProject()
     {
+        $this->_title($this->__('System'))
+            ->_title($this->__('EasyTranslate Projects'));
         $id      = $this->getRequest()->getParam('project_id', false);
         $project = Mage::getModel('easytranslate/project');
         if ($id) {
@@ -32,6 +34,11 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
     public function editAction(): void
     {
         $project = $this->_initProject();
+        if ($project->getId()) {
+            $this->_title($project->getData('name'));
+        } else {
+            $this->_title($this->__('New Project'));
+        }
 
         if (!$project->getId() && $this->getRequest()->getParam('project_id')) {
             $this->_getSession()->addError($this->__('This project no longer exists.'));
