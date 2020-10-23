@@ -16,10 +16,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
     {
         $this->_title($this->__('System'))
             ->_title($this->__('EasyTranslate Projects'));
-        $id      = $this->getRequest()->getParam('project_id', false);
-        $project = Mage::getModel('easytranslate/project');
-        if ($id) {
-            $project->load($id);
+        $projectId = $this->getRequest()->getParam('project_id', false);
+        $project   = Mage::getModel('easytranslate/project');
+        if ($projectId) {
+            $project->load($projectId);
             Mage::register('current_project', $project);
         }
 
@@ -128,8 +128,8 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
     public function deleteAction(): void
     {
-        $id = $this->getRequest()->getParam('project_id');
-        if (!$id) {
+        $projectId = $this->getRequest()->getParam('project_id');
+        if (!$projectId) {
             Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()
                 ->__('Unable to find a project to delete.'));
             $this->_redirect('*/*/');
@@ -138,14 +138,14 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
         try {
             $project = Mage::getModel('easytranslate/project');
-            $project->load($id);
+            $project->load($projectId);
             $project->delete();
             Mage::getSingleton('adminhtml/session')->addSuccess($this->_getHelper()
                 ->__('The project has been deleted.'));
             $this->_redirect('*/*/');
         } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-            $this->_redirect('*/*/edit', ['block_id' => $id]);
+            $this->_redirect('*/*/edit', ['block_id' => $projectId]);
         }
     }
 

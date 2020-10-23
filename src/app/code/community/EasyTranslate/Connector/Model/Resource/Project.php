@@ -68,23 +68,23 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
 
     protected function _saveProjectProducts(EasyTranslate_Connector_Model_Project $project): void
     {
-        $id       = (int)$project->getId();
-        $products = $project->getData('posted_products');
+        $projectId   = (int)$project->getId();
+        $newProducts = $project->getData('posted_products');
 
-        if ($products === null) {
+        if ($newProducts === null) {
             return;
         }
 
         $oldProducts = $this->getProducts($project);
 
         $table  = $this->getTable('easytranslate/project_product');
-        $insert = array_diff($products, $oldProducts);
-        $delete = array_diff($oldProducts, $products);
+        $insert = array_diff($newProducts, $oldProducts);
+        $delete = array_diff($oldProducts, $newProducts);
 
         if (!empty($delete)) {
             $cond = [
                 'product_id IN(?)' => $delete,
-                'project_id=?'     => $id
+                'project_id=?'     => $projectId
             ];
             $this->_getWriteAdapter()->delete($table, $cond);
         }
@@ -93,7 +93,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
             $data = [];
             foreach ($insert as $productId) {
                 $data[] = [
-                    'project_id' => $id,
+                    'project_id' => $projectId,
                     'product_id' => (int)$productId
                 ];
             }

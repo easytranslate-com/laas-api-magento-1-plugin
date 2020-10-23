@@ -36,7 +36,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends 
             return parent::_addColumnFilterToCollection($column);
         }
 
-        $productIds  = $this->_getSelectedProducts();
+        $productIds  = $this->_getSelectedProductIds();
         $filterValue = (int)$column->getFilter()->getValue();
         if ($filterValue === 1) {
             // user filtered by in_project "yes"
@@ -60,7 +60,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends 
         if ($this->_getProject()) {
             $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
             if (!$this->_getProject()->canEditDetails()) {
-                $productIds = $this->_getSelectedProducts();
+                $productIds = $this->_getSelectedProductIds();
                 if (!empty($productIds)) {
                     $collection->addFieldToFilter('entity_id', ['in' => $productIds]);
                 }
@@ -80,7 +80,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends 
                 'inline_css'       => 'in-project',
                 'type'             => 'checkbox',
                 'name'             => 'in_project',
-                'values'           => $this->_getSelectedProducts(),
+                'values'           => $this->_getSelectedProductIds(),
                 'align'            => 'center',
                 'index'            => 'entity_id'
             ]);
@@ -116,7 +116,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends 
         return $this->getUrl('*/*/productGrid', ['_current' => true]);
     }
 
-    protected function _getSelectedProducts(): array
+    protected function _getSelectedProductIds(): array
     {
         $products = $this->getRequest()->getPost('included_products');
         if (is_null($products)) {
