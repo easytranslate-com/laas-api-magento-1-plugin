@@ -80,9 +80,14 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             $project->addData($data);
             $session->setFormData($data);
 
-            if (isset($data['included_products']) && $project->canEditDetails()) {
+            if (isset($data['included_products']) && $data['included_products'] && $project->canEditDetails()) {
                 $products = explode(',', $data['included_products']);
                 $project->setData('posted_products', $products);
+            }
+
+            if (isset($data['included_categories']) && $data['included_categories'] && $project->canEditDetails()) {
+                $categories = explode(',', $data['included_categories']);
+                $project->setData('posted_categories', $categories);
             }
 
             $project->save();
@@ -120,6 +125,13 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
     }
 
     public function productGridAction(): void
+    {
+        $this->_initProject();
+        $this->loadLayout(false);
+        $this->renderLayout();
+    }
+
+    public function categoryGridAction(): void
     {
         $this->_initProject();
         $this->loadLayout(false);

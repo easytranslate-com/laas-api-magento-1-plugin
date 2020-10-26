@@ -2,51 +2,51 @@
 
 declare(strict_types=1);
 
-class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
+class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
     extends EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
 {
     public function __construct()
     {
         parent::__construct();
-        $this->setId('products');
+        $this->setId('categories');
         $this->setDefaultSort('entity_id');
         $this->setData('row_click_callback', $this->getJsObjectName() . '.easyTranslateRowClickCallback');
     }
 
     protected function _addColumnFilterToCollection(
         $column
-    ): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products {
+    ): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories {
         if (!$this->getCollection() || $column->getId() !== 'in_project') {
             return parent::_addColumnFilterToCollection($column);
         }
 
-        $productIds  = $this->_getSelectedProductIds();
+        $categoryIds = $this->_getSelectedCategoryIds();
         $filterValue = (int)$column->getFilter()->getValue();
         if ($filterValue === 1) {
             // user filtered by in_project "yes"
-            $this->getCollection()->addFieldToFilter('entity_id', ['in' => $productIds]);
-        } elseif ($filterValue === 0 && !empty($productIds)) {
+            $this->getCollection()->addFieldToFilter('entity_id', ['in' => $categoryIds]);
+        } elseif ($filterValue === 0 && !empty($categoryIds)) {
             // user filtered by in_project "no"
-            $this->getCollection()->addFieldToFilter('entity_id', ['nin' => $productIds]);
+            $this->getCollection()->addFieldToFilter('entity_id', ['nin' => $categoryIds]);
         }
 
         return $this;
     }
 
-    protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
+    protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
     {
         $this->setDefaultFilter(['in_project' => 1]);
-        $collection = Mage::getModel('catalog/product')->getCollection()
+        $collection = Mage::getModel('catalog/category')->getCollection()
             ->addAttributeToSelect('name')
-            ->addAttributeToSelect('sku')
-            ->addAttributeToSelect('price');
+            ->addAttributeToSelect('url_key')
+            ->addAttributeToFilter('level', ['gt' => 1]);
 
         if ($this->_getProject()) {
-            $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
+            $collection->setStore($this->_getProject()->getData('source_store_id'));
             if (!$this->_getProject()->canEditDetails()) {
-                $productIds = $this->_getSelectedProductIds();
-                if (!empty($productIds)) {
-                    $collection->addFieldToFilter('entity_id', ['in' => $productIds]);
+                $categoryIds = $this->_getSelectedCategoryIds();
+                if (!empty($categoryIds)) {
+                    $collection->addFieldToFilter('entity_id', ['in' => $categoryIds]);
                 }
             }
         }
@@ -56,7 +56,12 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
         return parent::_prepareCollection();
     }
 
-    protected function _prepareColumns(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
+    public function getMultipleRows($item): array
+    {
+        return [];
+    }
+
+    protected function _prepareColumns(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
     {
         if (!$this->_getProject() || $this->_getProject()->canEditDetails()) {
             $this->addColumn('in_project', [
@@ -64,7 +69,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
                 'inline_css'       => 'in-project',
                 'type'             => 'checkbox',
                 'name'             => 'in_project',
-                'values'           => $this->_getSelectedProductIds(),
+                'values'           => $this->_getSelectedCategoryIds(),
                 'align'            => 'center',
                 'index'            => 'entity_id'
             ]);
@@ -79,17 +84,9 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
             'header' => Mage::helper('catalog')->__('Name'),
             'index'  => 'name'
         ]);
-        $this->addColumn('sku', [
-            'header' => Mage::helper('catalog')->__('SKU'),
-            'width'  => '80',
-            'index'  => 'sku'
-        ]);
-        $this->addColumn('price', [
-            'header'        => Mage::helper('catalog')->__('Price'),
-            'type'          => 'currency',
-            'width'         => '1',
-            'currency_code' => (string)Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE),
-            'index'         => 'price'
+        $this->addColumn('url_key', [
+            'header' => Mage::helper('catalog')->__('URL Key'),
+            'index'  => 'url_key'
         ]);
 
         return parent::_prepareColumns();
@@ -97,30 +94,30 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
 
     public function getGridUrl(): string
     {
-        return $this->getUrl('*/*/productGrid', ['_current' => true]);
+        return $this->getUrl('*/*/categoryGrid', ['_current' => true]);
     }
 
-    protected function _getSelectedProductIds(): array
+    protected function _getSelectedCategoryIds(): array
     {
-        $products = $this->getRequest()->getPost('included_products');
-        if (is_null($products)) {
+        $categories = $this->getRequest()->getPost('included_categories');
+        if (is_null($categories)) {
             if ($this->_getProject()) {
-                return $this->_getProject()->getProducts();
+                return $this->_getProject()->getCategories();
             }
 
             return [];
         }
 
-        return explode(',', $products);
+        return explode(',', $categories);
     }
 
     public function getTabLabel(): string
     {
-        return $this->_getHelper()->__('Products');
+        return $this->_getHelper()->__('Categories');
     }
 
     public function getTabTitle(): string
     {
-        return $this->_getHelper()->__('Products');
+        return $this->_getHelper()->__('Categories');
     }
 }
