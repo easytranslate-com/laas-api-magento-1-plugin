@@ -29,6 +29,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
     {
         $this->_saveProjectStores($project);
         $this->_saveProjectProducts($project);
+        $this->_saveProjectCategories($project);
 
         return parent::_afterSave($project);
     }
@@ -101,10 +102,55 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
+    protected function _saveProjectCategories(EasyTranslate_Connector_Model_Project $project): void
+    {
+        $projectId     = (int)$project->getId();
+        $newCategories = $project->getData('posted_categories');
+
+        if ($newCategories === null) {
+            return;
+        }
+
+        $oldCategories = $this->getCategories($project);
+
+        $table  = $this->getTable('easytranslate/project_category');
+        $insert = array_diff($newCategories, $oldCategories);
+        $delete = array_diff($oldCategories, $newCategories);
+
+        if (!empty($delete)) {
+            $cond = [
+                'category_id IN(?)' => $delete,
+                'project_id=?'      => $projectId
+            ];
+            $this->_getWriteAdapter()->delete($table, $cond);
+        }
+
+        if (!empty($insert)) {
+            $data = [];
+            foreach ($insert as $productId) {
+                $data[] = [
+                    'project_id'  => $projectId,
+                    'category_id' => (int)$productId
+                ];
+            }
+            $this->_getWriteAdapter()->insertMultiple($table, $data);
+        }
+    }
+
     public function getProducts(EasyTranslate_Connector_Model_Project $project): array
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_product'), ['product_id'])
+            ->where('project_id = :project_id');
+        $bind   = ['project_id' => (int)$project->getId()];
+
+        return $this->_getWriteAdapter()->fetchCol($select, $bind);
+    }
+
+    public function getCategories(EasyTranslate_Connector_Model_Project $project): array
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getTable('easytranslate/project_category'), ['category_id'])
             ->where('project_id = :project_id');
         $bind   = ['project_id' => (int)$project->getId()];
 

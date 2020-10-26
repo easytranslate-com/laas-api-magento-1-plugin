@@ -24,6 +24,21 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $products;
     }
 
+    public function getCategories(): array
+    {
+        if (!$this->getId()) {
+            return [];
+        }
+
+        $categories = $this->getData('categories');
+        if (is_null($categories)) {
+            $categories = $this->getResource()->getCategories($this);
+            $this->setData('categories', $categories);
+        }
+
+        return $categories;
+    }
+
     public function canEditDetails(): bool
     {
         return !$this->getId() || $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::OPEN;

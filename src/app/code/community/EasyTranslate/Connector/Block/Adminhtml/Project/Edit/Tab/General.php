@@ -30,6 +30,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             'name' => 'included_products'
         ]);
 
+        $fieldset->addField('included_categories', 'hidden', [
+            'name' => 'included_categories'
+        ]);
+
         $fieldset->addField('name', 'text', [
             'name'     => 'name',
             'label'    => $this->_getHelper()->__('Name'),
@@ -37,13 +41,15 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             'required' => true,
         ]);
 
-        $fieldset->addField('status', 'label', [
-            'label' => $this->_getHelper()->__('Status'),
-        ]);
+        if ($project && $project->getId()) {
+            $fieldset->addField('status', 'label', [
+                'label' => $this->_getHelper()->__('Status'),
+            ]);
 
-        $fieldset->addField('price', 'label', [
-            'label' => $this->_getHelper()->__('Price'),
-        ]);
+            $fieldset->addField('price', 'label', [
+                'label' => $this->_getHelper()->__('Price'),
+            ]);
+        }
 
         $field    = $fieldset->addField('source_store_id', 'select', [
             'name'     => 'source_store_id',
@@ -66,9 +72,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         ]);
         $field->setRenderer($renderer);
 
-        if ($project) {
-            $values                      = $project->getData();
-            $values['included_products'] = implode(',', $project->getProducts());
+        if ($project instanceof EasyTranslate_Connector_Model_Project) {
+            $values                        = $project->getData();
+            $values['included_products']   = implode(',', $project->getProducts());
+            $values['included_categories'] = implode(',', $project->getCategories());
             if (isset($values['price'], $values['currency'])) {
                 $currency        = Mage::app()->getLocale()->currency($values['currency']);
                 $values['price'] = $currency->toCurrency($values['price']);
