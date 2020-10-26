@@ -2,31 +2,15 @@
 
 declare(strict_types=1);
 
-class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends Mage_Adminhtml_Block_Widget_Grid
-    implements Mage_Adminhtml_Block_Widget_Tab_Interface
+class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
+    extends EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
 {
     public function __construct()
     {
         parent::__construct();
         $this->setId('products');
         $this->setDefaultSort('entity_id');
-        $this->setData('use_ajax', true);
         $this->setData('row_click_callback', $this->getJsObjectName() . '.easyTranslateRowClickCallback');
-    }
-
-    public function getRowUrl($item): string
-    {
-        return '';
-    }
-
-    protected function _getHelper(): EasyTranslate_Connector_Helper_Data
-    {
-        return $this->helper('easytranslate');
-    }
-
-    protected function _getProject(): ?EasyTranslate_Connector_Model_Project
-    {
-        return Mage::registry('current_project');
     }
 
     protected function _addColumnFilterToCollection(
@@ -138,15 +122,5 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products extends 
     public function getTabTitle(): string
     {
         return $this->_getHelper()->__('Products');
-    }
-
-    public function canShowTab(): bool
-    {
-        return true;
-    }
-
-    public function isHidden(): bool
-    {
-        return false;
     }
 }
