@@ -80,7 +80,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
             'width'    => '60',
             'index'    => 'entity_id'
         ]);
-        $this->addColumn('product_name', [
+        $this->addColumn('name', [
             'header' => Mage::helper('catalog')->__('Name'),
             'index'  => 'name'
         ]);

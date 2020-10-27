@@ -135,10 +135,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
 
         if (!empty($insert)) {
             $data = [];
-            foreach ($insert as $productId) {
+            foreach ($insert as $categoryId) {
                 $data[] = [
                     'project_id'  => $projectId,
-                    'category_id' => (int)$productId
+                    'category_id' => (int)$categoryId
                 ];
             }
             $this->_getWriteAdapter()->insertMultiple($table, $data);

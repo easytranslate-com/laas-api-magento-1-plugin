@@ -93,8 +93,8 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
 
     protected function _getSelectedCmsBlockIds(): array
     {
-        $products = $this->getRequest()->getPost('included_cmsBlocks');
-        if (is_null($products)) {
+        $cmsBlocks = $this->getRequest()->getPost('included_cmsBlocks');
+        if (is_null($cmsBlocks)) {
             if ($this->_getProject()) {
                 return $this->_getProject()->getCmsBlocks();
             }
@@ -102,7 +102,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
             return [];
         }
 
-        return explode(',', $products);
+        return explode(',', $cmsBlocks);
     }
 
     public function getTabLabel(): string
