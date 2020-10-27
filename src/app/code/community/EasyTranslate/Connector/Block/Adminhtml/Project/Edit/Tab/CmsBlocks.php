@@ -79,8 +79,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
             'index'  => 'title'
         ]);
         $this->addColumn('is_active', [
-            'header' => Mage::helper('cms')->__('Is Active'),
-            'index'  => 'is_active'
+            'header'  => Mage::helper('cms')->__('Status'),
+            'index'   => 'is_active',
+            'type'    => 'options',
+            'options' => [
+                0 => Mage::helper('cms')->__('Disabled'),
+                1 => Mage::helper('cms')->__('Enabled')
+            ],
         ]);
 
         return parent::_prepareColumns();
