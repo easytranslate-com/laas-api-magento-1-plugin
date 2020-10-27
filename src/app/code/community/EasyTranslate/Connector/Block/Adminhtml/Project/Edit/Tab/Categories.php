@@ -74,17 +74,17 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
                 'index'            => 'entity_id'
             ]);
         }
-        $this->addColumn('entity_id', [
+        $this->addColumn('category_entity_id', [
             'header'   => Mage::helper('catalog')->__('ID'),
             'sortable' => true,
             'width'    => '60',
             'index'    => 'entity_id'
         ]);
-        $this->addColumn('name', [
+        $this->addColumn('category_name', [
             'header' => Mage::helper('catalog')->__('Name'),
             'index'  => 'name'
         ]);
-        $this->addColumn('url_key', [
+        $this->addColumn('category_url_key', [
             'header' => Mage::helper('catalog')->__('URL Key'),
             'index'  => 'url_key'
         ]);
