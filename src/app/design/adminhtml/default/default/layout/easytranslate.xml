@@ -48,7 +48,7 @@
     <adminhtml_easytranslate_project_categorygrid>
         <block type="easytranslate/adminhtml_project_edit_tab_categories" name="easytranslate.project.edit.tab.categories" output="toHtml"/>
     </adminhtml_easytranslate_project_categorygrid>
-    <adminhtml_easytranslate_project_cmsblockgrid>
+    <adminhtml_easytranslate_project_cmsblocksgrid>
         <block type="easytranslate/adminhtml_project_edit_tab_cmsBlocks" name="easytranslate.project.edit.tab.cmsBlocks" output="toHtml"/>
-    </adminhtml_easytranslate_project_cmsblockgrid>
+    </adminhtml_easytranslate_project_cmsblocksgrid>
 </layout>
