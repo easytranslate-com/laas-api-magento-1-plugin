@@ -33,6 +33,9 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         $fieldset->addField('included_categories', 'hidden', [
             'name' => 'included_categories'
         ]);
+        $fieldset->addField('included_cmsBlocks', 'hidden', [
+            'name' => 'included_cmsBlocks'
+        ]);
 
         $fieldset->addField('name', 'text', [
             'name'     => 'name',
