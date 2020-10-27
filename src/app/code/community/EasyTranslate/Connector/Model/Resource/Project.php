@@ -74,10 +74,14 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newProducts = $project->getData('posted_products');
 
         if ($newProducts === null) {
-            return;
+            $newProducts = [];
         }
 
         $oldProducts = $this->getProducts($project);
+
+        if (empty($newProducts) && empty($oldProducts)) {
+            return;
+        }
 
         $table  = $this->getTable('easytranslate/project_product');
         $insert = array_diff($newProducts, $oldProducts);
@@ -109,10 +113,13 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newCategories = $project->getData('posted_categories');
 
         if ($newCategories === null) {
-            return;
+            $newCategories = [];
         }
 
         $oldCategories = $this->getCategories($project);
+        if (empty($newCategories) && empty($oldCategories)) {
+            return;
+        }
 
         $table  = $this->getTable('easytranslate/project_category');
         $insert = array_diff($newCategories, $oldCategories);
@@ -144,10 +151,13 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newCmsBlocks = $project->getData('posted_cmsBlocks');
 
         if ($newCmsBlocks === null) {
-            return;
+            $newCmsBlocks = [];
         }
 
         $oldCmsBlocks = $this->getCmsBlocks($project);
+        if (empty($oldCmsBlocks) && empty($newCmsBlocks)) {
+            return;
+        }
 
         $table  = $this->getTable('easytranslate/project_cms_block');
         $insert = array_diff($newCmsBlocks, $oldCmsBlocks);
