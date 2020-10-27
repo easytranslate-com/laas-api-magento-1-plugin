@@ -35,7 +35,8 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     {
         $this->setDefaultFilter(['in_project' => 1]);
-        $collection = Mage::getModel('cms/block')->getCollection()->addFieldToSelect('title')
+        $collection = Mage::getModel('cms/block')->getCollection()->addFieldToSelect('block_id')
+            ->addFieldToSelect('title')
             ->addFieldToSelect('is_active');
 
         if ($this->_getProject()) {
@@ -63,18 +64,19 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
                 'name'             => 'in_project',
                 'values'           => $this->_getSelectedCmsBlockIds(),
                 'align'            => 'center',
-                'index'            => 'entity_id'
+                'index'            => 'block_id'
             ]);
         }
         $this->addColumn('block_id', [
-            'header'   => Mage::helper('cms')->__('ID'),
-            'sortable' => true,
-            'width'    => '60',
-            'index'    => 'main_table.block_id'
+            'header'       => Mage::helper('cms')->__('ID'),
+            'sortable'     => true,
+            'width'        => '60',
+            'index'        => 'block_id',
+            'filter_index' => 'main_table.block_id'
         ]);
         $this->addColumn('title', [
             'header' => Mage::helper('cms')->__('Title'),
-            'index'  => 'name'
+            'index'  => 'title'
         ]);
         $this->addColumn('is_active', [
             'header' => Mage::helper('cms')->__('Is Active'),

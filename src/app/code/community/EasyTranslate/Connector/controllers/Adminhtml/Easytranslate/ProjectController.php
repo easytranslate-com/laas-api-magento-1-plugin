@@ -91,7 +91,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             }
             if (isset($data['included_cmsBlocks']) && $data['included_cmsBlocks'] && $project->canEditDetails()) {
                 $categories = explode(',', $data['included_cmsBlocks']);
-                $project->setData('included_cmsBlocks', $categories);
+                $project->setData('posted_cmsBlocks', $categories);
             }
 
             $project->save();
