@@ -36,6 +36,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     {
         $this->setDefaultFilter(['in_project' => 1]);
         $collection = Mage::getModel('cms/block')->getCollection()->addFieldToSelect('block_id')
+            ->addFieldToSelect('identifier')
             ->addFieldToSelect('title')
             ->addFieldToSelect('is_active');
 
@@ -77,6 +78,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
         $this->addColumn('block_title', [
             'header' => Mage::helper('cms')->__('Title'),
             'index'  => 'title'
+        ]);
+        $this->addColumn('block_identifier', [
+            'header' => Mage::helper('cms')->__('Identifier'),
+            'index'  => 'identifier'
         ]);
         $this->addColumn('block_is_active', [
             'header'  => Mage::helper('cms')->__('Status'),
