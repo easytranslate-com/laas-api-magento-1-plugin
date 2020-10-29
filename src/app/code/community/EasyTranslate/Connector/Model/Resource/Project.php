@@ -30,6 +30,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $this->_saveProjectStores($project);
         $this->_saveProjectProducts($project);
         $this->_saveProjectCategories($project);
+        $this->_saveProjectCmsBlocks($project);
 
         return parent::_afterSave($project);
     }
@@ -73,10 +74,14 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newProducts = $project->getData('posted_products');
 
         if ($newProducts === null) {
-            return;
+            $newProducts = [];
         }
 
         $oldProducts = $this->getProducts($project);
+
+        if (empty($newProducts) && empty($oldProducts)) {
+            return;
+        }
 
         $table  = $this->getTable('easytranslate/project_product');
         $insert = array_diff($newProducts, $oldProducts);
@@ -108,10 +113,13 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newCategories = $project->getData('posted_categories');
 
         if ($newCategories === null) {
-            return;
+            $newCategories = [];
         }
 
         $oldCategories = $this->getCategories($project);
+        if (empty($newCategories) && empty($oldCategories)) {
+            return;
+        }
 
         $table  = $this->getTable('easytranslate/project_category');
         $insert = array_diff($newCategories, $oldCategories);
@@ -127,10 +135,48 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
 
         if (!empty($insert)) {
             $data = [];
-            foreach ($insert as $productId) {
+            foreach ($insert as $categoryId) {
                 $data[] = [
                     'project_id'  => $projectId,
-                    'category_id' => (int)$productId
+                    'category_id' => (int)$categoryId
+                ];
+            }
+            $this->_getWriteAdapter()->insertMultiple($table, $data);
+        }
+    }
+
+    protected function _saveProjectCmsBlocks(EasyTranslate_Connector_Model_Project $project): void
+    {
+        $projectId    = (int)$project->getId();
+        $newCmsBlocks = $project->getData('posted_cmsBlocks');
+
+        if ($newCmsBlocks === null) {
+            $newCmsBlocks = [];
+        }
+
+        $oldCmsBlocks = $this->getCmsBlocks($project);
+        if (empty($oldCmsBlocks) && empty($newCmsBlocks)) {
+            return;
+        }
+
+        $table  = $this->getTable('easytranslate/project_cms_block');
+        $insert = array_diff($newCmsBlocks, $oldCmsBlocks);
+        $delete = array_diff($oldCmsBlocks, $newCmsBlocks);
+
+        if (!empty($delete)) {
+            $cond = [
+                'block_id IN(?)' => $delete,
+                'project_id=?'   => $projectId
+            ];
+            $this->_getWriteAdapter()->delete($table, $cond);
+        }
+
+        if (!empty($insert)) {
+            $data = [];
+            foreach ($insert as $cmsBlockId) {
+                $data[] = [
+                    'project_id' => $projectId,
+                    'block_id'   => (int)$cmsBlockId
                 ];
             }
             $this->_getWriteAdapter()->insertMultiple($table, $data);
@@ -151,6 +197,16 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_category'), ['category_id'])
+            ->where('project_id = :project_id');
+        $bind   = ['project_id' => (int)$project->getId()];
+
+        return $this->_getWriteAdapter()->fetchCol($select, $bind);
+    }
+
+    public function getCmsBlocks(EasyTranslate_Connector_Model_Project $project): array
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getTable('easytranslate/project_cms_block'), ['block_id'])
             ->where('project_id = :project_id');
         $bind   = ['project_id' => (int)$project->getId()];
 

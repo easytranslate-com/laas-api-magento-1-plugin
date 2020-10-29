@@ -69,7 +69,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
                 'index'            => 'entity_id'
             ]);
         }
-        $this->addColumn('entity_id', [
+        $this->addColumn('product_entity_id', [
             'header'   => Mage::helper('catalog')->__('ID'),
             'sortable' => true,
             'width'    => '60',
@@ -79,12 +79,12 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
             'header' => Mage::helper('catalog')->__('Name'),
             'index'  => 'name'
         ]);
-        $this->addColumn('sku', [
+        $this->addColumn('product_sku', [
             'header' => Mage::helper('catalog')->__('SKU'),
             'width'  => '80',
             'index'  => 'sku'
         ]);
-        $this->addColumn('price', [
+        $this->addColumn('product_price', [
             'header'        => Mage::helper('catalog')->__('Price'),
             'type'          => 'currency',
             'width'         => '1',

@@ -89,6 +89,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
                 $categories = explode(',', $data['included_categories']);
                 $project->setData('posted_categories', $categories);
             }
+            if (isset($data['included_cmsBlocks']) && $data['included_cmsBlocks'] && $project->canEditDetails()) {
+                $categories = explode(',', $data['included_cmsBlocks']);
+                $project->setData('posted_cmsBlocks', $categories);
+            }
 
             $project->save();
             $session->setFormData(false);
@@ -132,6 +136,13 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
     }
 
     public function categoryGridAction(): void
+    {
+        $this->_initProject();
+        $this->loadLayout(false);
+        $this->renderLayout();
+    }
+
+    public function cmsBlocksGridAction(): void
     {
         $this->_initProject();
         $this->loadLayout(false);

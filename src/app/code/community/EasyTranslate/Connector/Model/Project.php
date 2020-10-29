@@ -39,6 +39,21 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $categories;
     }
 
+    public function getCmsBlocks(): array
+    {
+        if (!$this->getId()) {
+            return [];
+        }
+
+        $cmsBlocks = $this->getData('cmsBlocks');
+        if (is_null($cmsBlocks)) {
+            $cmsBlocks = $this->getResource()->getCmsBlocks($this);
+            $this->setData('cmsBlocks', $cmsBlocks);
+        }
+
+        return $cmsBlocks;
+    }
+
     public function canEditDetails(): bool
     {
         return !$this->getId() || $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::OPEN;
