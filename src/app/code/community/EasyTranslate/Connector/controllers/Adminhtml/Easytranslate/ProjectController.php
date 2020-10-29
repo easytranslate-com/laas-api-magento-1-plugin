@@ -90,8 +90,12 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
                 $project->setData('posted_categories', $categories);
             }
             if (isset($data['included_cmsBlocks']) && $data['included_cmsBlocks'] && $project->canEditDetails()) {
-                $categories = explode(',', $data['included_cmsBlocks']);
-                $project->setData('posted_cmsBlocks', $categories);
+                $cmsBlocks = explode(',', $data['included_cmsBlocks']);
+                $project->setData('posted_cmsBlocks', $cmsBlocks);
+            }
+            if (isset($data['included_cmsPages']) && $data['included_cmsPages'] && $project->canEditDetails()) {
+                $cmsPages = explode(',', $data['included_cmsPages']);
+                $project->setData('posted_cmsPages', $cmsPages);
             }
 
             $project->save();
@@ -143,6 +147,13 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
     }
 
     public function cmsBlocksGridAction(): void
+    {
+        $this->_initProject();
+        $this->loadLayout(false);
+        $this->renderLayout();
+    }
+
+    public function cmsPagesGridAction(): void
     {
         $this->_initProject();
         $this->loadLayout(false);

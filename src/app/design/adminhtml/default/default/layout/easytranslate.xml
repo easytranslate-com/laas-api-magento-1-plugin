@@ -20,6 +20,7 @@
                 <block type="easytranslate/adminhtml_project_edit_tab_products" name="easytranslate.project.edit.tab.products"/>
                 <block type="easytranslate/adminhtml_project_edit_tab_categories" name="easytranslate.project.edit.tab.categories"/>
                 <block type="easytranslate/adminhtml_project_edit_tab_cmsBlocks" name="easytranslate.project.edit.tab.cmsBlocks"/>
+                <block type="easytranslate/adminhtml_project_edit_tab_cmsPages" name="easytranslate.project.edit.tab.cmsPages"/>
                 <action method="addTab">
                     <name>general</name>
                     <block>easytranslate.project.edit.tab.general</block>
@@ -36,6 +37,10 @@
                     <name>cmsBlocks</name>
                     <block>easytranslate.project.edit.tab.cmsBlocks</block>
                 </action>
+                <action method="addTab">
+                    <name>cmsPages</name>
+                    <block>easytranslate.project.edit.tab.cmsPages</block>
+                </action>
             </block>
         </reference>
         <reference name="content">
@@ -51,4 +56,7 @@
     <adminhtml_easytranslate_project_cmsblocksgrid>
         <block type="easytranslate/adminhtml_project_edit_tab_cmsBlocks" name="easytranslate.project.edit.tab.cmsBlocks" output="toHtml"/>
     </adminhtml_easytranslate_project_cmsblocksgrid>
+    <adminhtml_easytranslate_project_cmspagesgrid>
+        <block type="easytranslate/adminhtml_project_edit_tab_cmsPages" name="easytranslate.project.edit.tab.cmsPages" output="toHtml"/>
+    </adminhtml_easytranslate_project_cmspagesgrid>
 </layout>

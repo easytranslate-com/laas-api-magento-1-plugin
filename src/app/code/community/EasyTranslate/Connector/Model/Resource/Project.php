@@ -31,6 +31,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $this->_saveProjectProducts($project);
         $this->_saveProjectCategories($project);
         $this->_saveProjectCmsBlocks($project);
+        $this->_saveProjectCmsPages($project);
 
         return parent::_afterSave($project);
     }
@@ -183,6 +184,44 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
+    protected function _saveProjectCmsPages(EasyTranslate_Connector_Model_Project $project): void
+    {
+        $projectId   = (int)$project->getId();
+        $newCmsPages = $project->getData('posted_cmsPages');
+
+        if ($newCmsPages === null) {
+            $newCmsPages = [];
+        }
+
+        $oldCmsPages = $this->getCmsPages($project);
+        if (empty($oldCmsPages) && empty($newCmsPages)) {
+            return;
+        }
+
+        $table  = $this->getTable('easytranslate/project_cms_page');
+        $insert = array_diff($newCmsPages, $oldCmsPages);
+        $delete = array_diff($oldCmsPages, $newCmsPages);
+
+        if (!empty($delete)) {
+            $cond = [
+                'page_id IN(?)' => $delete,
+                'project_id=?'  => $projectId
+            ];
+            $this->_getWriteAdapter()->delete($table, $cond);
+        }
+
+        if (!empty($insert)) {
+            $data = [];
+            foreach ($insert as $cmsPageId) {
+                $data[] = [
+                    'project_id' => $projectId,
+                    'page_id'    => (int)$cmsPageId
+                ];
+            }
+            $this->_getWriteAdapter()->insertMultiple($table, $data);
+        }
+    }
+
     public function getProducts(EasyTranslate_Connector_Model_Project $project): array
     {
         $select = $this->_getReadAdapter()->select()
@@ -207,6 +246,16 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_cms_block'), ['block_id'])
+            ->where('project_id = :project_id');
+        $bind   = ['project_id' => (int)$project->getId()];
+
+        return $this->_getWriteAdapter()->fetchCol($select, $bind);
+    }
+
+    public function getCmsPages(EasyTranslate_Connector_Model_Project $project): array
+    {
+        $select = $this->_getReadAdapter()->select()
+            ->from($this->getTable('easytranslate/project_cms_page'), ['page_id'])
             ->where('project_id = :project_id');
         $bind   = ['project_id' => (int)$project->getId()];
 
