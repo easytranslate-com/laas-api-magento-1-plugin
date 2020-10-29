@@ -36,12 +36,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     {
         $this->setDefaultFilter(['in_project' => 1]);
         $collection = Mage::getModel('cms/block')->getCollection()->addFieldToSelect('block_id')
-            ->addFieldToSelect('identifier')
             ->addFieldToSelect('title')
-            ->addFieldToSelect('is_active');
+            ->addFieldToSelect('identifier')
+            ->addFieldToSelect('is_active')
+            ->addFieldToSelect('creation_time')
+            ->addFieldToSelect('update_time');
 
         if ($this->_getProject()) {
-            $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
             if (!$this->_getProject()->canEditDetails()) {
                 $selectedCmsBlockIds = $this->_getSelectedCmsBlockIds();
                 if (!empty($selectedCmsBlockIds)) {
@@ -83,6 +84,16 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
             'header' => Mage::helper('cms')->__('Identifier'),
             'index'  => 'identifier'
         ]);
+        $this->addColumn('block_store_id', [
+            'header'     => Mage::helper('cms')->__('Store View'),
+            'index'      => 'store_id',
+            'type'       => 'store',
+            'store_all'  => true,
+            'store_view' => true,
+            'sortable'   => false,
+            'filter_condition_callback'
+                         => [$this, '_filterStoreCondition'],
+        ]);
         $this->addColumn('block_is_active', [
             'header'  => Mage::helper('cms')->__('Status'),
             'index'   => 'is_active',
@@ -91,6 +102,17 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
                 0 => Mage::helper('cms')->__('Disabled'),
                 1 => Mage::helper('cms')->__('Enabled')
             ],
+        ]);
+        $this->addColumn('block_creation_time', [
+            'header' => Mage::helper('cms')->__('Date Created'),
+            'index'  => 'creation_time',
+            'type'   => 'datetime',
+        ]);
+
+        $this->addColumn('block_update_time', [
+            'header' => Mage::helper('cms')->__('Last Modified'),
+            'index'  => 'update_time',
+            'type'   => 'datetime',
         ]);
 
         return parent::_prepareColumns();
@@ -123,5 +145,20 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     public function getTabTitle(): string
     {
         return $this->_getHelper()->__('CMS Blocks');
+    }
+
+    protected function _filterStoreCondition($collection, $column)
+    {
+        if (!$value = $column->getFilter()->getValue()) {
+            return;
+        }
+
+        $this->getCollection()->addStoreFilter($value);
+    }
+
+    protected function _afterLoadCollection()
+    {
+        $this->getCollection()->walk('afterLoad');
+        parent::_afterLoadCollection();
     }
 }
