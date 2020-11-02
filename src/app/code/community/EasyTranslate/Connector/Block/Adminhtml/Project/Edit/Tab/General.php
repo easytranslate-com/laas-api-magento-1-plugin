@@ -88,6 +88,8 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
                 $currency        = Mage::app()->getLocale()->currency($values['currency']);
                 $values['price'] = $currency->toCurrency($values['price']);
             }
+            $statusLabel      = Mage::getModel('easytranslate/source_status')->getOptions()[$values['status']];
+            $values['status'] = $this->_getHelper()->__($statusLabel);
             $form->setValues($values);
         }
         $this->setForm($form);
