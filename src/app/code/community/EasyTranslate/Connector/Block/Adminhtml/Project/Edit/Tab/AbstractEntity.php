@@ -33,6 +33,6 @@ abstract class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Abstract
 
     public function isHidden(): bool
     {
-        return false;
+        return $this->_getProject() === null || !$this->_getProject()->getId();
     }
 }
