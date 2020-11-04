@@ -16,6 +16,9 @@ $projectTable = $installer->getConnection()
     ->addColumn('name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [
         'nullable' => false
     ], 'Name')
+    ->addColumn('team', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [
+        'nullable' => false
+    ], 'Team')
     ->addColumn('source_store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, [
         'unsigned' => true
     ], 'Source Store ID')

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use EasyTranslate\Api\ApiException;
+use EasyTranslate\Api\ProjectApi;
+
 class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends Mage_Adminhtml_Controller_Action
 {
     public function indexAction(): void
@@ -12,7 +15,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->renderLayout();
     }
 
-    protected function _initProject()
+    protected function _initProject(): EasyTranslate_Connector_Model_Project
     {
         $this->_title($this->__('System'))
             ->_title($this->__('EasyTranslate Projects'));
@@ -77,29 +80,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
 
         try {
-            $project->addData($data);
-            $session->setFormData($data);
-
-            if (isset($data['included_products']) && $data['included_products'] && $project->canEditDetails()) {
-                $products = explode(',', $data['included_products']);
-                $project->setData('posted_products', $products);
-            }
-
-            if (isset($data['included_categories']) && $data['included_categories'] && $project->canEditDetails()) {
-                $categories = explode(',', $data['included_categories']);
-                $project->setData('posted_categories', $categories);
-            }
-            if (isset($data['included_cmsBlocks']) && $data['included_cmsBlocks'] && $project->canEditDetails()) {
-                $cmsBlocks = explode(',', $data['included_cmsBlocks']);
-                $project->setData('posted_cmsBlocks', $cmsBlocks);
-            }
-            if (isset($data['included_cmsPages']) && $data['included_cmsPages'] && $project->canEditDetails()) {
-                $cmsPages = explode(',', $data['included_cmsPages']);
-                $project->setData('posted_cmsPages', $cmsPages);
-            }
-
-            $project->save();
-            $session->setFormData(false);
+            $this->_saveProjectPostData($project, $data);
             if (!$this->_validateStoreViews($data)) {
                 $session->addWarning($this->_getHelper()
                     ->__('The source store view cannot also be a target store view.'));
@@ -108,10 +89,6 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         } catch (Mage_Core_Exception $e) {
             $session->addError($e->getMessage());
             $redirectBack = true;
-        } catch (Exception $e) {
-            $session->addError($this->_getHelper()->__('An error occurred while saving the project.'));
-            $redirectBack = true;
-            Mage::logException($e);
         }
 
         if ($redirectBack) {
@@ -121,6 +98,42 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
 
         $this->_redirect('*/*/index');
+    }
+
+    protected function _saveProjectPostData(EasyTranslate_Connector_Model_Project $project, array $data): void
+    {
+        if (empty($data)) {
+            Mage::throwException('Invalid POST data.');
+        }
+        $session = $this->_getSession();
+
+        $project->addData($data);
+        $session->setData('form_data', $data);
+
+        if (isset($data['included_products']) && $data['included_products'] && $project->canEditDetails()) {
+            $products = explode(',', $data['included_products']);
+            $project->setData('posted_products', $products);
+        }
+
+        if (isset($data['included_categories']) && $data['included_categories'] && $project->canEditDetails()) {
+            $categories = explode(',', $data['included_categories']);
+            $project->setData('posted_categories', $categories);
+        }
+        if (isset($data['included_cmsBlocks']) && $data['included_cmsBlocks'] && $project->canEditDetails()) {
+            $cmsBlocks = explode(',', $data['included_cmsBlocks']);
+            $project->setData('posted_cmsBlocks', $cmsBlocks);
+        }
+        if (isset($data['included_cmsPages']) && $data['included_cmsPages'] && $project->canEditDetails()) {
+            $cmsPages = explode(',', $data['included_cmsPages']);
+            $project->setData('posted_cmsPages', $cmsPages);
+        }
+
+        $project->save();
+        $session->setData('form_data', false);
+        if (!$this->_validateStoreViews($data)) {
+            $session->addWarning($this->_getHelper()
+                ->__('The source store view cannot also be a target store view.'));
+        }
     }
 
     protected function _validateStoreViews(array $data): bool
@@ -160,8 +173,36 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->renderLayout();
     }
 
+    public function sendAction(): void
+    {
+        $magentoProject = $this->_initProject();
+        $data           = $this->getRequest()->getPost();
+        try {
+            $this->_saveProjectPostData($magentoProject, $data);
+        } catch (Mage_Core_Exception $e) {
+            $this->_getSession()->addError($e->getMessage());
+            $this->_redirectReferer();
+
+            return;
+        }
+        $project       = Mage::getModel('easytranslate/bridge_project', $magentoProject);
+        $configuration = Mage::getModel('easytranslate/config')->getApiConfiguration();
+        $projectApi    = new ProjectApi($configuration);
+        try {
+            $projectApi->sendProject($project);
+            $magentoProject->setData('status', EasyTranslate_Connector_Model_Source_Status::SENT);
+            $magentoProject->save();
+            $message = $this->_getHelper()->__('The project has successfully been sent to EasyTranslate.');
+            $this->_getSession()->addSuccess($message);
+        } catch (ApiException $exception) {
+            $this->_getSession()->addError($this->_getHelper()->__($exception->getMessage()));
+        }
+        $this->_redirectReferer();
+    }
+
     public function deleteAction(): void
     {
+        // TODO check if project can be edited
         $projectId = $this->getRequest()->getParam('project_id');
         if (!$projectId) {
             Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()
@@ -185,6 +226,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
     public function massDeleteAction(): void
     {
+        // TODO check if project can be edited
         $projectIds = $this->getRequest()->getParam('project_ids');
 
         if (!is_array($projectIds)) {

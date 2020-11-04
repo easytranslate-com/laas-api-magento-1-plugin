@@ -10,18 +10,34 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         $this->_blockGroup = 'easytranslate';
         $this->_controller = 'adminhtml_project';
         $this->setData('form_action_url', $this->getUrl('*/*/save'));
-        $this->_updateButton('save', 'label', Mage::helper('easytranslate')->__('Save Project'));
-        $this->_addButton('save_and_continue', [
-            'label'   => Mage::helper('easytranslate')->__('Save and Continue Edit'),
-            'onclick' => 'saveAndContinueEdit()',
-            'class'   => 'save',
-        ], -100);
+        /** @var EasyTranslate_Connector_Model_Project $project */
+        $project = Mage::registry('current_project');
+        if (!$project || $project->canEditDetails()) {
+            $this->_updateButton('save', 'label', Mage::helper('easytranslate')->__('Save Project'));
+            $this->_addButton('save_and_continue', [
+                'label'   => Mage::helper('easytranslate')->__('Save and Continue Edit'),
+                'onclick' => 'saveAndContinueEdit()',
+                'class'   => 'save',
+            ], -100);
+            $this->_addButton('send', [
+                'label'   => Mage::helper('easytranslate')->__('Send To EasyTranslate'),
+                'onclick' => 'sendToEasyTranslate()',
+                'class'   => 'save',
+            ], -100);
 
-        $this->_formScripts[] = "
-            function saveAndContinueEdit(){
+            $sendToEasyTranslateUrl = $this->getUrl('*/*/send');
+            $this->_formScripts[]   = "
+            function saveAndContinueEdit() {
                 editForm.submit($('edit_form').action+'back/edit/');
             }
+            function sendToEasyTranslate() {
+                editForm.submit('$sendToEasyTranslateUrl');
+            }
         ";
+        } else {
+            $this->_removeButton('save');
+            $this->_removeButton('reset');
+        }
     }
 
     public function getHeaderText()
