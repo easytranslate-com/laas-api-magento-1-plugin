@@ -42,7 +42,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         }
     }
 
-    public function getHeaderText()
+    public function getHeaderText(): string
     {
         $project = Mage::registry('current_project');
         if ($project && $project->getId()) {

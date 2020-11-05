@@ -8,6 +8,10 @@ use EasyTranslate\Api\Configuration;
 
 class ObtainAccessTokenRequest extends AbstractRequest
 {
+    private const GRANT_TYPE = 'password';
+
+    private const SCOPE = 'dashboard';
+
     /**
      * @var Configuration
      */
@@ -22,6 +26,7 @@ class ObtainAccessTokenRequest extends AbstractRequest
     {
         return self::TYPE_POST;
     }
+
     public function getResource(): string
     {
         return 'oauth/token';
@@ -32,10 +37,10 @@ class ObtainAccessTokenRequest extends AbstractRequest
         return [
             'client_id'     => $this->configuration->getClientId(),
             'client_secret' => $this->configuration->getClientSecret(),
-            'grant_type'    => 'password',
+            'grant_type'    => self::GRANT_TYPE,
             'username'      => $this->configuration->getUsername(),
             'password'      => $this->configuration->getPassword(),
-            'scope'         => 'dashboard',
+            'scope'         => self::SCOPE,
         ];
     }
 

@@ -21,7 +21,7 @@ class EasyTranslate_Connector_Model_Autoloader
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         spl_autoload_register([$this, 'loadClass'], true, true);
     }
@@ -38,7 +38,7 @@ class EasyTranslate_Connector_Model_Autoloader
      *
      * @return void
      */
-    public function addNamespace($prefix, $base_dir, $prepend = false)
+    public function addNamespace(string $prefix, string $base_dir, bool $prepend = false): void
     {
         // normalize namespace prefix
         $prefix = trim($prefix, '\\') . '\\';
@@ -55,7 +55,7 @@ class EasyTranslate_Connector_Model_Autoloader
         if ($prepend) {
             array_unshift($this->prefixes[$prefix], $base_dir);
         } else {
-            array_push($this->prefixes[$prefix], $base_dir);
+            $this->prefixes[$prefix][] = $base_dir;
         }
     }
 
@@ -67,7 +67,7 @@ class EasyTranslate_Connector_Model_Autoloader
      * @return mixed The mapped file name on success, or boolean false on
      * failure.
      */
-    public function loadClass($class)
+    public function loadClass(string $class)
     {
         // handle pseudo namespaces
         if (strpos($class, '\\') === false) {
@@ -109,7 +109,7 @@ class EasyTranslate_Connector_Model_Autoloader
      * @return mixed Boolean false if no mapped file can be loaded, or the
      * name of the mapped file that was loaded.
      */
-    protected function loadMappedFile($prefix, $relative_class)
+    protected function loadMappedFile(string $prefix, string $relative_class)
     {
         // are there any base directories for this namespace prefix?
         if (isset($this->prefixes[$prefix]) === false) {
@@ -143,7 +143,7 @@ class EasyTranslate_Connector_Model_Autoloader
      *
      * @return bool True if the file exists, false if not.
      */
-    protected function requireFile($file)
+    protected function requireFile(string $file): bool
     {
         if (file_exists($file)) {
             require $file;
