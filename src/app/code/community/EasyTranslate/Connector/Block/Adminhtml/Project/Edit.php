@@ -19,11 +19,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
                 'onclick' => 'saveAndContinueEdit()',
                 'class'   => 'save',
             ], -100);
-            $this->_addButton('send', [
-                'label'   => Mage::helper('easytranslate')->__('Send To EasyTranslate'),
-                'onclick' => 'sendToEasyTranslate()',
-                'class'   => 'save',
-            ], -100);
+            if ($project && $project->getId()) {
+                $this->_addButton('send', [
+                    'label'   => Mage::helper('easytranslate')->__('Send To EasyTranslate'),
+                    'onclick' => 'sendToEasyTranslate()',
+                    'class'   => 'save',
+                ], -100);
+            }
 
             $sendToEasyTranslateUrl = $this->getUrl('*/*/send');
             $this->_formScripts[]   = "
