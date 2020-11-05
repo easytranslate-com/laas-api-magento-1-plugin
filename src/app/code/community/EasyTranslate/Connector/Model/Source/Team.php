@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use EasyTranslate\Api\ApiException;
 use EasyTranslate\Api\TeamApi;
 
 class EasyTranslate_Connector_Model_Source_Team
@@ -11,7 +12,13 @@ class EasyTranslate_Connector_Model_Source_Team
         $apiConfiguration = Mage::getModel('easytranslate/config')->getApiConfiguration();
         $teamsApi         = new TeamApi($apiConfiguration);
 
-        return $teamsApi->getUser()->getTeams();
+        try {
+            $userResponse = $teamsApi->getUser();
+        } catch (ApiException $e) {
+            return [];
+        }
+
+        return $userResponse->getTeams();
     }
 
     public function toOptionArray(): array

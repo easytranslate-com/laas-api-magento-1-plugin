@@ -50,13 +50,20 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             'disabled' => !$canEdit,
         ]);
 
+        $teamValues = Mage::getModel('easytranslate/source_team')->toOptionArray();
+        $note       = '';
+        if (empty($teamValues)) {
+            $note = $this->_getHelper()
+                ->__('If no team is displayed, please check your API and EasyTranslate settings.');
+        }
         $fieldset->addField('team', 'select', [
             'name'     => 'team',
             'label'    => $this->_getHelper()->__('Team'),
             'title'    => $this->_getHelper()->__('Team'),
             'required' => true,
-            'values'   => Mage::getModel('easytranslate/source_team')->toOptionArray(),
+            'values'   => $teamValues,
             'disabled' => !$canEdit,
+            'note'     => $note,
         ]);
 
         if ($project && $project->getId()) {
