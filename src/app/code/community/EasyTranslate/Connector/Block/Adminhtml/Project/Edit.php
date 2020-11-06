@@ -6,38 +6,30 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
 {
     public function __construct()
     {
+        $this->_objectId = 'project_id';
         parent::__construct();
         $this->_blockGroup = 'easytranslate';
         $this->_controller = 'adminhtml_project';
         $this->setData('form_action_url', $this->getUrl('*/*/save'));
+        $this->_updateButton('save', 'label', $this->_getHelper()->__('Save Project'));
+
         /** @var EasyTranslate_Connector_Model_Project $project */
         $project = Mage::registry('current_project');
-        if (!$project || $project->canEditDetails()) {
-            $this->_updateButton('save', 'label', Mage::helper('easytranslate')->__('Save Project'));
-            $this->_addButton('save_and_continue', [
-                'label'   => Mage::helper('easytranslate')->__('Save and Continue Edit'),
-                'onclick' => 'saveAndContinueEdit()',
-                'class'   => 'save',
-            ], -100);
-            if ($project && $project->getId()) {
-                $this->_addButton('send', [
-                    'label'   => Mage::helper('easytranslate')->__('Send To EasyTranslate'),
-                    'onclick' => 'sendToEasyTranslate()',
-                    'class'   => 'save',
-                ], -100);
-            }
 
-            $sendToEasyTranslateUrl = $this->getUrl('*/*/send');
-            $this->_formScripts[]   = "
-            function saveAndContinueEdit() {
-                editForm.submit($('edit_form').action+'back/edit/');
-            }
-            function sendToEasyTranslate() {
-                editForm.submit('$sendToEasyTranslateUrl');
-            }
-        ";
+        if (!$project) {
+            $this->_addSaveAndContinueEditButton();
+        } elseif ($project->canEditDetails()) {
+            $this->_addSaveAndContinueEditButton();
+            $this->_addSendButton();
+        } elseif ($project->requiresPriceApproval()) {
+            $this->_addAcceptPriceButton($project);
+            $this->_addDeclinePriceButton($project);
+            $this->_removeButton('save');
+            $this->_removeButton('delete');
+            $this->_removeButton('reset');
         } else {
             $this->_removeButton('save');
+            $this->_removeButton('delete');
             $this->_removeButton('reset');
         }
     }
@@ -46,10 +38,67 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
     {
         $project = Mage::registry('current_project');
         if ($project && $project->getId()) {
-            return Mage::helper('easytranslate')
-                ->__('Edit Project "%s" (ID %s)', $project->getName(), $project->getId());
+            return $this->_getHelper()->__('Edit Project "%s" (ID %s)', $project->getName(), $project->getId());
         }
 
-        return Mage::helper('easytranslate')->__('New Project');
+        return $this->_getHelper()->__('New Project');
+    }
+
+    protected function _addSaveAndContinueEditButton(): void
+    {
+        $this->_addButton('save_and_continue', [
+            'label'   => $this->_getHelper()->__('Save and Continue Edit'),
+            'onclick' => 'saveAndContinueEdit()',
+            'class'   => 'save',
+        ], -100);
+        $this->_formScripts[] = "
+            function saveAndContinueEdit() {
+                editForm.submit($('edit_form').action+'back/edit/');
+            }
+        ";
+    }
+
+    protected function _addSendButton(): void
+    {
+        $this->_addButton('send', [
+            'label'   => $this->_getHelper()->__('Send To EasyTranslate'),
+            'onclick' => 'sendToEasyTranslate()',
+            'class'   => 'save',
+        ], -100);
+        $sendToEasyTranslateUrl = $this->getUrl('*/*/send');
+        $this->_formScripts[]   = "
+            function sendToEasyTranslate() {
+                editForm.submit('$sendToEasyTranslateUrl');
+            }
+        ";
+    }
+
+    protected function _addAcceptPriceButton(EasyTranslate_Connector_Model_Project $project): void
+    {
+        $confirmMessage  = $this->_getHelper()->__('Are you sure you want to accept the price for this project?');
+        $acceptPriceUrl = $this->getUrl('*/*/acceptPrice', ['project_id' => $project->getId()]);
+        $this->_addButton('accept_price', [
+            'label'   => $this->_getHelper()->__('Accept Price'),
+            'class'   => 'save',
+            'onclick' => 'confirmSetLocation(\'' . Mage::helper('core')->jsQuoteEscape($confirmMessage) . '\', \''
+                . $acceptPriceUrl . '\')',
+        ]);
+    }
+
+    protected function _addDeclinePriceButton(EasyTranslate_Connector_Model_Project $project): void
+    {
+        $confirmMessage  = $this->_getHelper()->__('Are you sure you want to decline the price for this project?');
+        $declinePriceUrl = $this->getUrl('*/*/declinePrice', ['project_id' => $project->getId()]);
+        $this->_addButton('decline_price', [
+            'label'   => $this->_getHelper()->__('Decline Price'),
+            'class'   => 'cancel',
+            'onclick' => 'confirmSetLocation(\'' . Mage::helper('core')->jsQuoteEscape($confirmMessage) . '\', \''
+                . $declinePriceUrl . '\')',
+        ]);
+    }
+
+    protected function _getHelper(): EasyTranslate_Connector_Helper_Data
+    {
+        return Mage::helper('easytranslate');
     }
 }

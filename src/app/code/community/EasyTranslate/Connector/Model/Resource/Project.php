@@ -16,6 +16,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
         $project->setUpdatedAt(Mage::getSingleton('core/date')->gmtDate());
 
+        if ($project->getData('secret') === null) {
+            $project->setData('secret', bin2hex(random_bytes(32)));
+        }
+
         // make sure that we do not translate from and to the same language
         $sourceStoreId  = $project->getData('source_store_id');
         $targetStoreIds = $project->getData('target_stores');

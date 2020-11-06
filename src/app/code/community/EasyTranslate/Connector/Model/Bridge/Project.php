@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-class EasyTranslate_Connector_Model_Bridge_Project implements \EasyTranslate\ProjectInterface
+use EasyTranslate\ProjectInterface;
+
+class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
 {
     /**
      * @var EasyTranslate_Connector_Model_Project
@@ -12,6 +14,11 @@ class EasyTranslate_Connector_Model_Bridge_Project implements \EasyTranslate\Pro
     public function __construct(EasyTranslate_Connector_Model_Project $magentoProject)
     {
         $this->_magentoProject = $magentoProject;
+    }
+
+    public function getId(): string
+    {
+        return $this->_magentoProject->getData('external_id');
     }
 
     public function getTeam(): string
@@ -28,13 +35,12 @@ class EasyTranslate_Connector_Model_Bridge_Project implements \EasyTranslate\Pro
     public function getTargetLanguages(): array
     {
         // TODO generate target languages from target stores
-        return ['DK'];
+        return ['da'];
     }
 
     public function getCallbackUrl(): string
     {
-        // TODO generate callback URL
-        return '';
+        return Mage::getModel('easytranslate/callback_linkGenerator')->generateLink($this->_magentoProject);
     }
 
     public function getContent(): array
