@@ -12,7 +12,9 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
 
     protected function _prepareForm(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General
     {
+        /** @var EasyTranslate_Connector_Model_Project $project */
         $project = Mage::registry('current_project');
+        $canEdit = !$project || $project->canEditDetails();
         $form    = new Varien_Data_Form();
 
         $fieldset = $form->addFieldset('project_information', [
@@ -45,6 +47,23 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             'label'    => $this->_getHelper()->__('Name'),
             'title'    => $this->_getHelper()->__('Name'),
             'required' => true,
+            'disabled' => !$canEdit,
+        ]);
+
+        $teamValues = Mage::getModel('easytranslate/source_team')->toOptionArray();
+        $note       = '';
+        if (empty($teamValues)) {
+            $note = $this->_getHelper()
+                ->__('If no team is displayed, please check your API and EasyTranslate settings.');
+        }
+        $fieldset->addField('team', 'select', [
+            'name'     => 'team',
+            'label'    => $this->_getHelper()->__('Team'),
+            'title'    => $this->_getHelper()->__('Team'),
+            'required' => true,
+            'values'   => $teamValues,
+            'disabled' => !$canEdit,
+            'note'     => $note,
         ]);
 
         if ($project && $project->getId()) {
@@ -63,7 +82,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             'title'    => $this->_getHelper()->__('Source Store View'),
             'required' => true,
             'values'   => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(),
-            'disabled' => false,
+            'disabled' => !$canEdit,
         ]);
         $renderer = $this->getLayout()->createBlock('adminhtml/store_switcher_form_renderer_fieldset_element');
         $field->setRenderer($renderer);
@@ -74,7 +93,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             'title'    => $this->_getHelper()->__('Target Store Views'),
             'required' => true,
             'values'   => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(),
-            'disabled' => false,
+            'disabled' => !$canEdit,
         ]);
         $field->setRenderer($renderer);
 
@@ -83,11 +102,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             $values['included_products']   = implode(',', $project->getProducts());
             $values['included_categories'] = implode(',', $project->getCategories());
             $values['included_cmsBlocks']  = implode(',', $project->getCmsBlocks());
-            $values['included_cmsPages']  = implode(',', $project->getCmsPages());
+            $values['included_cmsPages']   = implode(',', $project->getCmsPages());
             if (isset($values['price'], $values['currency'])) {
                 $currency        = Mage::app()->getLocale()->currency($values['currency']);
                 $values['price'] = $currency->toCurrency($values['price']);
             }
+            $statusLabel      = Mage::getModel('easytranslate/source_status')->getOptions()[$values['status']];
+            $values['status'] = $this->_getHelper()->__($statusLabel);
             $form->setValues($values);
         }
         $this->setForm($form);

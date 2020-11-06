@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use EasyTranslate\Api\Configuration as ApiConfiguration;
+
 class EasyTranslate_Connector_Model_Config
 {
     protected const XML_PATH_API_ENVIRONMENT = 'easytranslate/api/environment';
@@ -74,5 +76,16 @@ class EasyTranslate_Connector_Model_Config
         }
 
         return explode(',', $rawAttributes);
+    }
+
+    public function getApiConfiguration(): ApiConfiguration
+    {
+        return new ApiConfiguration(
+            $this->getApiEnvironment(),
+            $this->getApiClientId(),
+            $this->getApiClientSecret(),
+            $this->getApiUsername(),
+            $this->getApiPassword()
+        );
     }
 }

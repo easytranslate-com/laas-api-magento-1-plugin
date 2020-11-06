@@ -16,7 +16,10 @@ $projectTable = $installer->getConnection()
     ->addColumn('name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [
         'nullable' => false
     ], 'Name')
-    ->addColumn('source_store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
+    ->addColumn('team', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [
+        'nullable' => false
+    ], 'Team')
+    ->addColumn('source_store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, [
         'unsigned' => true
     ], 'Source Store ID')
     ->addColumn('status', Varien_Db_Ddl_Table::TYPE_TEXT, 64, [
@@ -49,7 +52,7 @@ $projectTargetStoreTable = $installer->getConnection()
         'nullable' => false,
         'unsigned' => true
     ], 'Project ID')
-    ->addColumn('target_store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
+    ->addColumn('target_store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, [
         'primary'  => true,
         'nullable' => false,
         'unsigned' => true
@@ -235,7 +238,7 @@ $projectQueueTable = $installer->getConnection()
         'nullable' => false,
         'unsigned' => true
     ], 'Project ID')
-    ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
+    ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, [
         'primary'  => true,
         'nullable' => false,
         'unsigned' => true
