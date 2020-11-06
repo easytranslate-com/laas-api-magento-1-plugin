@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use EasyTranslate\Api\Callback\DataConverter\PriceApprovalConverter;
 
-class EasyTranslate_Connector_Model_Callback_PriceApprovalHandler
+class EasyTranslate_Connector_Model_Callback_PriceApprovalRequestHandler
 {
     public function handle(array $data): void
     {
@@ -17,7 +17,7 @@ class EasyTranslate_Connector_Model_Callback_PriceApprovalHandler
         }
         $project->setData('price', $response->getPrice());
         $project->setData('currency', $response->getCurrency());
-        $project->setData('status', EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL);
+        $project->setData('status', EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL_REQUEST);
         $project->save();
     }
 }

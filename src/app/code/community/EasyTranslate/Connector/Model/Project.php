@@ -77,6 +77,6 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
     public function requiresPriceApproval(): bool
     {
         return $this->getId()
-            && $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL;
+            && $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL_REQUEST;
     }
 }

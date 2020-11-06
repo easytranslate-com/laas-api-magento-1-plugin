@@ -29,7 +29,7 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
         try {
             switch ($this->_params['event']) {
                 case Event::PRICE_APPROVAL_NEEDED:
-                    Mage::getModel('easytranslate/callback_priceApprovalHandler')->handle($this->_params);
+                    Mage::getModel('easytranslate/callback_priceApprovalRequestHandler')->handle($this->_params);
                     break;
                 case Event::TASK_COMPLETED:
                     Mage::getModel('easytranslate/callback_taskCompletedHandler')->handle($this->_params);
