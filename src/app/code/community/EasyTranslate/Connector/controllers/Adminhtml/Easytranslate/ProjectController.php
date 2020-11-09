@@ -189,10 +189,49 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $configuration = Mage::getModel('easytranslate/config')->getApiConfiguration();
         $projectApi    = new ProjectApi($configuration);
         try {
-            $projectApi->sendProject($project);
+            $projectResponse = $projectApi->sendProject($project);
             $magentoProject->setData('status', EasyTranslate_Connector_Model_Source_Status::SENT);
+            $magentoProject->setData('external_id', $projectResponse->getId());
+            $magentoProject->setData('price', $projectResponse->getPrice());
+            $magentoProject->setData('currency', $projectResponse->getCurrency());
             $magentoProject->save();
             $message = $this->_getHelper()->__('The project has successfully been sent to EasyTranslate.');
+            $this->_getSession()->addSuccess($message);
+        } catch (ApiException $exception) {
+            $this->_getSession()->addError($this->_getHelper()->__($exception->getMessage()));
+        }
+        $this->_redirectReferer();
+    }
+
+    public function acceptPriceAction(): void
+    {
+        $magentoProject = $this->_initProject();
+        $project        = Mage::getModel('easytranslate/bridge_project', $magentoProject);
+        $configuration  = Mage::getModel('easytranslate/config')->getApiConfiguration();
+        $projectApi     = new ProjectApi($configuration);
+        try {
+            $projectApi->acceptPrice($project);
+            $magentoProject->setData('status', EasyTranslate_Connector_Model_Source_Status::PRICE_ACCEPTED);
+            $magentoProject->save();
+            $message = $this->_getHelper()->__('The price of the project has successfully been accepted.');
+            $this->_getSession()->addSuccess($message);
+        } catch (ApiException $exception) {
+            $this->_getSession()->addError($this->_getHelper()->__($exception->getMessage()));
+        }
+        $this->_redirectReferer();
+    }
+
+    public function declinePriceAction(): void
+    {
+        $magentoProject = $this->_initProject();
+        $project        = Mage::getModel('easytranslate/bridge_project', $magentoProject);
+        $configuration  = Mage::getModel('easytranslate/config')->getApiConfiguration();
+        $projectApi     = new ProjectApi($configuration);
+        try {
+            $projectApi->declinePrice($project);
+            $magentoProject->setData('status', EasyTranslate_Connector_Model_Source_Status::PRICE_DECLINED);
+            $magentoProject->save();
+            $message = $this->_getHelper()->__('The price of the project has successfully been declined.');
             $this->_getSession()->addSuccess($message);
         } catch (ApiException $exception) {
             $this->_getSession()->addError($this->_getHelper()->__($exception->getMessage()));
@@ -205,8 +244,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         // TODO check if project can be edited
         $projectId = $this->getRequest()->getParam('project_id');
         if (!$projectId) {
-            Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()
-                ->__('Unable to find a project to delete.'));
+            $this->_getSession()->addError($this->_getHelper()->__('Unable to find a project to delete.'));
             $this->_redirect('*/*/');
 
             return;
@@ -215,11 +253,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             $project = Mage::getModel('easytranslate/project');
             $project->load($projectId);
             $project->delete();
-            Mage::getSingleton('adminhtml/session')->addSuccess($this->_getHelper()
-                ->__('The project has been deleted.'));
+            $this->_getSession()->addSuccess($this->_getHelper()->__('The project has been deleted.'));
             $this->_redirect('*/*/');
         } catch (Exception $e) {
-            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            $this->_getSession()->addError($e->getMessage());
             $this->_redirect('*/*/edit', ['block_id' => $projectId]);
         }
     }
@@ -230,8 +267,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $projectIds = $this->getRequest()->getParam('project_ids');
 
         if (!is_array($projectIds)) {
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('easytranslate')
-                ->__('Please select project(s).'));
+            $this->_getSession()->addError(Mage::helper('easytranslate')->__('Please select project(s).'));
             $this->_redirect('*/*/index');
 
             return;
@@ -242,13 +278,13 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
                 $model = Mage::getModel('easytranslate/project')->load($projectId);
                 $model->delete();
             }
-            Mage::getSingleton('adminhtml/session')->addSuccess(
-                Mage::helper('adminhtml')->__('Total of %d record(s) have been deleted.', count($projectIds))
+            $this->_getSession()->addSuccess(Mage::helper('adminhtml')
+                ->__('Total of %d record(s) have been deleted.', count($projectIds))
             );
         } catch (Mage_Core_Exception $e) {
-            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            $this->_getSession()->addError($e->getMessage());
         } catch (Exception $e) {
-            Mage::getSingleton('adminhtml/session')
+            $this->_getSession()
                 ->addException($e, Mage::helper('adminhtml')->__('An error occurred while deleting record(s).'));
         }
 

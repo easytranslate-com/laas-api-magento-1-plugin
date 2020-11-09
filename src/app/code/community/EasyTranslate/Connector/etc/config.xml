@@ -95,6 +95,17 @@
             </modules>
         </translate>
     </adminhtml>
+    <frontend>
+        <routers>
+            <easytranslate>
+                <use>standard</use>
+                <args>
+                    <module>EasyTranslate_Connector</module>
+                    <frontName>easytranslate</frontName>
+                </args>
+            </easytranslate>
+        </routers>
+    </frontend>
     <default>
         <easytranslate>
             <api>

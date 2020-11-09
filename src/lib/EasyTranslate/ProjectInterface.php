@@ -6,6 +6,8 @@ namespace EasyTranslate;
 
 interface ProjectInterface
 {
+    public function getId(): string;
+
     public function getTeam(): string;
 
     public function getSourceLanguage(): string;

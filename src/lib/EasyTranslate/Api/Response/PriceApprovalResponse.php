@@ -4,29 +4,30 @@ declare(strict_types=1);
 
 namespace EasyTranslate\Api\Response;
 
-class CreateProjectResponse extends AbstractResponse
+class PriceApprovalResponse extends AbstractResponse
 {
     /**
      * @var string
      */
-    private $id;
+    private $id = '';
 
     /**
      * @var float
      */
-    private $price;
+    private $price = 0.0;
 
     /**
      * @var string
      */
-    private $currency;
+    private $currency = '';
 
     public function mapFields(array $data): void
     {
         if (isset($data['data']['type'], $data['data']['id']) && $data['data']['type'] === 'project') {
             $this->id = $data['data']['id'];
             if (isset($data['data']['attributes']['price'])) {
-                $this->price    = (float)$data['data']['attributes']['price']['amount'];
+                $priceInCents   = (int)$data['data']['attributes']['price']['amount'];
+                $this->price    = (float)$priceInCents / 100;
                 $this->currency = $data['data']['attributes']['price']['currency'];
             }
         }
@@ -38,12 +39,12 @@ class CreateProjectResponse extends AbstractResponse
         return $this->id;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    public function getCurrency(): ?string
+    public function getCurrency(): string
     {
         return $this->currency;
     }

@@ -13,6 +13,8 @@ $projectTable = $installer->getConnection()
         'nullable' => false,
         'unsigned' => true
     ], 'Project ID')
+    ->addColumn('external_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [], 'External ID')
+    ->addColumn('secret', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [], 'Secret')
     ->addColumn('name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [
         'nullable' => false
     ], 'Name')
@@ -30,6 +32,8 @@ $projectTable = $installer->getConnection()
     ->addColumn('currency', Varien_Db_Ddl_Table::TYPE_TEXT, 3, [], 'Currency')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Created At')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Updated At')
+    ->addIndex($installer->getIdxName('easytranslate/project', 'external_id'), ['external_id'],
+        ['type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE])
     ->addForeignKey(
         $installer->getFkName('easytranslate/project', 'source_store_id', 'core/store', 'store_id'),
         'source_store_id',
