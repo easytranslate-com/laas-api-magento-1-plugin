@@ -231,7 +231,7 @@ $installer->getConnection()->createTable($projectCmsPageTable);
 
 $projectQueueTable = $installer->getConnection()
     ->newTable($installer->getTable('easytranslate/task_queue'))
-    ->addColumn('item_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
+    ->addColumn('task_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'identity' => true,
         'primary'  => true,
         'nullable' => false,
