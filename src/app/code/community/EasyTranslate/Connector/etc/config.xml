@@ -66,6 +66,19 @@
             </controller_front_init_before>
         </events>
     </global>
+    <crontab>
+        <jobs>
+            <easytranslate_import>
+                <schedule>
+                    <!-- TODO think about proper schedule -->
+                    <cron_expr>*/20 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>easytranslate/cron_handler::handle</model>
+                </run>
+            </easytranslate_import>
+        </jobs>
+    </crontab>
     <admin>
         <routers>
             <adminhtml>
