@@ -23,6 +23,7 @@ class CreateProjectResponse extends AbstractResponse
 
     public function mapFields(array $data): void
     {
+        // TODO probably we should return a ProjectInterface here
         if (isset($data['data']['type'], $data['data']['id']) && $data['data']['type'] === 'project') {
             $this->id = $data['data']['id'];
             if (isset($data['data']['attributes']['price'])) {
