@@ -42,9 +42,9 @@
                     <project_cms_page>
                         <table>easytranslate_project_cms_page</table>
                     </project_cms_page>
-                    <project_queue>
-                        <table>easytranslate_project_queue</table>
-                    </project_queue>
+                    <task_queue>
+                        <table>easytranslate_task_queue</table>
+                    </task_queue>
                 </entities>
             </easytranslate_resource>
         </models>

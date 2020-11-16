@@ -9,7 +9,7 @@ class PriceApprovalResponse extends AbstractResponse
     /**
      * @var string
      */
-    private $id = '';
+    private $projectId = '';
 
     /**
      * @var float
@@ -24,7 +24,7 @@ class PriceApprovalResponse extends AbstractResponse
     public function mapFields(array $data): void
     {
         if (isset($data['data']['type'], $data['data']['id']) && $data['data']['type'] === 'project') {
-            $this->id = $data['data']['id'];
+            $this->projectId = $data['data']['id'];
             if (isset($data['data']['attributes']['price'])) {
                 $priceInCents   = (int)$data['data']['attributes']['price']['amount'];
                 $this->price    = (float)$priceInCents / 100;
@@ -34,9 +34,9 @@ class PriceApprovalResponse extends AbstractResponse
         parent::mapFields($data);
     }
 
-    public function getId(): string
+    public function getProjectId(): string
     {
-        return $this->id;
+        return $this->projectId;
     }
 
     public function getPrice(): float
