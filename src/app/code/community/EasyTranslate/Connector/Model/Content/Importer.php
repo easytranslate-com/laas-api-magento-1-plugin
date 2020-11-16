@@ -7,6 +7,7 @@ class EasyTranslate_Connector_Model_Content_Importer
     protected const IMPORTERS
         = [
             EasyTranslate_Connector_Model_Content_Generator_CmsBlock::ENTITY_CODE => 'easytranslate/content_importer_cmsBlock',
+            EasyTranslate_Connector_Model_Content_Generator_CmsPage::ENTITY_CODE  => 'easytranslate/content_importer_cmsPage',
         ];
 
     public function import(array $data, int $sourceStoreId, array $targetStoreIds): void
