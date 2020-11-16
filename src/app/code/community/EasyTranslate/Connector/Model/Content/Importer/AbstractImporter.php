@@ -30,7 +30,7 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
         $this->_bulkSave();
     }
 
-    abstract protected function _createObjects(string $lastId, array $attributes, array $storeIds): void;
+    abstract protected function _createObjects(string $id, array $attributes, array $storeIds): void;
 
     protected function _bulkSave(): void
     {
