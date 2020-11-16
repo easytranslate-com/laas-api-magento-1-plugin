@@ -9,7 +9,7 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
      */
     protected $_objects;
 
-    public function import(array $data, array $storeIds): void
+    public function import(array $data, int $sourceStoreId, array $targetStoreIds): void
     {
         $lastId     = null;
         $attributes = [];
@@ -17,7 +17,7 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
             $delimiter = EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator::KEY_SEPARATOR;
             [$entityCode, $currentId, $attributeCode] = explode($delimiter, $key);
             if ($lastId !== null && $currentId !== $lastId) {
-                $this->_createObjects($lastId, $attributes, $storeIds);
+                $this->_createObjects($lastId, $attributes, $sourceStoreId, $targetStoreIds);
                 $attributes = [];
             }
             $attributes[$attributeCode] = $content;
@@ -25,12 +25,17 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
         }
         // make sure to import the last entity as well
         if ($lastId !== null) {
-            $this->_createObjects($lastId, $attributes, $storeIds);
+            $this->_createObjects($lastId, $attributes, $sourceStoreId, $targetStoreIds);
         }
         $this->_bulkSave();
     }
 
-    abstract protected function _createObjects(string $id, array $attributes, array $storeIds): void;
+    abstract protected function _createObjects(
+        string $id,
+        array $attributes,
+        int $sourceStoreId,
+        array $targetStoreIds
+    ): void;
 
     protected function _bulkSave(): void
     {
