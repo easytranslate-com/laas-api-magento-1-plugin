@@ -28,6 +28,7 @@ class TaskCompletedResponse extends AbstractResponse
 
     public function mapFields(array $data): void
     {
+        // TODO probably we should return a TaskInterface here
         if (isset($data['data']['type'], $data['data']['id']) && $data['data']['type'] === 'task') {
             $this->taskId         = $data['data']['id'];
             $this->projectId      = $data['data']['attributes']['project_id'];

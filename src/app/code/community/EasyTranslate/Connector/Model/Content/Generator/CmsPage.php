@@ -7,6 +7,11 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsPage
 {
     public const ENTITY_CODE = 'cms_page';
 
+    /**
+     * @var string
+     */
+    protected $_idField = 'page_id';
+
     public function __construct()
     {
         parent::__construct();

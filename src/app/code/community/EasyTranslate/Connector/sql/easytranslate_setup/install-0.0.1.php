@@ -242,6 +242,8 @@ $projectQueueTable = $installer->getConnection()
         'nullable' => false,
         'unsigned' => true
     ], 'Project ID')
+    // must not be unique, because we may import the same language to multiple stores, which results in multiple tasks
+    ->addColumn('external_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, [], 'External ID')
     ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, [
         'primary'  => true,
         'nullable' => false,

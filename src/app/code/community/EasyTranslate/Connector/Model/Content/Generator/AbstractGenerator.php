@@ -18,6 +18,11 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
      */
     protected $_attributeCodes;
 
+    /**
+     * @var string
+     */
+    protected $_idField = 'entity_id';
+
     public function __construct()
     {
         $this->_config = Mage::getModel('easytranslate/config');
@@ -47,7 +52,7 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
             if ($value === null || $value === '') {
                 continue;
             }
-            $keyParts      = [static::ENTITY_CODE, $model->getId(), $attributeCode];
+            $keyParts      = [static::ENTITY_CODE, $model->getData($this->_idField), $attributeCode];
             $key           = implode(self::KEY_SEPARATOR, $keyParts);
             $content[$key] = $value;
         }
