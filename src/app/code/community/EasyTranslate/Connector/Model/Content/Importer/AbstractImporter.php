@@ -21,6 +21,11 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
                 $attributes = [];
             }
             $attributes[$attributeCode] = $content;
+            $lastId                     = $currentId;
+        }
+        // make sure to import the last entity as well
+        if ($lastId !== null) {
+            $this->_createObjects($lastId, $attributes, $storeIds);
         }
         $this->_bulkSave();
     }
