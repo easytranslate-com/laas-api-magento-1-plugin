@@ -13,7 +13,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
             if (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
                 $this->_handleExistingUniqueBlock($block, $attributes);
             } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
-                $this->_handleExistingNonUniqueBlock($block, $attributes, (int)$targetStoreId);
+                $this->_handleExistingBlockWithMultipleStores($block, $attributes, (int)$targetStoreId);
             } else {
                 // this should rarely happen - only if the block from the source store has been deleted in the meantime
                 $this->_handleNonExistingBlock($block, $attributes, $targetStoreId);
@@ -36,7 +36,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         $this->_objects[] = $block;
     }
 
-    protected function _handleExistingNonUniqueBlock(
+    protected function _handleExistingBlockWithMultipleStores(
         Mage_Cms_Model_Block $block,
         array $newData,
         int $targetStoreId

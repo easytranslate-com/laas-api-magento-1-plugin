@@ -13,7 +13,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
             if (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
                 $this->_handleExistingUniquePage($page, $attributes);
             } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
-                $this->_handleExistingNonUniquePage($page, $attributes, (int)$targetStoreId);
+                $this->_handleExistingPageWithMultipleStores($page, $attributes, (int)$targetStoreId);
             } else {
                 // this should rarely happen - only if the page from the source store has been deleted in the meantime
                 $this->_handleNonExistingPage($page, $attributes, $targetStoreId);
@@ -36,7 +36,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         $this->_objects[] = $page;
     }
 
-    protected function _handleExistingNonUniquePage(
+    protected function _handleExistingPageWithMultipleStores(
         Mage_Cms_Model_Page $page,
         array $newData,
         int $targetStoreId
