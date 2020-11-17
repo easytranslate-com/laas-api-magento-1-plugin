@@ -8,6 +8,7 @@ class EasyTranslate_Connector_Model_Content_Importer
         = [
             EasyTranslate_Connector_Model_Content_Generator_CmsBlock::ENTITY_CODE => 'easytranslate/content_importer_cmsBlock',
             EasyTranslate_Connector_Model_Content_Generator_CmsPage::ENTITY_CODE  => 'easytranslate/content_importer_cmsPage',
+            EasyTranslate_Connector_Model_Content_Generator_Product::ENTITY_CODE  => 'easytranslate/content_importer_product',
         ];
 
     public function import(array $data, int $sourceStoreId, array $targetStoreIds): void
