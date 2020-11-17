@@ -41,7 +41,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         array $newData,
         int $targetStoreId
     ): void {
-        // first remove the current store ID from the existing CMS page
+        // first remove the current store ID from the existing CMS page, because pages must be unique per store
         $storeIds    = (array)$page->getData('store_id');
         $newStoreIds = array_diff($storeIds, [$targetStoreId]);
         $page->setData('store_id', $newStoreIds);

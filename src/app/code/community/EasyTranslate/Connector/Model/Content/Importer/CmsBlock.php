@@ -41,7 +41,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         array $newData,
         int $targetStoreId
     ): void {
-        // first remove the current store ID from the existing CMS block
+        // first remove the current store ID from the existing CMS block, because blocks must be unique per store
         $storeIds    = (array)$block->getData('stores');
         $newStoreIds = array_diff($storeIds, [$targetStoreId]);
         $block->setData('stores', $newStoreIds);
