@@ -8,11 +8,11 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
     protected function _createObjects(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
     {
         foreach ($targetStoreIds as $targetStoreId) {
-            $page           = $this->_loadExistingPage($id, $sourceStoreId);
-            $targetStoreIds = (array)$page->getData('store_id');
-            if (in_array($targetStoreId, $targetStoreIds, false) && count($targetStoreIds) === 1) {
+            $page     = $this->_loadExistingPage($id, $sourceStoreId);
+            $storeIds = (array)$page->getData('store_id');
+            if (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
                 $this->_handleExistingUniquePage($page, $attributes);
-            } elseif (in_array($targetStoreId, $targetStoreIds, false) && count($targetStoreIds) > 1) {
+            } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
                 $this->_handleExistingNonUniquePage($page, $attributes, (int)$targetStoreId);
             } else {
                 // this should rarely happen - only if the page from the source store has been deleted in the meantime

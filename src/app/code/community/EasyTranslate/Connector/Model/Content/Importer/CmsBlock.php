@@ -8,11 +8,11 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
     protected function _createObjects(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
     {
         foreach ($targetStoreIds as $targetStoreId) {
-            $block          = $this->_loadExistingBlock($id, $sourceStoreId);
-            $targetStoreIds = (array)$block->getData('stores');
-            if (in_array($targetStoreId, $targetStoreIds, false) && count($targetStoreIds) === 1) {
+            $block    = $this->_loadExistingBlock($id, $sourceStoreId);
+            $storeIds = (array)$block->getData('stores');
+            if (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
                 $this->_handleExistingUniqueBlock($block, $attributes);
-            } elseif (in_array($targetStoreId, $targetStoreIds, false) && count($targetStoreIds) > 1) {
+            } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
                 $this->_handleExistingNonUniqueBlock($block, $attributes, (int)$targetStoreId);
             } else {
                 // this should rarely happen - only if the block from the source store has been deleted in the meantime
