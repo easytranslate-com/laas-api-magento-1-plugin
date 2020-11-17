@@ -21,8 +21,9 @@ class EasyTranslate_Connector_Model_Cron_Handler
         }
         $project       = $task->getProject();
         $targetContent = $this->_loadTargetContent($project, $task);
+        $sourceStoreId = (int)$project->getData('source_store_id');
         $targetStores  = $project->getData('target_stores');
-        Mage::getModel('easytranslate/content_importer')->import($targetContent, $targetStores);
+        Mage::getModel('easytranslate/content_importer')->import($targetContent, $sourceStoreId, $targetStores);
         $task->setData('processed_at', Mage::getSingleton('core/date')->gmtDate());
         $task->save();
     }
