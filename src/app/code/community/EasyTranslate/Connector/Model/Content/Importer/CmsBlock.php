@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
-    extends EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
+    extends EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporter
 {
-    protected function _createObjects(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
+    protected function _importObject(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
     {
         foreach ($targetStoreIds as $targetStoreId) {
             $block    = $this->_loadExistingBlock($id, $sourceStoreId);
