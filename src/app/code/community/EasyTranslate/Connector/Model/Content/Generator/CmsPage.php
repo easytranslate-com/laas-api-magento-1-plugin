@@ -23,6 +23,7 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsPage
         return Mage::getModel('cms/page')
             ->getCollection()
             ->addFieldToSelect($this->_attributeCodes)
+            ->addFieldToSelect($this->_idField)
             ->addFieldToFilter('page_id', ['in' => $modelIds]);
     }
 }
