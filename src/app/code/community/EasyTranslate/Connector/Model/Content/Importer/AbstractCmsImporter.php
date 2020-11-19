@@ -25,6 +25,9 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporte
 
     protected function _bulkSave(): void
     {
+        if ($this->_objects === null) {
+            return;
+        }
         $transaction = Mage::getModel('core/resource_transaction');
         foreach ($this->_objects as $object) {
             $transaction->addObject($object);

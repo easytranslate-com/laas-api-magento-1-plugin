@@ -110,21 +110,21 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $project->addData($data);
         $session->setData('form_data', $data);
 
-        if (isset($data['included_products']) && $data['included_products'] && $project->canEditDetails()) {
-            $products = explode(',', $data['included_products']);
+        if (isset($data['included_products']) && $project->canEditDetails()) {
+            $products = $data['included_products'] ? explode(',', $data['included_products']) : [];
             $project->setData('posted_products', $products);
         }
 
-        if (isset($data['included_categories']) && $data['included_categories'] && $project->canEditDetails()) {
-            $categories = explode(',', $data['included_categories']);
+        if (isset($data['included_categories']) && $project->canEditDetails()) {
+            $categories = $data['included_categories'] ? explode(',', $data['included_categories']) : [];
             $project->setData('posted_categories', $categories);
         }
-        if (isset($data['included_cmsBlocks']) && $data['included_cmsBlocks'] && $project->canEditDetails()) {
-            $cmsBlocks = explode(',', $data['included_cmsBlocks']);
+        if (isset($data['included_cmsBlocks']) && $project->canEditDetails()) {
+            $cmsBlocks = $data['included_cmsBlocks'] ? explode(',', $data['included_cmsBlocks']) : [];
             $project->setData('posted_cmsBlocks', $cmsBlocks);
         }
-        if (isset($data['included_cmsPages']) && $data['included_cmsPages'] && $project->canEditDetails()) {
-            $cmsPages = explode(',', $data['included_cmsPages']);
+        if (isset($data['included_cmsPages']) && $project->canEditDetails()) {
+            $cmsPages = $data['included_cmsPages'] ? explode(',', $data['included_cmsPages']) : [];
             $project->setData('posted_cmsPages', $cmsPages);
         }
 

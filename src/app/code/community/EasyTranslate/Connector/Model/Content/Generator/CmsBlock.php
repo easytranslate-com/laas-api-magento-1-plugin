@@ -10,7 +10,7 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsBlock
     /**
      * @var string
      */
-    protected $_idField = 'block_id';
+    protected $_idField = 'identifier';
 
     public function __construct()
     {
@@ -23,6 +23,7 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsBlock
         return Mage::getModel('cms/block')
             ->getCollection()
             ->addFieldToSelect($this->_attributeCodes)
+            ->addFieldToSelect($this->_idField)
             ->addFieldToFilter('block_id', ['in' => $modelIds]);
     }
 }

@@ -6,6 +6,11 @@ use EasyTranslate\Api\TaskApi;
 
 class EasyTranslate_Connector_Model_Cron_Handler
 {
+    public function __construct()
+    {
+        EasyTranslate_Connector_Model_Autoloader::createAndRegister();
+    }
+
     public function handle(): void
     {
         /** @var EasyTranslate_Connector_Model_Task_Queue $task */

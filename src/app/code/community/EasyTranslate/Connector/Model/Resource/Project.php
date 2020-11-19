@@ -79,7 +79,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newProducts = $project->getData('posted_products');
 
         if ($newProducts === null) {
-            $newProducts = [];
+            return;
         }
 
         $oldProducts = $this->getProducts($project);
@@ -118,7 +118,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newCategories = $project->getData('posted_categories');
 
         if ($newCategories === null) {
-            $newCategories = [];
+            return;
         }
 
         $oldCategories = $this->getCategories($project);
@@ -156,7 +156,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newCmsBlocks = $project->getData('posted_cmsBlocks');
 
         if ($newCmsBlocks === null) {
-            $newCmsBlocks = [];
+            return;
         }
 
         $oldCmsBlocks = $this->getCmsBlocks($project);
@@ -194,7 +194,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $newCmsPages = $project->getData('posted_cmsPages');
 
         if ($newCmsPages === null) {
-            $newCmsPages = [];
+            return;
         }
 
         $oldCmsPages = $this->getCmsPages($project);

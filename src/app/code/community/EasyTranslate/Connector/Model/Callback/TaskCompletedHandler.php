@@ -20,6 +20,7 @@ class EasyTranslate_Connector_Model_Callback_TaskCompletedHandler
         foreach ($targetStoreIds as $targetStoreId) {
             $task = Mage::getModel('easytranslate/task_queue');
             $task->setData('project_id', $project->getId());
+            $task->setData('external_id', $response->getTaskId());
             $task->setData('store_id', $targetStoreId);
             $task->setData('content_link', $response->getTargetContent());
             $task->save();
@@ -30,7 +31,7 @@ class EasyTranslate_Connector_Model_Callback_TaskCompletedHandler
         EasyTranslate_Connector_Model_Project $project,
         string $targetLanguage
     ): array {
-        $targetMagentoLocale = Mage::getModel('easytranslate/locale_mapper')
+        $targetMagentoLocale = Mage::getModel('easytranslate/locale_targetMapper')
             ->mapExternalCodeToMagentoCode($targetLanguage);
         $storeIds            = [];
         $potentialStoreIds   = $project->getData('target_stores');
