@@ -10,7 +10,7 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsPage
     /**
      * @var string
      */
-    protected $_idField = 'page_id';
+    protected $_idField = 'identifier';
 
     public function __construct()
     {
