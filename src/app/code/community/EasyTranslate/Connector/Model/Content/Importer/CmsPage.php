@@ -8,7 +8,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
     protected function _importObject(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
     {
         foreach ($targetStoreIds as $targetStoreId) {
-            $page     = $this->_loadBasePage($id, $sourceStoreId, $targetStoreId);
+            $page     = $this->_loadBasePage($id, $sourceStoreId, (int)$targetStoreId);
             $storeIds = (array)$page->getData('store_id');
             if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
                 $this->_handleExistingGlobalPage($page, $attributes, (int)$targetStoreId);

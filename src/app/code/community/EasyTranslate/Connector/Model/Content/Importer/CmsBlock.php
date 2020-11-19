@@ -8,7 +8,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
     protected function _importObject(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
     {
         foreach ($targetStoreIds as $targetStoreId) {
-            $block    = $this->_loadBaseBlock($id, $sourceStoreId, $targetStoreId);
+            $block    = $this->_loadBaseBlock($id, $sourceStoreId, (int)$targetStoreId);
             $storeIds = (array)$block->getData('stores');
             if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
                 $this->_handleExistingGlobalBlock($block, $attributes, (int)$targetStoreId);
