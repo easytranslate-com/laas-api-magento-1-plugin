@@ -13,6 +13,8 @@ class EasyTranslate_Connector_Model_Content_Importer_Category
             /** @var Mage_Catalog_Model_Resource_Category $categoryResource */
             $categoryResource = $category->getResource();
             foreach ($attributes as $attributeCode => $attributeValue) {
+                // using Mage_Catalog_Model_Category::save unchecks all "Use Default Value" flags
+                // hence, save each attribute individually to make sure only these ones are changed
                 $categoryResource->saveAttribute($category, $attributeCode);
             }
         }
