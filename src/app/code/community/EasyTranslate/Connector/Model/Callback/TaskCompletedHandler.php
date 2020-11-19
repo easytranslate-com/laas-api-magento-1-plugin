@@ -30,7 +30,7 @@ class EasyTranslate_Connector_Model_Callback_TaskCompletedHandler
         EasyTranslate_Connector_Model_Project $project,
         string $targetLanguage
     ): array {
-        $targetMagentoLocale = Mage::getModel('easytranslate/locale_mapper')
+        $targetMagentoLocale = Mage::getModel('easytranslate/locale_targetMapper')
             ->mapExternalCodeToMagentoCode($targetLanguage);
         $storeIds            = [];
         $potentialStoreIds   = $project->getData('target_stores');
