@@ -18,6 +18,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
                 $this->_handleExistingPageWithMultipleStores($page, $attributes, (int)$targetStoreId);
             } else {
                 // this should rarely happen - only if the page from the source store has been deleted in the meantime
+                $page->setIdentifier($id);
                 $this->_handleNonExistingPage($page, $attributes, (int)$targetStoreId);
             }
         }

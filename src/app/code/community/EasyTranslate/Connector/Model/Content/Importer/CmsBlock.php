@@ -18,6 +18,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
                 $this->_handleExistingBlockWithMultipleStores($block, $attributes, (int)$targetStoreId);
             } else {
                 // this should rarely happen - only if the block from the source store has been deleted in the meantime
+                $block->setIdentifier($id);
                 $this->_handleNonExistingBlock($block, $attributes, (int)$targetStoreId);
             }
         }
