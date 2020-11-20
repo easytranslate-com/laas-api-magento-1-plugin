@@ -44,8 +44,8 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
 
         $fieldset->addField('name', 'text', [
             'name'     => 'name',
-            'label'    => $this->_getHelper()->__('Name'),
-            'title'    => $this->_getHelper()->__('Name'),
+            'label'    => $this->_getHelper()->__('Project Name'),
+            'title'    => $this->_getHelper()->__('Project Name'),
             'required' => true,
             'disabled' => !$canEdit,
         ]);
@@ -58,8 +58,8 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         }
         $fieldset->addField('team', 'select', [
             'name'     => 'team',
-            'label'    => $this->_getHelper()->__('Team'),
-            'title'    => $this->_getHelper()->__('Team'),
+            'label'    => $this->_getHelper()->__('Account'),
+            'title'    => $this->_getHelper()->__('Account'),
             'required' => true,
             'values'   => $teamValues,
             'disabled' => !$canEdit,
@@ -71,8 +71,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
                 'label' => $this->_getHelper()->__('Status'),
             ]);
 
+            $bold = false;
+            if ($project->getData('status') === EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL_REQUEST) {
+                $bold = true;
+            }
             $fieldset->addField('price', 'label', [
                 'label' => $this->_getHelper()->__('Price'),
+                'bold'  => $bold,
             ]);
         }
 
@@ -103,7 +108,9 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             $values['included_categories'] = implode(',', $project->getCategories());
             $values['included_cmsBlocks']  = implode(',', $project->getCmsBlocks());
             $values['included_cmsPages']   = implode(',', $project->getCmsPages());
-            if (isset($values['price'], $values['currency'])) {
+            if (isset($values['price']) && $values['price'] === '0.0000') {
+                $values['price'] = $this->_getHelper()->__('tbd');
+            } elseif (isset($values['price'], $values['currency'])) {
                 $currency        = Mage::app()->getLocale()->currency($values['currency']);
                 $values['price'] = $currency->toCurrency($values['price']);
             }

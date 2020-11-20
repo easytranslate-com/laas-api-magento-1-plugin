@@ -92,6 +92,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         $newPage->addData($newData);
         // make sure that a new page is created!
         $newPage->unsetData('page_id');
+        $newPage->unsetData('creation_time');
         $newPage->setData('store_id', [$targetStoreId]);
         $newPage->setData('stores', [$targetStoreId]);
         $this->_objects[] = $newPage;
