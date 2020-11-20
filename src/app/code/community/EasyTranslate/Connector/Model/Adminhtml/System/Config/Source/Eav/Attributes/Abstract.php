@@ -12,7 +12,6 @@ abstract class EasyTranslate_Connector_Model_Adminhtml_System_Config_Source_Eav_
     {
         $entityType = Mage::getSingleton('eav/config')->getEntityType($entityTypeCode);
 
-        // TODO think about how to handle select / multiselect attributes
         return Mage::getResourceModel('eav/entity_attribute_collection')
             ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea']])
             ->addFieldToFilter('attribute_code', ['nin' => static::EXCLUDED_ATTRIBUTES])
