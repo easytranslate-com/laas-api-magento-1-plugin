@@ -3,9 +3,9 @@ varienGrid.prototype.easyTranslateRowClickCallback = function (grid, event) {
     if (!checkbox.matches('input')) {
         // toggle the checkbox manually on row click
         checkbox = this.retrieveCheckbox(checkbox);
-        checkbox.checked = !checkbox.checked;
+        grid.setCheckboxChecked(checkbox, !checkbox.checked);
     }
-    this.updateProjectEntities(checkbox.value, checkbox.checked);
+    grid.updateProjectEntities(checkbox.value, checkbox.checked);
 };
 
 varienGrid.prototype.retrieveCheckbox = function (element) {
@@ -14,6 +14,15 @@ varienGrid.prototype.retrieveCheckbox = function (element) {
         row = element.parentNode;
     }
     return row.querySelector('.in-project');
+};
+
+varienGrid.prototype.easyTranslateCheckboxCheckCallback = function (grid, element, checked) {
+    let entityId = element.value;
+    // this excludes the "Select All" checkbox
+    if (isNaN(entityId)) {
+        return;
+    }
+    grid.updateProjectEntities(entityId, checked);
 };
 
 varienGrid.prototype.updateProjectEntities = function (entityId, included) {
