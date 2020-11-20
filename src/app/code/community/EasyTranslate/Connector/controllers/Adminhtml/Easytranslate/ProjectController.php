@@ -241,7 +241,6 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
     public function deleteAction(): void
     {
-        // TODO check if project can be edited
         $projectId = $this->getRequest()->getParam('project_id');
         if (!$projectId) {
             $this->_getSession()->addError($this->_getHelper()->__('Unable to find a project to delete.'));
@@ -252,18 +251,22 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         try {
             $project = Mage::getModel('easytranslate/project');
             $project->load($projectId);
+            if (!$project->canEditDetails()) {
+                $message = $this->_getHelper()
+                    ->__('This project cannot be deleted, because it has already been sent to EasyTranslate.');
+                Mage::throwException($message);
+            }
             $project->delete();
             $this->_getSession()->addSuccess($this->_getHelper()->__('The project has been deleted.'));
             $this->_redirect('*/*/');
         } catch (Exception $e) {
             $this->_getSession()->addError($e->getMessage());
-            $this->_redirect('*/*/edit', ['block_id' => $projectId]);
+            $this->_redirect('*/*/edit', ['project_id' => $projectId]);
         }
     }
 
     public function massDeleteAction(): void
     {
-        // TODO check if project can be edited
         $projectIds = $this->getRequest()->getParam('project_ids');
 
         if (!is_array($projectIds)) {
@@ -274,13 +277,27 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
 
         try {
+            $addWarning              = false;
+            $numberOfDeletedProjects = 0;
             foreach ($projectIds as $projectId) {
-                $model = Mage::getModel('easytranslate/project')->load($projectId);
-                $model->delete();
+                $project = Mage::getModel('easytranslate/project')->load($projectId);
+                if ($project->canEditDetails()) {
+                    $project->delete();
+                    $numberOfDeletedProjects++;
+                } else {
+                    $addWarning = true;
+                }
             }
-            $this->_getSession()->addSuccess(Mage::helper('adminhtml')
-                ->__('Total of %d record(s) have been deleted.', count($projectIds))
-            );
+            if ($addWarning) {
+                $message = $this->_getHelper()
+                    ->__('One or more projects could not be deleted, because they have already been sent to EasyTranslate.');
+                $this->_getSession()->addWarning($message);
+            }
+            if ($numberOfDeletedProjects > 0) {
+                $this->_getSession()->addSuccess(Mage::helper('adminhtml')
+                    ->__('Total of %d record(s) have been deleted.', $numberOfDeletedProjects)
+                );
+            }
         } catch (Mage_Core_Exception $e) {
             $this->_getSession()->addError($e->getMessage());
         } catch (Exception $e) {
