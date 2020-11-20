@@ -11,6 +11,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
         $this->setId('categories');
         $this->setDefaultSort('entity_id');
         $this->setData('row_click_callback', $this->getJsObjectName() . '.easyTranslateRowClickCallback');
+        $this->setData('checkbox_check_callback', $this->getJsObjectName() . '.easyTranslateCheckboxCheckCallback');
     }
 
     protected function _addColumnFilterToCollection(
