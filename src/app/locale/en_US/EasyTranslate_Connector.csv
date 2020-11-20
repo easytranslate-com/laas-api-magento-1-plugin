@@ -60,3 +60,5 @@
 "Are you sure you want to decline the price for this project?","Are you sure you want to decline the price for this project?"
 "The price of the project has successfully been accepted.","The price of the project has successfully been accepted."
 "The price of the project has successfully been declined.","The price of the project has successfully been declined."
+"This project cannot be deleted, because it has already been sent to EasyTranslate.","This project cannot be deleted, because it has already been sent to EasyTranslate."
+"One or more projects could not be deleted, because they have already been sent to EasyTranslate.","One or more projects could not be deleted, because they have already been sent to EasyTranslate."
