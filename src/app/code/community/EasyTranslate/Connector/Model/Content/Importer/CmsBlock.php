@@ -90,6 +90,7 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         $newBlock->addData($newData);
         // make sure that a new block is created!
         $newBlock->unsetData('block_id');
+        $newBlock->unsetData('creation_time');
         $newBlock->setData('store_id', [$targetStoreId]);
         $newBlock->setData('stores', [$targetStoreId]);
         $this->_objects[] = $newBlock;
