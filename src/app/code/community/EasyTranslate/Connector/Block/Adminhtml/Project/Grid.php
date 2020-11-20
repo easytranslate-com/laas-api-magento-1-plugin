@@ -34,7 +34,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
 
         $this->addColumn('name',
             [
-                'header' => $this->__('Name'),
+                'header' => $this->__('Project Name'),
                 'index'  => 'name',
             ]
         );
