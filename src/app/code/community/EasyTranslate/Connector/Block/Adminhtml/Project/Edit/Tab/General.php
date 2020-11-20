@@ -71,8 +71,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
                 'label' => $this->_getHelper()->__('Status'),
             ]);
 
+            $bold = false;
+            if ($project->getData('status') === EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL_REQUEST) {
+                $bold = true;
+            }
             $fieldset->addField('price', 'label', [
                 'label' => $this->_getHelper()->__('Price'),
+                'bold'  => $bold,
             ]);
         }
 
