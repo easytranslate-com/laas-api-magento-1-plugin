@@ -45,9 +45,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Products
             $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
             if (!$this->_getProject()->canEditDetails()) {
                 $productIds = $this->_getSelectedProductIds();
-                if (!empty($productIds)) {
-                    $collection->addFieldToFilter('entity_id', ['in' => $productIds]);
-                }
+                $collection->addFieldToFilter('entity_id', ['in' => $productIds]);
             }
         }
 

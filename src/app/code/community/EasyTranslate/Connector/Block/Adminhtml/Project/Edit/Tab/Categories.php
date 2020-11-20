@@ -45,9 +45,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
             $collection->setStore($this->_getProject()->getData('source_store_id'));
             if (!$this->_getProject()->canEditDetails()) {
                 $categoryIds = $this->_getSelectedCategoryIds();
-                if (!empty($categoryIds)) {
-                    $collection->addFieldToFilter('entity_id', ['in' => $categoryIds]);
-                }
+                $collection->addFieldToFilter('entity_id', ['in' => $categoryIds]);
             }
         }
 

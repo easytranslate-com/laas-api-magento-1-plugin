@@ -44,9 +44,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
 
         if ($this->_getProject() && !$this->_getProject()->canEditDetails()) {
             $selectedCmsBlockIds = $this->_getSelectedCmsBlockIds();
-            if (!empty($selectedCmsBlockIds)) {
-                $collection->addFieldToFilter('main_table.block_id', ['in' => $selectedCmsBlockIds]);
-            }
+            $collection->addFieldToFilter('main_table.block_id', ['in' => $selectedCmsBlockIds]);
         }
 
         $this->setCollection($collection);
