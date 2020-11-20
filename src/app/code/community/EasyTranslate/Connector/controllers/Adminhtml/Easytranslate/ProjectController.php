@@ -257,7 +257,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             $this->_redirect('*/*/');
         } catch (Exception $e) {
             $this->_getSession()->addError($e->getMessage());
-            $this->_redirect('*/*/edit', ['block_id' => $projectId]);
+            $this->_redirect('*/*/edit', ['project_id' => $projectId]);
         }
     }
 
