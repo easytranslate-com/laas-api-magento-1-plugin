@@ -43,12 +43,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
             ->addFieldToSelect('creation_time')
             ->addFieldToSelect('update_time');
 
-        if ($this->_getProject()) {
-            if (!$this->_getProject()->canEditDetails()) {
-                $selectedCmsPageIds = $this->_getSelectedCmsPageIds();
-                if (!empty($selectedCmsPageIds)) {
-                    $collection->addFieldToFilter('main_table.page_id', ['in' => $selectedCmsPageIds]);
-                }
+        if ($this->_getProject() && !$this->_getProject()->canEditDetails()) {
+            $selectedCmsPageIds = $this->_getSelectedCmsPageIds();
+            if (!empty($selectedCmsPageIds)) {
+                $collection->addFieldToFilter('main_table.page_id', ['in' => $selectedCmsPageIds]);
             }
         }
 
