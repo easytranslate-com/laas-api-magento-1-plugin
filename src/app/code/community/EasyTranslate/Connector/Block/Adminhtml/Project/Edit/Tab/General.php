@@ -103,7 +103,9 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
             $values['included_categories'] = implode(',', $project->getCategories());
             $values['included_cmsBlocks']  = implode(',', $project->getCmsBlocks());
             $values['included_cmsPages']   = implode(',', $project->getCmsPages());
-            if (isset($values['price'], $values['currency'])) {
+            if (isset($values['price']) && $values['price'] === '0.0000') {
+                $values['price'] = $this->_getHelper()->__('tbd');
+            } elseif (isset($values['price'], $values['currency'])) {
                 $currency        = Mage::app()->getLocale()->currency($values['currency']);
                 $values['price'] = $currency->toCurrency($values['price']);
             }
