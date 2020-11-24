@@ -130,6 +130,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             $session->addWarning($this->_getHelper()
                 ->__('The source store view cannot also be a target store view.'));
         }
+        if (!$this->_validateLocales($project)) {
+            $session->addWarning($this->_getHelper()
+                ->__('Some or all languages are not supported yet :-( Please contact the EasyTranslate support.'));
+        }
     }
 
     protected function _validateStoreViews(array $data): bool
@@ -139,6 +143,27 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
 
         return !in_array($data['source_store_id'], $data['target_stores'], true);
+    }
+
+    protected function _validateLocales(EasyTranslate_Connector_Model_Project $project): bool
+    {
+        $sourceMapper     = Mage::getModel('easytranslate/locale_sourceMapper');
+        $sourceStoreId    = $project->getData('source_store_id');
+        $sourceLocaleCode = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $sourceStoreId);
+        if (!$sourceMapper->isMagentoCodeSupported($sourceLocaleCode)) {
+            return false;
+        }
+
+        $targetMapper   = Mage::getModel('easytranslate/locale_targetMapper');
+        $targetStoreIds = $project->getData('target_stores');
+        foreach ($targetStoreIds as $targetStoreId) {
+            $targetLocaleCode = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $targetStoreId);
+            if (!$targetMapper->isMagentoCodeSupported($targetLocaleCode)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function productGridAction(): void
@@ -181,6 +206,14 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
             return;
         }
+        if (!$this->_validateLocales($magentoProject)) {
+            $message = $this->_getHelper()->__('The project could not be sent to EasyTranslate.');
+            $this->_getSession()->addError($message);
+            $this->_redirectReferer();
+
+            return;
+        }
+
         $project       = Mage::getModel('easytranslate/bridge_project', $magentoProject);
         $configuration = Mage::getModel('easytranslate/config')->getApiConfiguration();
         $projectApi    = new ProjectApi($configuration);
