@@ -74,6 +74,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
                 'type'     => 'currency',
                 'currency' => 'currency',
                 'renderer' => 'easytranslate/adminhtml_widget_grid_column_renderer_currency',
+                'default'  => $this->__('tbd'),
             ]
         );
 
