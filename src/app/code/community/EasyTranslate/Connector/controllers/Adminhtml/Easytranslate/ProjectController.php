@@ -81,10 +81,6 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
 
         try {
             $this->_saveProjectPostData($project, $data);
-            if (!$this->_validateStoreViews($data)) {
-                $session->addWarning($this->_getHelper()
-                    ->__('The source store view cannot also be a target store view.'));
-            }
             $session->addSuccess($this->_getHelper()->__('The project has been saved.'));
         } catch (Mage_Core_Exception $e) {
             $session->addError($e->getMessage());
