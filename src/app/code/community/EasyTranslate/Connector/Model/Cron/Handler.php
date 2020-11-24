@@ -27,7 +27,9 @@ class EasyTranslate_Connector_Model_Cron_Handler
         $project       = $task->getProject();
         $targetContent = $this->_loadTargetContent($project, $task);
         $sourceStoreId = (int)$project->getData('source_store_id');
-        $targetStores  = $project->getData('target_stores');
+        // TODO retrieve correct external locale code
+        $externalTargetLocaleCode = $task->getData('target_language');
+        $targetStores             = $this->_getCorrectTargetStores($project, $externalTargetLocaleCode);
         Mage::getModel('easytranslate/content_importer')->import($targetContent, $sourceStoreId, $targetStores);
         $task->setData('processed_at', Mage::getSingleton('core/date')->gmtDate());
         $task->save();
@@ -44,5 +46,24 @@ class EasyTranslate_Connector_Model_Cron_Handler
         $bridgeTask    = Mage::getModel('easytranslate/bridge_task', $task);
 
         return $taskApi->downloadTaskTarget($bridgeProject, $bridgeTask)->getData();
+    }
+
+    protected function _getCorrectTargetStores(
+        EasyTranslate_Connector_Model_Project $project,
+        string $externalTargetLocaleCode
+    ): array {
+        $targetStores            = [];
+        $magentoTargetLocaleCode = Mage::getModel('easytranslate/locale_targetMapper')
+            ->mapExternalCodeToMagentoCode($externalTargetLocaleCode);
+        $allTargetStores         = $project->getData('target_stores');
+        foreach ($allTargetStores as $targetStore) {
+            $storeLocaleCode = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $targetStore);
+            // import into all stores with the target locale
+            if ($magentoTargetLocaleCode === $storeLocaleCode) {
+                $targetStores[] = $targetStore;
+            }
+        }
+
+        return $targetStores;
     }
 }
