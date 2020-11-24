@@ -25,16 +25,18 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </environment>
-                        <client_id translate="label" module="easytranslate">
+                        <client_id translate="label comment" module="easytranslate">
                             <label>Client ID</label>
+                            <comment>You can find it in your EasyTranslate account under Settings > API.</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </client_id>
-                        <client_secret translate="label" module="easytranslate">
+                        <client_secret translate="label comment" module="easytranslate">
                             <label>Client Secret</label>
+                            <comment>You can find it in your EasyTranslate account under Settings > API.</comment>
                             <frontend_type>obscure</frontend_type>
                             <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
                             <sort_order>30</sort_order>
@@ -42,16 +44,18 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </client_secret>
-                        <username translate="label" module="easytranslate">
+                        <username translate="label comment" module="easytranslate">
                             <label>User Name</label>
+                            <comment>Enter the same credentials you use for the EasyTranslate platform.</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </username>
-                        <password translate="label" module="easytranslate">
+                        <password translate="label comment" module="easytranslate">
                             <label>Password</label>
+                            <comment>Enter the same credentials you use for the EasyTranslate platform.</comment>
                             <frontend_type>obscure</frontend_type>
                             <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
                             <sort_order>50</sort_order>
