@@ -3,6 +3,8 @@
 "Environment","Environment"
 "Client ID","Client ID"
 "Client Secret","Client Secret"
+"You can find it in your EasyTranslate account under Settings > API.","You can find it in your EasyTranslate account under Settings > API."
+"Enter the same credentials you use for the EasyTranslate platform.","Enter the same credentials you use for the EasyTranslate platform."
 "User Name","User Name"
 "Password","Password"
 "Sandbox","Sandbox"
