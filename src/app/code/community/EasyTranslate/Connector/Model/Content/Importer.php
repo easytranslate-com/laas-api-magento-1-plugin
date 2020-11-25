@@ -14,6 +14,9 @@ class EasyTranslate_Connector_Model_Content_Importer
 
     public function import(array $data, int $sourceStoreId, array $targetStoreIds): void
     {
+        if (empty($targetStoreIds)) {
+            return;
+        }
         foreach (static::IMPORTERS as $code => $importer) {
             $importerData = array_filter($data, static function ($key) use ($code) {
                 // if the key starts with the importer code, the importer can handle the data
