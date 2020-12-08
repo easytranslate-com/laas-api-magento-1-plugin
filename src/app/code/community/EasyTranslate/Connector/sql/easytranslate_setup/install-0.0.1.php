@@ -229,14 +229,14 @@ if ($installer->getConnection()->isTableExists($installer->getTable('easytransla
 
 $installer->getConnection()->createTable($projectCmsPageTable);
 
-$projectQueueTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/task_queue'))
+$taskTable = $installer->getConnection()
+    ->newTable($installer->getTable('easytranslate/task'))
     ->addColumn('task_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'identity' => true,
         'primary'  => true,
         'nullable' => false,
         'unsigned' => true
-    ], 'Queue Item ID')
+    ], 'Task ID')
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'primary'  => true,
         'nullable' => false,
@@ -249,13 +249,11 @@ $projectQueueTable = $installer->getConnection()
         'nullable' => false,
         'unsigned' => true
     ], 'Store ID')
-    ->addColumn('content_link', Varien_Db_Ddl_Table::TYPE_TEXT, 256, [
-        'nullable' => false,
-    ], 'Content Link')
+    ->addColumn('content_link', Varien_Db_Ddl_Table::TYPE_TEXT, 256, [], 'Content Link')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Created At')
     ->addColumn('processed_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, [], 'Processed At')
     ->addForeignKey(
-        $installer->getFkName('easytranslate/task_queue', 'project_id', 'easytranslate/project',
+        $installer->getFkName('easytranslate/task', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
         $installer->getTable('easytranslate/project'),
@@ -263,18 +261,18 @@ $projectQueueTable = $installer->getConnection()
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
     ->addForeignKey(
-        $installer->getFkName('easytranslate/task_queue', 'store_id', 'core/store', 'store_id'),
+        $installer->getFkName('easytranslate/task', 'store_id', 'core/store', 'store_id'),
         'store_id',
         $installer->getTable('core/store'),
         'store_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
-    ->setComment('EasyTranslate Project Queue');
+    ->setComment('EasyTranslate Task');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/task_queue'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/task_queue'));
+if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/task'))) {
+    $installer->getConnection()->dropTable($installer->getTable('easytranslate/task'));
 }
 
-$installer->getConnection()->createTable($projectQueueTable);
+$installer->getConnection()->createTable($taskTable);
 
 $installer->endSetup();

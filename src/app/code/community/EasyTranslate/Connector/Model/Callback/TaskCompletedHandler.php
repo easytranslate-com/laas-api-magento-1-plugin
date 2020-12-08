@@ -15,34 +15,12 @@ class EasyTranslate_Connector_Model_Callback_TaskCompletedHandler
         if ($project->getData('secret') !== $secret) {
             Mage::throwException('Secret does not match.');
         }
-        $targetLanguage = $response->getTargetLanguage();
-        $targetStoreIds = $this->_getStoreIdsByTargetLanguage($project, $targetLanguage);
-        foreach ($targetStoreIds as $targetStoreId) {
-            $task = Mage::getModel('easytranslate/task_queue');
-            $task->setData('project_id', $project->getId());
-            $task->setData('external_id', $response->getTaskId());
-            $task->setData('store_id', $targetStoreId);
-            $task->setData('content_link', $response->getTargetContent());
+        $tasks = Mage::getModel('easytranslate/task')
+            ->getCollection()
+            ->addFieldToFilter('external_id', $response->getTask()->getId());
+        foreach ($tasks as $task) {
+            $task->setData('content_link', $response->getTask()->getTargetContent());
             $task->save();
         }
-    }
-
-    protected function _getStoreIdsByTargetLanguage(
-        EasyTranslate_Connector_Model_Project $project,
-        string $targetLanguage
-    ): array {
-        $targetMagentoLocale = Mage::getModel('easytranslate/locale_targetMapper')
-            ->mapExternalCodeToMagentoCode($targetLanguage);
-        $storeIds            = [];
-        $potentialStoreIds   = $project->getData('target_stores');
-        foreach ($potentialStoreIds as $potentialStoreId) {
-            $potentialStoreLocale = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE,
-                $potentialStoreId);
-            if ($potentialStoreLocale === $targetMagentoLocale) {
-                $storeIds[] = $potentialStoreId;
-            }
-        }
-
-        return $storeIds;
     }
 }

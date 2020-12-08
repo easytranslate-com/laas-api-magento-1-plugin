@@ -13,10 +13,11 @@ class EasyTranslate_Connector_Model_Cron_Handler
 
     public function handle(): void
     {
-        /** @var EasyTranslate_Connector_Model_Task_Queue $task */
-        $task = Mage::getModel('easytranslate/task_queue')
+        /** @var EasyTranslate_Connector_Model_Task $task */
+        $task = Mage::getModel('easytranslate/task')
             ->getCollection()
             ->addFieldToFilter('processed_at', ['null' => true])
+            ->addFieldToFilter('content_link', ['notnull' => true])
             ->setOrder('created_at', Varien_Data_Collection::SORT_ORDER_ASC)
             ->setPageSize(1)
             ->setCurPage(1)
@@ -27,17 +28,15 @@ class EasyTranslate_Connector_Model_Cron_Handler
         $project       = $task->getProject();
         $targetContent = $this->_loadTargetContent($project, $task);
         $sourceStoreId = (int)$project->getData('source_store_id');
-        // TODO retrieve correct external locale code
-        $externalTargetLocaleCode = $task->getData('target_language');
-        $targetStores             = $this->_getCorrectTargetStores($project, $externalTargetLocaleCode);
-        Mage::getModel('easytranslate/content_importer')->import($targetContent, $sourceStoreId, $targetStores);
+        $targetStoreId   = (int)$task->getData('store_id');
+        Mage::getModel('easytranslate/content_importer')->import($targetContent, $sourceStoreId, $targetStoreId);
         $task->setData('processed_at', Mage::getSingleton('core/date')->gmtDate());
         $task->save();
     }
 
     protected function _loadTargetContent(
         EasyTranslate_Connector_Model_Project $project,
-        EasyTranslate_Connector_Model_Task_Queue $task
+        EasyTranslate_Connector_Model_Task $task
     ): array {
         $configuration = Mage::getModel('easytranslate/config')->getApiConfiguration();
         $taskApi       = new TaskApi($configuration);
@@ -46,24 +45,5 @@ class EasyTranslate_Connector_Model_Cron_Handler
         $bridgeTask    = Mage::getModel('easytranslate/bridge_task', $task);
 
         return $taskApi->downloadTaskTarget($bridgeProject, $bridgeTask)->getData();
-    }
-
-    protected function _getCorrectTargetStores(
-        EasyTranslate_Connector_Model_Project $project,
-        string $externalTargetLocaleCode
-    ): array {
-        $targetStores            = [];
-        $magentoTargetLocaleCode = Mage::getModel('easytranslate/locale_targetMapper')
-            ->mapExternalCodeToMagentoCode($externalTargetLocaleCode);
-        $allTargetStores         = $project->getData('target_stores');
-        foreach ($allTargetStores as $targetStore) {
-            $storeLocaleCode = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $targetStore);
-            // import into all stores with the target locale
-            if ($magentoTargetLocaleCode === $storeLocaleCode) {
-                $targetStores[] = $targetStore;
-            }
-        }
-
-        return $targetStores;
     }
 }

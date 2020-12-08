@@ -4,57 +4,41 @@ declare(strict_types=1);
 
 namespace EasyTranslate\Api\Response;
 
+use EasyTranslate\Task;
+use EasyTranslate\TaskInterface;
+
 class TaskCompletedResponse extends AbstractResponse
 {
     /**
-     * @var string
+     * @var TaskInterface
      */
-    private $taskId = '';
+    private $task;
 
     /**
      * @var string
      */
-    private $projectId = '';
-
-    /**
-     * @var string
-     */
-    private $targetContent = '';
-
-    /**
-     * @var string
-     */
-    private $targetLanguage = '';
+    private $projectId;
 
     public function mapFields(array $data): void
     {
-        // TODO probably we should return a TaskInterface here
         if (isset($data['data']['type'], $data['data']['id']) && $data['data']['type'] === 'task') {
-            $this->taskId         = $data['data']['id'];
-            $this->projectId      = $data['data']['attributes']['project_id'];
-            $this->targetContent  = $data['data']['attributes']['target_content'];
-            $this->targetLanguage = $data['data']['attributes']['target_language'];
+            $task = new Task();
+            $task->setId($data['data']['id']);
+            $this->projectId = $data['data']['attributes']['project_id'];
+            $task->setTargetContent($data['data']['attributes']['target_content']);
+            $task->setTargetLanguage($data['data']['attributes']['target_language']);
+            $this->task = $task;
         }
         parent::mapFields($data);
     }
 
-    public function getTaskId(): string
+    public function getTask(): TaskInterface
     {
-        return $this->taskId;
+        return $this->task;
     }
 
     public function getProjectId(): string
     {
         return $this->projectId;
-    }
-
-    public function getTargetContent(): string
-    {
-        return $this->targetContent;
-    }
-
-    public function getTargetLanguage(): string
-    {
-        return $this->targetLanguage;
     }
 }

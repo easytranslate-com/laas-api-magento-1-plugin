@@ -10,9 +10,9 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporte
      */
     protected $_objects;
 
-    public function import(array $data, int $sourceStoreId, array $targetStoreIds): void
+    public function import(array $data, int $sourceStoreId, int $targetStoreId): void
     {
-        parent::import($data, $sourceStoreId, $targetStoreIds);
+        parent::import($data, $sourceStoreId, $targetStoreId);
         $this->_bulkSave();
     }
 
@@ -20,7 +20,7 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporte
         string $id,
         array $attributes,
         int $sourceStoreId,
-        array $targetStoreIds
+        int $targetStoreId
     ): void;
 
     protected function _bulkSave(): void

@@ -8,7 +8,7 @@ interface TaskInterface
 {
     public function getId(): string;
 
-    public function getProjectId(): string;
+    public function getProject(): ProjectInterface;
 
     public function getTargetContent(): ?string;
 
