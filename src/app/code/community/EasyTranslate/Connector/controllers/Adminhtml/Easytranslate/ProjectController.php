@@ -214,15 +214,14 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
             return;
         }
 
-        $project       = Mage::getModel('easytranslate/bridge_project', $magentoProject);
+        $bridgeProject = Mage::getModel('easytranslate/bridge_project', $magentoProject);
         $configuration = Mage::getModel('easytranslate/config')->getApiConfiguration();
         $projectApi    = new ProjectApi($configuration);
         try {
-            $projectResponse = $projectApi->sendProject($project);
+            $projectResponse = $projectApi->sendProject($bridgeProject);
+            $externalProject = $projectResponse->getProject();
             $magentoProject->setData('status', EasyTranslate_Connector_Model_Source_Status::SENT);
-            $magentoProject->setData('external_id', $projectResponse->getId());
-            $magentoProject->setData('price', $projectResponse->getPrice());
-            $magentoProject->setData('currency', $projectResponse->getCurrency());
+            $magentoProject->importDataFromExternalProject($externalProject);
             $magentoProject->save();
             $message = $this->_getHelper()->__('The project has successfully been sent to EasyTranslate.');
             $this->_getSession()->addSuccess($message);

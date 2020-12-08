@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use EasyTranslate\ProjectInterface;
+use EasyTranslate\TaskInterface;
+
 class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
 {
     protected function _construct(): void
@@ -69,6 +72,28 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $cmsPages;
     }
 
+    public function getTasks(): array
+    {
+        if (!$this->getId()) {
+            return [];
+        }
+
+        $tasks = $this->getData('tasks');
+        if (is_null($tasks)) {
+            $tasks = $this->getTaskCollection();
+            $this->setData('tasks', iterator_to_array($tasks, false));
+        }
+
+        return $tasks;
+    }
+
+    public function getTaskCollection(): EasyTranslate_Connector_Model_Resource_Task_Collection
+    {
+        return Mage::getModel('easytranslate/task')
+            ->getCollection()
+            ->addFieldToFilter('project_id', $this->getId());
+    }
+
     public function canEditDetails(): bool
     {
         return !$this->getId() || $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::OPEN;
@@ -78,5 +103,63 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
     {
         return $this->getId()
             && $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL_REQUEST;
+    }
+
+    public function importDataFromExternalProject(ProjectInterface $externalProject): void
+    {
+        $this->setData('external_id', $externalProject->getId());
+        $this->setData('price', $externalProject->getPrice());
+        $this->setData('currency', $externalProject->getCurrency());
+        /** @var TaskInterface $externalTask */
+        foreach ($externalProject->getTasks() as $externalTask) {
+            $targetLanguage = $externalTask->getTargetLanguage();
+            $targetStoreIds = $this->_getStoreIdsByTargetLanguage($targetLanguage);
+            // one external task (language-specific) can result in multiple Magento tasks (store-specific)
+            foreach ($targetStoreIds as $targetStoreId) {
+                $magentoTask = Mage::getModel('easytranslate/task');
+                $magentoTask->setData('project_id', $this->getId());
+                $magentoTask->setData('external_id', $externalTask->getId());
+                $magentoTask->setData('store_id', $targetStoreId);
+                $magentoTask->setData('content_link', $externalTask->getTargetContent());
+                $magentoTask->save();
+            }
+        }
+        // make sure that tasks are re-retrieved
+        $this->unsetData('tasks');
+    }
+
+    protected function _getStoreIdsByTargetLanguage(string $targetLanguage): array
+    {
+        $targetMagentoLocale = Mage::getModel('easytranslate/locale_targetMapper')
+            ->mapExternalCodeToMagentoCode($targetLanguage);
+        $storeIds            = [];
+        $potentialStoreIds   = $this->getData('target_stores');
+        foreach ($potentialStoreIds as $potentialStoreId) {
+            $potentialStoreLocale = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE,
+                $potentialStoreId);
+            if ($potentialStoreLocale === $targetMagentoLocale) {
+                $storeIds[] = $potentialStoreId;
+            }
+        }
+
+        return $storeIds;
+    }
+
+    public function updateTasksStatus(): EasyTranslate_Connector_Model_Project
+    {
+        $numberOfTasks = $this->getTaskCollection()->getSize();
+        if ($numberOfTasks === 0) {
+            return $this;
+        }
+        $numberOfCompletedTasks = $this->getTaskCollection()
+            ->addFieldToFilter('processed_at', ['notnull' => true])
+            ->getSize();
+        if ($numberOfTasks === $numberOfCompletedTasks) {
+            $this->setData('status', EasyTranslate_Connector_Model_Source_Status::FINISHED);
+        } elseif ($numberOfCompletedTasks > 0) {
+            $this->setData('status', EasyTranslate_Connector_Model_Source_Status::PARTIALLY_FINISHED);
+        }
+
+        return $this;
     }
 }

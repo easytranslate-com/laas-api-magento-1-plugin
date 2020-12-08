@@ -115,4 +115,19 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
     {
         return $this->_magentoProject->getData('name');
     }
+
+    public function getTasks(): array
+    {
+        return $this->_magentoProject->getTasks();
+    }
+
+    public function getPrice(): ?float
+    {
+        return (float)$this->_magentoProject->getData('price');
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->_magentoProject->getData('currency');
+    }
 }

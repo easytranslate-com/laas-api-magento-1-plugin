@@ -5,22 +5,20 @@ declare(strict_types=1);
 class EasyTranslate_Connector_Model_Content_Importer_CmsPage
     extends EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporter
 {
-    protected function _importObject(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
+    protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
     {
-        foreach ($targetStoreIds as $targetStoreId) {
-            $page     = $this->_loadBasePage($id, $sourceStoreId, (int)$targetStoreId);
-            $storeIds = (array)$page->getData('store_id');
-            if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
-                $this->_handleExistingGlobalPage($page, $attributes, (int)$targetStoreId);
-            } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
-                $this->_handleExistingUniquePage($page, $attributes);
-            } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
-                $this->_handleExistingPageWithMultipleStores($page, $attributes, (int)$targetStoreId);
-            } else {
-                // this should rarely happen - only if the page from the source store has been deleted in the meantime
-                $page->setIdentifier($id);
-                $this->_handleNonExistingPage($page, $attributes, (int)$targetStoreId);
-            }
+        $page     = $this->_loadBasePage($id, $sourceStoreId, $targetStoreId);
+        $storeIds = (array)$page->getData('store_id');
+        if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
+            $this->_handleExistingGlobalPage($page, $attributes, $targetStoreId);
+        } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
+            $this->_handleExistingUniquePage($page, $attributes);
+        } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
+            $this->_handleExistingPageWithMultipleStores($page, $attributes, $targetStoreId);
+        } else {
+            // this should rarely happen - only if the page from the source store has been deleted in the meantime
+            $page->setIdentifier($id);
+            $this->_handleNonExistingPage($page, $attributes, $targetStoreId);
         }
     }
 

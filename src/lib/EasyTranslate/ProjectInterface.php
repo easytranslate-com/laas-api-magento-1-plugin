@@ -14,13 +14,19 @@ interface ProjectInterface
 
     public function getTargetLanguages(): array;
 
-    public function getCallbackUrl(): string;
+    public function getCallbackUrl(): ?string;
 
-    public function getContent(): array;
+    public function getContent(): ?array;
 
     public function getFolderId(): ?string;
 
     public function getFolderName(): ?string;
 
     public function getName(): ?string;
+
+    public function getTasks(): array;
+
+    public function getPrice(): ?float;
+
+    public function getCurrency(): ?string;
 }

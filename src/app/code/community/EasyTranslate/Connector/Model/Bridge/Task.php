@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
+use EasyTranslate\ProjectInterface;
 use EasyTranslate\TaskInterface;
 
 class EasyTranslate_Connector_Model_Bridge_Task implements TaskInterface
 {
     /**
-     * @var EasyTranslate_Connector_Model_Task_Queue
+     * @var EasyTranslate_Connector_Model_Task
      */
     protected $_magentoTask;
 
-    public function __construct(EasyTranslate_Connector_Model_Task_Queue $task)
+    public function __construct(EasyTranslate_Connector_Model_Task $task)
     {
         $this->_magentoTask = $task;
     }
@@ -21,9 +22,11 @@ class EasyTranslate_Connector_Model_Bridge_Task implements TaskInterface
         return $this->_magentoTask->getData('external_id');
     }
 
-    public function getProjectId(): string
+    public function getProject(): ProjectInterface
     {
-        return $this->_magentoTask->getProject()->getData('external_id');
+        $magentoProject = $this->_magentoTask->getProject();
+
+        return Mage::getModel('easytranslate/bridge_project', $magentoProject);
     }
 
     public function getTargetContent(): ?string

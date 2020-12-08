@@ -4,48 +4,78 @@ declare(strict_types=1);
 
 namespace EasyTranslate\Api\Response;
 
+use EasyTranslate\Project;
+use EasyTranslate\ProjectInterface;
+use EasyTranslate\Task;
+
 class CreateProjectResponse extends AbstractResponse
 {
     /**
-     * @var string
+     * @var ProjectInterface
      */
-    private $id;
-
-    /**
-     * @var float
-     */
-    private $price;
-
-    /**
-     * @var string
-     */
-    private $currency;
+    private $project;
 
     public function mapFields(array $data): void
     {
-        // TODO probably we should return a ProjectInterface here
         if (isset($data['data']['type'], $data['data']['id']) && $data['data']['type'] === 'project') {
-            $this->id = $data['data']['id'];
+            $project = new Project();
+            $project->setId($data['data']['id']);
+            $team = $this->extractTeam($data);
+            $project->setTeam($team);
+            $project->setSourceLanguage($data['data']['attributes']['source_language']);
+            $project->setTargetLanguages($data['data']['attributes']['target_languages']);
+            $project->setFolderId($data['data']['attributes']['folder_id']);
+            $project->setFolderName($data['data']['attributes']['folder_name']);
+            $project->setName($data['data']['attributes']['name']);
+            $tasks = $this->extractTasks($data, $project);
+            $project->setTasks($tasks);
             if (isset($data['data']['attributes']['price'])) {
-                $this->price    = (float)$data['data']['attributes']['price']['amount'];
-                $this->currency = $data['data']['attributes']['price']['currency'];
+                $project->setPrice((float)$data['data']['attributes']['price']['amount']);
+                $project->setCurrency($data['data']['attributes']['price']['currency']);
             }
+            $this->project = $project;
         }
         parent::mapFields($data);
     }
 
-    public function getId(): string
+    private function extractTeam(array $data): string
     {
-        return $this->id;
+        if (!isset($data['included'])) {
+            return '';
+        }
+
+        foreach ($data['included'] as $includedObject) {
+            if (isset($includedObject['type']) && $includedObject['type'] === 'account') {
+                return $includedObject['attributes']['team_identifier'];
+            }
+        }
+
+        return '';
     }
 
-    public function getPrice(): ?float
+    private function extractTasks(array $data, ProjectInterface $project): array
     {
-        return $this->price;
+        $tasks = [];
+        if (!isset($data['included'])) {
+            return $tasks;
+        }
+
+        foreach ($data['included'] as $includedObject) {
+            if (!isset($includedObject['type']) || $includedObject['type'] !== 'task') {
+                continue;
+            }
+            $task = new Task();
+            $task->setId($includedObject['id']);
+            $task->setProject($project);
+            $task->setTargetLanguage($includedObject['attributes']['target_language']);
+            $tasks[] = $task;
+        }
+
+        return $tasks;
     }
 
-    public function getCurrency(): ?string
+    public function getProject(): ProjectInterface
     {
-        return $this->currency;
+        return $this->project;
     }
 }

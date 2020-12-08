@@ -5,22 +5,20 @@ declare(strict_types=1);
 class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
     extends EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporter
 {
-    protected function _importObject(string $id, array $attributes, int $sourceStoreId, array $targetStoreIds): void
+    protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
     {
-        foreach ($targetStoreIds as $targetStoreId) {
-            $block    = $this->_loadBaseBlock($id, $sourceStoreId, (int)$targetStoreId);
-            $storeIds = (array)$block->getData('stores');
-            if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
-                $this->_handleExistingGlobalBlock($block, $attributes, (int)$targetStoreId);
-            } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
-                $this->_handleExistingUniqueBlock($block, $attributes);
-            } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
-                $this->_handleExistingBlockWithMultipleStores($block, $attributes, (int)$targetStoreId);
-            } else {
-                // this should rarely happen - only if the block from the source store has been deleted in the meantime
-                $block->setIdentifier($id);
-                $this->_handleNonExistingBlock($block, $attributes, (int)$targetStoreId);
-            }
+        $block    = $this->_loadBaseBlock($id, $sourceStoreId, $targetStoreId);
+        $storeIds = (array)$block->getData('stores');
+        if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
+            $this->_handleExistingGlobalBlock($block, $attributes, $targetStoreId);
+        } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) === 1) {
+            $this->_handleExistingUniqueBlock($block, $attributes);
+        } elseif (in_array($targetStoreId, $storeIds, false) && count($storeIds) > 1) {
+            $this->_handleExistingBlockWithMultipleStores($block, $attributes, $targetStoreId);
+        } else {
+            // this should rarely happen - only if the block from the source store has been deleted in the meantime
+            $block->setIdentifier($id);
+            $this->_handleNonExistingBlock($block, $attributes, $targetStoreId);
         }
     }
 
