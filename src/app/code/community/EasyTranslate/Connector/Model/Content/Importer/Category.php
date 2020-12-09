@@ -8,6 +8,10 @@ class EasyTranslate_Connector_Model_Content_Importer_Category
     protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
     {
         $category = Mage::getModel('catalog/category')->setStoreId($targetStoreId)->load($id);
+        if ($category->isObjectNew()) {
+            // entity has been deleted in the meantime, do nothing
+            return;
+        }
         $category->addData($attributes);
         /** @var Mage_Catalog_Model_Resource_Category $categoryResource */
         $categoryResource = $category->getResource();
