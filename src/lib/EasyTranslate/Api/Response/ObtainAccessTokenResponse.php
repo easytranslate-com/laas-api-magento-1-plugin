@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace EasyTranslate\Api\Response;
 
+use EasyTranslate\Api\ApiException;
+
 class ObtainAccessTokenResponse extends AbstractResponse
 {
     /**
@@ -13,10 +15,11 @@ class ObtainAccessTokenResponse extends AbstractResponse
 
     public function mapFields(array $data): void
     {
-        if (isset($data['access_token'])) {
-            $this->accessToken = $data['access_token'];
-        }
         parent::mapFields($data);
+        if (!isset($data['access_token'])) {
+            throw new ApiException(sprintf('Invalid response data in response class %s', self::class));
+        }
+        $this->accessToken = $data['access_token'];
     }
 
     public function getAccessToken(): string
