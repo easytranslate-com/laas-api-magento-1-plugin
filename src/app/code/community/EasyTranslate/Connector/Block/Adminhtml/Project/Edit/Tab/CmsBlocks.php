@@ -36,16 +36,14 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     {
         $this->setDefaultFilter(['in_project' => 1]);
-        $collection = Mage::getModel('cms/block')->getCollection()->addFieldToSelect('block_id')
-            ->addFieldToSelect('title')
-            ->addFieldToSelect('identifier')
-            ->addFieldToSelect('is_active')
-            ->addFieldToSelect('creation_time')
-            ->addFieldToSelect('update_time');
+        $collection = Mage::getModel('cms/block')->getCollection();
 
-        if ($this->_getProject() && !$this->_getProject()->canEditDetails()) {
-            $selectedCmsBlockIds = $this->_getSelectedCmsBlockIds();
-            $collection->addFieldToFilter('main_table.block_id', ['in' => $selectedCmsBlockIds]);
+        if ($this->_getProject()) {
+            $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
+            if (!$this->_getProject()->canEditDetails()) {
+                $selectedCmsBlockIds = $this->_getSelectedCmsBlockIds();
+                $collection->addFieldToFilter('main_table.block_id', ['in' => $selectedCmsBlockIds]);
+            }
         }
 
         $this->setCollection($collection);
@@ -80,16 +78,6 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
         $this->addColumn('block_identifier', [
             'header' => Mage::helper('cms')->__('Identifier'),
             'index'  => 'identifier'
-        ]);
-        $this->addColumn('block_store_id', [
-            'header'     => Mage::helper('cms')->__('Store View'),
-            'index'      => 'store_id',
-            'type'       => 'store',
-            'store_all'  => true,
-            'store_view' => true,
-            'sortable'   => false,
-            'filter_condition_callback'
-                         => [$this, '_filterStoreCondition'],
         ]);
         $this->addColumn('block_is_active', [
             'header'  => Mage::helper('cms')->__('Status'),
@@ -144,18 +132,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
         return $this->_getHelper()->__('CMS Blocks');
     }
 
-    protected function _filterStoreCondition($collection, $column)
-    {
-        if (!$value = $column->getFilter()->getValue()) {
-            return;
-        }
-
-        $this->getCollection()->addStoreFilter($value);
-    }
-
-    protected function _afterLoadCollection()
+    protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
     {
         $this->getCollection()->walk('afterLoad');
-        parent::_afterLoadCollection();
+
+        return parent::_afterLoadCollection();
     }
 }

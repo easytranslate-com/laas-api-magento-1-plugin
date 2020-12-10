@@ -36,17 +36,14 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
     protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
     {
         $this->setDefaultFilter(['in_project' => 1]);
-        $collection = Mage::getModel('cms/page')->getCollection()->addFieldToSelect('page_id')
-            ->addFieldToSelect('title')
-            ->addFieldToSelect('identifier')
-            ->addFieldToSelect('root_template')
-            ->addFieldToSelect('is_active')
-            ->addFieldToSelect('creation_time')
-            ->addFieldToSelect('update_time');
+        $collection = Mage::getModel('cms/page')->getCollection();
 
-        if ($this->_getProject() && !$this->_getProject()->canEditDetails()) {
-            $selectedCmsPageIds = $this->_getSelectedCmsPageIds();
-            $collection->addFieldToFilter('main_table.page_id', ['in' => $selectedCmsPageIds]);
+        if ($this->_getProject()) {
+            $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
+            if (!$this->_getProject()->canEditDetails()) {
+                $selectedCmsPageIds = $this->_getSelectedCmsPageIds();
+                $collection->addFieldToFilter('main_table.page_id', ['in' => $selectedCmsPageIds]);
+            }
         }
 
         $this->setCollection($collection);
@@ -88,16 +85,6 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
             'index'   => 'root_template',
             'type'    => 'options',
             'options' => Mage::getSingleton('page/source_layout')->getOptions(),
-        ]);
-        $this->addColumn('page_store_id', [
-            'header'     => Mage::helper('cms')->__('Store View'),
-            'index'      => 'store_id',
-            'type'       => 'store',
-            'store_all'  => true,
-            'store_view' => true,
-            'sortable'   => false,
-            'filter_condition_callback'
-                         => [$this, '_filterStoreCondition'],
         ]);
         $this->addColumn('page_is_active', [
             'header'  => Mage::helper('cms')->__('Status'),
@@ -149,18 +136,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
         return $this->_getHelper()->__('CMS Pages');
     }
 
-    protected function _filterStoreCondition($collection, $column)
-    {
-        if (!$value = $column->getFilter()->getValue()) {
-            return;
-        }
-
-        $this->getCollection()->addStoreFilter($value);
-    }
-
-    protected function _afterLoadCollection()
+    protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
     {
         $this->getCollection()->walk('afterLoad');
-        parent::_afterLoadCollection();
+
+        return parent::_afterLoadCollection();
     }
 }
