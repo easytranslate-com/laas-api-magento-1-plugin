@@ -36,17 +36,29 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
     protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
     {
         $this->setDefaultFilter(['in_project' => 1]);
-        $collection = Mage::getModel('cms/page')->getCollection()->addFieldToSelect('page_id')
-            ->addFieldToSelect('title')
-            ->addFieldToSelect('identifier')
-            ->addFieldToSelect('root_template')
-            ->addFieldToSelect('is_active')
-            ->addFieldToSelect('creation_time')
-            ->addFieldToSelect('update_time');
+        $collection = Mage::getResourceModel('easytranslate/cms_page_collection');
 
-        if ($this->_getProject() && !$this->_getProject()->canEditDetails()) {
-            $selectedCmsPageIds = $this->_getSelectedCmsPageIds();
-            $collection->addFieldToFilter('main_table.page_id', ['in' => $selectedCmsPageIds]);
+        if ($this->_getProject()) {
+            $collection->addStoreFilter($this->_getProject()->getData('source_store_id'));
+            if ($this->_getProject()->canEditDetails()) {
+                // join stores in which pages have already been added to a project / translated
+                $projectCmsPageTable     = $collection->getTable('easytranslate/project_cms_page');
+                $projectTargetStoreTable = $collection->getTable('easytranslate/project_target_store');
+                $collection->getSelect()->joinLeft(
+                    ['etpcp' => $projectCmsPageTable],
+                    'etpcp.page_id=main_table.page_id',
+                    ['project_ids' => 'GROUP_CONCAT(DISTINCT etpcp.project_id)']
+                );
+                $collection->getSelect()->joinLeft(
+                    ['etpts' => $projectTargetStoreTable],
+                    'etpts.project_id=etpcp.project_id',
+                    ['translated_stores' => 'GROUP_CONCAT(DISTINCT target_store_id)']
+                );
+                $collection->getSelect()->group('main_table.page_id');
+            } else {
+                $selectedCmsPageIds = $this->_getSelectedCmsPageIds();
+                $collection->addFieldToFilter('main_table.page_id', ['in' => $selectedCmsPageIds]);
+            }
         }
 
         $this->setCollection($collection);
@@ -89,16 +101,6 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
             'type'    => 'options',
             'options' => Mage::getSingleton('page/source_layout')->getOptions(),
         ]);
-        $this->addColumn('page_store_id', [
-            'header'     => Mage::helper('cms')->__('Store View'),
-            'index'      => 'store_id',
-            'type'       => 'store',
-            'store_all'  => true,
-            'store_view' => true,
-            'sortable'   => false,
-            'filter_condition_callback'
-                         => [$this, '_filterStoreCondition'],
-        ]);
         $this->addColumn('page_is_active', [
             'header'  => Mage::helper('cms')->__('Status'),
             'index'   => 'is_active',
@@ -116,8 +118,30 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
             'index'  => 'update_time',
             'type'   => 'datetime',
         ]);
+        if (!$this->_getProject() || $this->_getProject()->canEditDetails()) {
+            $this->addColumn('translated_stores',
+                [
+                    'header'                    => $this->__('Already Translated In'),
+                    'width'                     => '250px',
+                    'index'                     => 'translated_stores',
+                    'type'                      => 'store',
+                    'store_view'                => true,
+                    'sortable'                  => false,
+                    'filter_condition_callback' => [$this, '_filterTranslatedCondition'],
+                ]);
+        }
 
         return parent::_prepareColumns();
+    }
+
+    protected function _filterTranslatedCondition(
+        Mage_Cms_Model_Resource_Page_Collection $collection,
+        Mage_Adminhtml_Block_Widget_Grid_Column $column
+    ): void {
+        $value = $column->getFilter()->getValue();
+        if ($value) {
+            $collection->getSelect()->where('etpts.target_store_id=?', $value);
+        }
     }
 
     public function getGridUrl(): string
@@ -149,18 +173,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsPages
         return $this->_getHelper()->__('CMS Pages');
     }
 
-    protected function _filterStoreCondition($collection, $column)
-    {
-        if (!$value = $column->getFilter()->getValue()) {
-            return;
-        }
-
-        $this->getCollection()->addStoreFilter($value);
-    }
-
-    protected function _afterLoadCollection()
+    protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
     {
         $this->getCollection()->walk('afterLoad');
-        parent::_afterLoadCollection();
+
+        return parent::_afterLoadCollection();
     }
 }

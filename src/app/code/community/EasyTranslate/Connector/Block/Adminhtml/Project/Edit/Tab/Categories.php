@@ -37,14 +37,29 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
     protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
     {
         $this->setDefaultFilter(['in_project' => 1]);
-        $collection = Mage::getModel('catalog/category')->getCollection()
+        $collection = Mage::getResourceModel('easytranslate/catalog_category_collection')
             ->addAttributeToSelect('name')
             ->addAttributeToSelect('url_key')
             ->addAttributeToFilter('level', ['gt' => 1]);
 
         if ($this->_getProject()) {
             $collection->setStore($this->_getProject()->getData('source_store_id'));
-            if (!$this->_getProject()->canEditDetails()) {
+            if ($this->_getProject()->canEditDetails()) {
+                // join stores in which products have already been added to a project / translated
+                $projectCategoryTable    = $collection->getTable('easytranslate/project_category');
+                $projectTargetStoreTable = $collection->getTable('easytranslate/project_target_store');
+                $collection->getSelect()->joinLeft(
+                    ['etpc' => $projectCategoryTable],
+                    'etpc.category_id=e.entity_id',
+                    ['project_ids' => 'GROUP_CONCAT(DISTINCT etpc.project_id)']
+                );
+                $collection->getSelect()->joinLeft(
+                    ['etpts' => $projectTargetStoreTable],
+                    'etpts.project_id=etpc.project_id',
+                    ['translated_stores' => 'GROUP_CONCAT(DISTINCT target_store_id)']
+                );
+                $collection->groupByAttribute('entity_id');
+            } else {
                 $categoryIds = $this->_getSelectedCategoryIds();
                 $collection->addFieldToFilter('entity_id', ['in' => $categoryIds]);
             }
@@ -87,8 +102,30 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
             'header' => Mage::helper('catalog')->__('URL Key'),
             'index'  => 'url_key'
         ]);
+        if (!$this->_getProject() || $this->_getProject()->canEditDetails()) {
+            $this->addColumn('translated_stores',
+                [
+                    'header'                    => $this->__('Already Translated In'),
+                    'width'                     => '250px',
+                    'index'                     => 'translated_stores',
+                    'type'                      => 'store',
+                    'store_view'                => true,
+                    'sortable'                  => false,
+                    'filter_condition_callback' => [$this, '_filterTranslatedCondition'],
+                ]);
+        }
 
         return parent::_prepareColumns();
+    }
+
+    protected function _filterTranslatedCondition(
+        Mage_Catalog_Model_Resource_Category_Collection $collection,
+        Mage_Adminhtml_Block_Widget_Grid_Column $column
+    ): void {
+        $value = $column->getFilter()->getValue();
+        if ($value) {
+            $collection->getSelect()->where('etpts.target_store_id=?', $value);
+        }
     }
 
     public function getGridUrl(): string
