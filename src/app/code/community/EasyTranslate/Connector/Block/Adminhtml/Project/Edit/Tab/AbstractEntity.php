@@ -35,4 +35,17 @@ abstract class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Abstract
     {
         return $this->_getProject() === null || !$this->_getProject()->getId();
     }
+
+    protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
+    {
+        foreach ($this->_collection as $item) {
+            $translatedStores = $item->getData('translated_stores');
+            if (empty($translatedStores)) {
+                continue;
+            }
+            $item->setData('translated_stores', explode(',', $translatedStores));
+        }
+
+        return parent::_afterLoadCollection();
+    }
 }
