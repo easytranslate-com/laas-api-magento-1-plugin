@@ -7,7 +7,11 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
 {
     protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
     {
-        $page     = $this->_loadBasePage($id, $sourceStoreId, $targetStoreId);
+        $page = $this->_loadBasePage($id, $sourceStoreId, $targetStoreId);
+        if ($page->isObjectNew()) {
+            // entity has been deleted in the meantime, do nothing
+            return;
+        }
         $storeIds = (array)$page->getData('store_id');
         if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
             $this->_handleExistingGlobalPage($page, $attributes, $targetStoreId);

@@ -7,7 +7,11 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
 {
     protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
     {
-        $block    = $this->_loadBaseBlock($id, $sourceStoreId, $targetStoreId);
+        $block = $this->_loadBaseBlock($id, $sourceStoreId, $targetStoreId);
+        if ($block->isObjectNew()) {
+            // entity has been deleted in the meantime, do nothing
+            return;
+        }
         $storeIds = (array)$block->getData('stores');
         if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $storeIds, false) && count($storeIds) === 1) {
             $this->_handleExistingGlobalBlock($block, $attributes, $targetStoreId);
