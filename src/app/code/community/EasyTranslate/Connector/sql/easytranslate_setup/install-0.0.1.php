@@ -5,8 +5,9 @@ $installer = $this;
 
 $installer->startSetup();
 
-$projectTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/project'))
+$projectTableName = $installer->getTable('easytranslate/project');
+$projectTable     = $installer->getConnection()
+    ->newTable($projectTableName)
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'identity' => true,
         'primary'  => true,
@@ -43,14 +44,15 @@ $projectTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Project');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/project'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/project'));
+if ($installer->getConnection()->isTableExists($projectTableName)) {
+    $installer->getConnection()->dropTable($projectTableName);
 }
 
 $installer->getConnection()->createTable($projectTable);
 
-$projectTargetStoreTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/project_target_store'))
+$projectTargetStoreTableName = $installer->getTable('easytranslate/project_target_store');
+$projectTargetStoreTable     = $installer->getConnection()
+    ->newTable($projectTargetStoreTableName)
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'primary'  => true,
         'nullable' => false,
@@ -66,7 +68,7 @@ $projectTargetStoreTable = $installer->getConnection()
         $installer->getFkName('easytranslate/project_target_store', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
-        $installer->getTable('easytranslate/project'),
+        $projectTableName,
         'project_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
@@ -79,14 +81,15 @@ $projectTargetStoreTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Project Target Store');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/project_target_store'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/project_target_store'));
+if ($installer->getConnection()->isTableExists($projectTargetStoreTableName)) {
+    $installer->getConnection()->dropTable($projectTargetStoreTableName);
 }
 
 $installer->getConnection()->createTable($projectTargetStoreTable);
 
-$projectProductTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/project_product'))
+$projectProductTableName = $installer->getTable('easytranslate/project_product');
+$projectProductTable     = $installer->getConnection()
+    ->newTable($projectProductTableName)
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'primary'  => true,
         'nullable' => false,
@@ -102,7 +105,7 @@ $projectProductTable = $installer->getConnection()
         $installer->getFkName('easytranslate/project_product', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
-        $installer->getTable('easytranslate/project'),
+        $projectTableName,
         'project_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
@@ -115,14 +118,15 @@ $projectProductTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Project Product');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/project_product'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/project_product'));
+if ($installer->getConnection()->isTableExists($projectProductTableName)) {
+    $installer->getConnection()->dropTable($projectProductTableName);
 }
 
 $installer->getConnection()->createTable($projectProductTable);
 
-$projectCategoryTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/project_category'))
+$projectCategoryTableName = $installer->getTable('easytranslate/project_category');
+$projectCategoryTable     = $installer->getConnection()
+    ->newTable($projectCategoryTableName)
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'primary'  => true,
         'nullable' => false,
@@ -138,7 +142,7 @@ $projectCategoryTable = $installer->getConnection()
         $installer->getFkName('easytranslate/project_category', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
-        $installer->getTable('easytranslate/project'),
+        $projectTableName,
         'project_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
@@ -151,14 +155,15 @@ $projectCategoryTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Project Category');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/project_category'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/project_category'));
+if ($installer->getConnection()->isTableExists($projectCategoryTableName)) {
+    $installer->getConnection()->dropTable($projectCategoryTableName);
 }
 
 $installer->getConnection()->createTable($projectCategoryTable);
 
-$projectCmsBlockTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/project_cms_block'))
+$projectCmsBlockTableName = $installer->getTable('easytranslate/project_cms_block');
+$projectCmsBlockTable     = $installer->getConnection()
+    ->newTable($projectCmsBlockTableName)
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'primary'  => true,
         'nullable' => false,
@@ -174,7 +179,7 @@ $projectCmsBlockTable = $installer->getConnection()
         $installer->getFkName('easytranslate/project_cms_block', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
-        $installer->getTable('easytranslate/project'),
+        $projectTableName,
         'project_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
@@ -187,14 +192,15 @@ $projectCmsBlockTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Project CMS Block');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/project_cms_block'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/project_cms_block'));
+if ($installer->getConnection()->isTableExists($projectCmsBlockTableName)) {
+    $installer->getConnection()->dropTable($projectCmsBlockTableName);
 }
 
 $installer->getConnection()->createTable($projectCmsBlockTable);
 
-$projectCmsPageTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/project_cms_page'))
+$projectCmsPageTableName = $installer->getTable('easytranslate/project_cms_page');
+$projectCmsPageTable     = $installer->getConnection()
+    ->newTable($projectCmsPageTableName)
     ->addColumn('project_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'primary'  => true,
         'nullable' => false,
@@ -210,7 +216,7 @@ $projectCmsPageTable = $installer->getConnection()
         $installer->getFkName('easytranslate/project_cms_page', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
-        $installer->getTable('easytranslate/project'),
+        $projectTableName,
         'project_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
@@ -223,14 +229,15 @@ $projectCmsPageTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Project CMS Page');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/project_cms_page'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/project_cms_page'));
+if ($installer->getConnection()->isTableExists($projectCmsPageTableName)) {
+    $installer->getConnection()->dropTable($projectCmsPageTableName);
 }
 
 $installer->getConnection()->createTable($projectCmsPageTable);
 
-$taskTable = $installer->getConnection()
-    ->newTable($installer->getTable('easytranslate/task'))
+$taskTableName = $installer->getTable('easytranslate/task');
+$taskTable     = $installer->getConnection()
+    ->newTable($taskTableName)
     ->addColumn('task_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, [
         'identity' => true,
         'primary'  => true,
@@ -256,7 +263,7 @@ $taskTable = $installer->getConnection()
         $installer->getFkName('easytranslate/task', 'project_id', 'easytranslate/project',
             'project_id'),
         'project_id',
-        $installer->getTable('easytranslate/project'),
+        $projectTableName,
         'project_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
@@ -269,8 +276,8 @@ $taskTable = $installer->getConnection()
     )
     ->setComment('EasyTranslate Task');
 
-if ($installer->getConnection()->isTableExists($installer->getTable('easytranslate/task'))) {
-    $installer->getConnection()->dropTable($installer->getTable('easytranslate/task'));
+if ($installer->getConnection()->isTableExists($taskTableName)) {
+    $installer->getConnection()->dropTable($taskTableName);
 }
 
 $installer->getConnection()->createTable($taskTable);
