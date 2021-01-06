@@ -7,7 +7,10 @@ class EasyTranslate_Connector_Model_Content_Importer_Category
 {
     protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
     {
-        $category = Mage::getModel('catalog/category')->setStoreId($targetStoreId)->load($id);
+        // disable flat, so that we can use saveAttribute (not available in the flat resource model)
+        $category = Mage::getModel('catalog/category', ['disable_flat' => true])
+            ->setStoreId($targetStoreId)
+            ->load($id);
         if ($category->isObjectNew()) {
             // entity has been deleted in the meantime, do nothing
             return;
