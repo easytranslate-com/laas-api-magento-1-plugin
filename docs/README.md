@@ -121,4 +121,4 @@ on [GitHub](https://github.com/easytranslate-com/laas-api-magento-plugin/issues)
 
 ## Copyright
 
-&copy; 2020 EasyTranslate A/S
+&copy; 2020-2021 EasyTranslate A/S
