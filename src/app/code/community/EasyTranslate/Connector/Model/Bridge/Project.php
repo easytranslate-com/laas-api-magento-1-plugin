@@ -101,6 +101,11 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
         return Mage::getModel('easytranslate/content_generator_product')->getContent($productIds);
     }
 
+    public function getWorkflow(): string
+    {
+        return $this->_magentoProject->getData('workflow');
+    }
+
     public function getFolderId(): ?string
     {
         return null;

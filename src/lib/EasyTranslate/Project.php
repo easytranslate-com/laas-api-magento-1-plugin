@@ -39,6 +39,11 @@ class Project implements ProjectInterface
     /**
      * @var string
      */
+    private $workflow = Workflow::TYPE_TRANSLATION;
+
+    /**
+     * @var string
+     */
     private $folderId;
 
     /**
@@ -94,6 +99,11 @@ class Project implements ProjectInterface
     public function getContent(): ?array
     {
         return $this->content;
+    }
+
+    public function getWorkflow(): string
+    {
+        return $this->workflow;
     }
 
     public function getFolderId(): ?string
@@ -154,6 +164,11 @@ class Project implements ProjectInterface
     public function setContent(?array $content): void
     {
         $this->content = $content;
+    }
+
+    public function setWorkflow(string $workflow): void
+    {
+        $this->workflow = $workflow;
     }
 
     public function setFolderId(?string $folderId): void
