@@ -102,6 +102,15 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         ]);
         $field->setRenderer($renderer);
 
+        $fieldset->addField('workflow', 'select', [
+            'name'     => 'workflow',
+            'label'    => $this->_getHelper()->__('Workflow'),
+            'title'    => $this->_getHelper()->__('Workflow'),
+            'required' => true,
+            'values'   => Mage::getModel('easytranslate/source_workflow')->toOptionArray(),
+            'disabled' => !$canEdit,
+        ]);
+
         if ($project instanceof EasyTranslate_Connector_Model_Project) {
             $values                        = $project->getData();
             $values['included_products']   = implode(',', $project->getProducts());

@@ -31,6 +31,7 @@ class CreateProjectResponse extends AbstractResponse
         $project->setFolderId($data['data']['attributes']['folder_id']);
         $project->setFolderName($data['data']['attributes']['folder_name']);
         $project->setName($data['data']['attributes']['name']);
+        $project->setWorkflow($data['data']['attributes']['workflow']);
         $tasks = $this->extractTasks($data, $project);
         $project->setTasks($tasks);
         if (isset($data['data']['attributes']['price'])) {

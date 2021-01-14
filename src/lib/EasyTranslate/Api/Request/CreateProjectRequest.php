@@ -37,6 +37,7 @@ class CreateProjectRequest extends AbstractRequest
                 'source_language'  => $this->project->getSourceLanguage(),
                 'target_languages' => $this->project->getTargetLanguages(),
                 'content'          => $this->project->getContent(),
+                'workflow'         => $this->project->getWorkflow(),
                 'callback_url'     => $this->project->getCallbackUrl(),
             ],
         ];
