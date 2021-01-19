@@ -20,6 +20,8 @@ class EasyTranslate_Connector_Model_Callback_TaskCompletedHandler
             ->addFieldToFilter('external_id', $response->getTask()->getId());
         foreach ($tasks as $task) {
             $task->setData('content_link', $response->getTask()->getTargetContent());
+            // make sure the task is imported again if there is another update
+            $task->setData('processed_at', null);
             $task->save();
         }
     }
