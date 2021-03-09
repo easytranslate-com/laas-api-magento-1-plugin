@@ -112,11 +112,13 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         ]);
         $fieldset->addField('automatic_import', 'select',
             [
-                'label'  => $this->_getHelper()->__('Automatic Import'),
-                'title'  => $this->_getHelper()->__('Automatic Import'),
-                'name'   => 'automatic_import',
-                'values' => Mage::getSingleton('adminhtml/system_config_source_yesno')->toOptionArray(),
-                'value'  => 1
+                'label'    => $this->_getHelper()->__('Automatic Import'),
+                'title'    => $this->_getHelper()->__('Automatic Import'),
+                'name'     => 'automatic_import',
+                'values'   => Mage::getSingleton('adminhtml/system_config_source_yesno')->toOptionArray(),
+                'value'    => 1,
+                'disabled' => !$canEdit,
+
             ]);
 
         if ($project instanceof EasyTranslate_Connector_Model_Project) {
