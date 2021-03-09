@@ -336,6 +336,13 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirect('*/*/index');
     }
 
+    public function scheduleImportAction(): void
+    {
+        $magentoProject = $this->_initProject();
+        $magentoProject->setData('automatic_import', 1)->save();
+        $this->_redirectReferer();
+    }
+
     protected function _isAllowed(): bool
     {
         return Mage::getSingleton('admin/session')->isAllowed('system/easytranslate');

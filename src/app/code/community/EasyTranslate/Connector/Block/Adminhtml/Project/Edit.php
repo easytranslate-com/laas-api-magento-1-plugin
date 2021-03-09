@@ -32,6 +32,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
             $this->_removeButton('delete');
             $this->_removeButton('reset');
         }
+        $this->_addImportButtonIfAvailable($project);
     }
 
     public function getHeaderText(): string
@@ -100,5 +101,19 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
     protected function _getHelper(): EasyTranslate_Connector_Helper_Data
     {
         return Mage::helper('easytranslate');
+    }
+
+    protected function _addImportButtonIfAvailable(EasyTranslate_Connector_Model_Project $project): void
+    {
+        if ((bool)$project->getData('automatic_import') === false
+            && $project->getTaskCollection()->addFieldToFilter('processed_at', ['null' => true])->getSize()) {
+            $this->_addButton('import', [
+                'label'   => $this->_getHelper()->__('Schedule for import'),
+                'onclick' => 'scheduleForImport()',
+                'class'   => 'save',
+            ], -100);
+            $scheduleImportUrl    = $this->getUrl('*/*/scheduleImport');
+            $this->_formScripts[] = "function scheduleForImport() {editForm.submit('$scheduleImportUrl');}";
+        }
     }
 }
