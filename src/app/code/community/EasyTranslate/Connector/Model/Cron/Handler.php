@@ -18,6 +18,8 @@ class EasyTranslate_Connector_Model_Cron_Handler
             ->getCollection()
             ->addFieldToFilter('processed_at', ['null' => true])
             ->addFieldToFilter('content_link', ['notnull' => true])
+            ->join(['project' => 'easytranslate/project'], 'main_table.project_id = project.project_id', ['automatic_import'])
+            ->addFieldToFilter('automatic_import', 1)
             ->setOrder('created_at', Varien_Data_Collection::SORT_ORDER_ASC)
             ->setPageSize(1)
             ->setCurPage(1)
