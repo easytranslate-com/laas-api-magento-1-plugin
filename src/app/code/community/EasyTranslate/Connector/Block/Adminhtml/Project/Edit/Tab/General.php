@@ -118,7 +118,6 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
                 'values'   => Mage::getSingleton('adminhtml/system_config_source_yesno')->toOptionArray(),
                 'value'    => 1,
                 'disabled' => !$canEdit,
-
             ]);
 
         if ($project instanceof EasyTranslate_Connector_Model_Project) {
