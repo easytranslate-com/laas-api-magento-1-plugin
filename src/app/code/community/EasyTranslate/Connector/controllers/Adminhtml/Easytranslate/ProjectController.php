@@ -340,6 +340,7 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
     {
         $magentoProject = $this->_initProject();
         $magentoProject->setData('automatic_import', 1)->save();
+        $this->_getSession()->addSuccess($this->_getHelper()->__('The import has been scheduled'));
         $this->_redirectReferer();
     }
 
