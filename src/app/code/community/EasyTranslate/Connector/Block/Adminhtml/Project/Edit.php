@@ -31,8 +31,8 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
             $this->_removeButton('save');
             $this->_removeButton('delete');
             $this->_removeButton('reset');
+            $this->_addImportButtonIfAvailable($project);
         }
-        $this->_addImportButtonIfAvailable($project);
     }
 
     public function getHeaderText(): string
@@ -76,7 +76,7 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
 
     protected function _addAcceptPriceButton(EasyTranslate_Connector_Model_Project $project): void
     {
-        $confirmMessage  = $this->_getHelper()->__('Are you sure you want to accept the price for this project?');
+        $confirmMessage = $this->_getHelper()->__('Are you sure you want to accept the price for this project?');
         $acceptPriceUrl = $this->getUrl('*/*/acceptPrice', ['project_id' => $project->getId()]);
         $this->_addButton('accept_price', [
             'label'   => $this->_getHelper()->__('Accept Price'),
