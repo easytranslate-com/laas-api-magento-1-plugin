@@ -14,7 +14,7 @@ blocks and CMS pages via EasyTranslate.
 
 The following diagram gives a rough overview of the workflow:
 
-![EasyTranslate Magento 1 Workflow](images/easytranslate-m1-connector.jpg "EasyTranslate Magento 1 Workflow")
+![EasyTranslate Magento 1 Workflow](images/easytranslate-m1-connector.png "EasyTranslate Magento 1 Workflow")
 
 ### Initial Configuration
 
@@ -33,7 +33,8 @@ this, [Aoe_Scheduler](https://github.com/AOEpeople/Aoe_Scheduler) might come in 
 ### Create Projects / Access Existing Projects
 
 Go to System > EasyTranslate Projects. Click the "Add Project" button on the upper right corner. Add the basic project
-information and click "Save and Continue Edit":
+information and click "Save and Continue Edit".
+In this step you can also decide, if the translations shall be automatically imported or only on manual scheduling.
 
 ![EasyTranslate Magento 1 Create Project](images/easytranslate-m1-connector-create-project.png "EasyTranslate Magento 1 Create Project")
 
@@ -62,7 +63,12 @@ will see respective buttons in the project view:
 
 If the estimated price for the project is below your threshold, or you accepted the price, the content will be
 translated. As soon as the translations are available, EasyTranslate will notify your shop about it. When your default
-Magento cronjob is configured correctly, translations will then be automatically imported after a few hours.
+Magento cronjob is configured correctly and you activated automatic import, translations will then be automatically imported after a few hours.
+
+### Schedule Import [optional]
+
+If automatic import is disabled, the button "Schedule for import" appears in the project view. 
+A click on this button activates the import, so the translations will be included within the next hours.
 
 ## Compatibility
 
