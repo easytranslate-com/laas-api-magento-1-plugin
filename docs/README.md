@@ -14,7 +14,7 @@ blocks and CMS pages via EasyTranslate.
 
 The following diagram gives a rough overview of the workflow:
 
-![EasyTranslate Magento 1 Workflow](images/easytranslate-m1-connector.png "EasyTranslate Magento 1 Workflow")
+![EasyTranslate Magento 1 Workflow](images/easytranslate-m1-connector.jpg "EasyTranslate Magento 1 Workflow")
 
 ### Initial Configuration
 
