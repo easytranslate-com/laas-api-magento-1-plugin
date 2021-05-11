@@ -28,12 +28,12 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
         $this->_config = Mage::getModel('easytranslate/config');
     }
 
-    abstract protected function _getCollection(array $modelIds): Varien_Data_Collection_Db;
+    abstract protected function _getCollection(array $modelIds, int $storeId): Varien_Data_Collection_Db;
 
-    public function getContent(array $modelIds): array
+    public function getContent(array $modelIds, int $storeId): array
     {
         $content = [];
-        $models  = $this->_getCollection($modelIds);
+        $models  = $this->_getCollection($modelIds, $storeId);
         foreach ($models as $model) {
             $singleContent = $this->_getSingleContent($model);
             foreach ($singleContent as $key => $value) {

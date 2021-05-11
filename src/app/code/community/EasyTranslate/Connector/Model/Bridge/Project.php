@@ -65,40 +65,41 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
 
     public function getContent(): array
     {
-        $cmsBlocksContent  = $this->_getCmsBlocksContent();
-        $cmsPagesContent   = $this->_getCmsPagesContent();
-        $categoriesContent = $this->_getCategoriesContent();
-        $productsContent   = $this->_getProductsContent();
+        $storeId           = $this->_magentoProject->getData('source_store_id');
+        $cmsBlocksContent  = $this->_getCmsBlocksContent($storeId);
+        $cmsPagesContent   = $this->_getCmsPagesContent($storeId);
+        $categoriesContent = $this->_getCategoriesContent($storeId);
+        $productsContent   = $this->_getProductsContent($storeId);
 
         return array_merge($cmsBlocksContent, $cmsPagesContent, $categoriesContent, $productsContent);
     }
 
-    protected function _getCmsBlocksContent(): array
+    protected function _getCmsBlocksContent(int $storeId): array
     {
         $cmsBlockIds = $this->_magentoProject->getCmsBlocks();
 
-        return Mage::getModel('easytranslate/content_generator_cmsBlock')->getContent($cmsBlockIds);
+        return Mage::getModel('easytranslate/content_generator_cmsBlock')->getContent($cmsBlockIds, $storeId);
     }
 
-    protected function _getCmsPagesContent(): array
+    protected function _getCmsPagesContent(int $storeId): array
     {
         $cmsPageIds = $this->_magentoProject->getCmsPages();
 
-        return Mage::getModel('easytranslate/content_generator_cmsPage')->getContent($cmsPageIds);
+        return Mage::getModel('easytranslate/content_generator_cmsPage')->getContent($cmsPageIds, $storeId);
     }
 
-    protected function _getCategoriesContent(): array
+    protected function _getCategoriesContent(int $storeId): array
     {
         $categoryIds = $this->_magentoProject->getCategories();
 
-        return Mage::getModel('easytranslate/content_generator_category')->getContent($categoryIds);
+        return Mage::getModel('easytranslate/content_generator_category')->getContent($categoryIds, $storeId);
     }
 
-    protected function _getProductsContent(): array
+    protected function _getProductsContent(int $storeId): array
     {
         $productIds = $this->_magentoProject->getProducts();
 
-        return Mage::getModel('easytranslate/content_generator_product')->getContent($productIds);
+        return Mage::getModel('easytranslate/content_generator_product')->getContent($productIds, $storeId);
     }
 
     public function getWorkflow(): string

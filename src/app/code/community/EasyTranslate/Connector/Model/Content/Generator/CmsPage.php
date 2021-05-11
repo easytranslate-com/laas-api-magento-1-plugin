@@ -18,12 +18,21 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsPage
         $this->_attributeCodes = $this->_config->getCmsPagesAttributes();
     }
 
-    protected function _getCollection(array $modelIds): Varien_Data_Collection_Db
+    protected function _getCollection(array $modelIds, int $storeId): Varien_Data_Collection_Db
     {
-        return Mage::getModel('cms/page')
+        // re-load CMS pages based on identifiers (a language-specific one may have been added after project creation)
+        $identifiers = Mage::getModel('cms/page')
+            ->getCollection()
+            ->addFieldToFilter('page_id', ['in' => $modelIds])
+            ->getColumnValues($this->_idField);
+        $cmsBlocks   = Mage::getModel('cms/page')
             ->getCollection()
             ->addFieldToSelect($this->_attributeCodes)
             ->addFieldToSelect($this->_idField)
-            ->addFieldToFilter('page_id', ['in' => $modelIds]);
+            ->addStoreFilter($storeId)
+            ->addFieldToFilter($this->_idField, ['in' => $identifiers]);
+
+        return Mage::getModel('easytranslate/content_generator_filter_cms')
+            ->filterEntities($cmsBlocks, $identifiers);
     }
 }
