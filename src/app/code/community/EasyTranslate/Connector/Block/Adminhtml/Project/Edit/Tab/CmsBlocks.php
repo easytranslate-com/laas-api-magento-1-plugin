@@ -172,6 +172,9 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_CmsBlocks
     protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
     {
         $this->getCollection()->walk('afterLoad');
+        $identifiers = $this->getCollection()->getColumnValues('identifier');
+        Mage::getModel('easytranslate/content_generator_filter_cms')
+            ->filterEntities($this->getCollection(), $identifiers);
 
         return parent::_afterLoadCollection();
     }
