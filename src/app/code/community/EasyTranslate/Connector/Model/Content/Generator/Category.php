@@ -13,10 +13,11 @@ class EasyTranslate_Connector_Model_Content_Generator_Category
         $this->_attributeCodes = $this->_config->getCategoriesAttributes();
     }
 
-    protected function _getCollection(array $modelIds): Varien_Data_Collection_Db
+    protected function _getCollection(array $modelIds, int $storeId): Varien_Data_Collection_Db
     {
         return Mage::getModel('catalog/category')
             ->getCollection()
+            ->setStoreId($storeId)
             ->addAttributeToSelect($this->_attributeCodes)
             ->addAttributeToFilter('entity_id', ['in' => $modelIds]);
     }
