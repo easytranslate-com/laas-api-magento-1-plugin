@@ -47,7 +47,7 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
     protected function _getSingleContent(Mage_Core_Model_Abstract $model): array
     {
         $content = [];
-        foreach ($this->_attributeCodes as $attributeCode) {
+        foreach ($this->_getAttributeCodes($model) as $attributeCode) {
             $value = $model->getData($attributeCode);
             if ($value === null || $value === '') {
                 continue;
@@ -58,5 +58,10 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
         }
 
         return $content;
+    }
+
+    protected function _getAttributeCodes(Mage_Core_Model_Abstract $model): array
+    {
+        return $this->_attributeCodes;
     }
 }
