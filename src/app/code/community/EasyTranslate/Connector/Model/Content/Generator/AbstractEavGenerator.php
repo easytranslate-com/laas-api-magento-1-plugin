@@ -12,7 +12,7 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractEavGenera
         $attributeSetId = (int)$model->getData('attribute_set_id');
         $resourceModel  = $model->getResource();
         if (!$attributeSetId || !$resourceModel instanceof Mage_Eav_Model_Entity_Abstract) {
-            return $this->_attributeCodes;
+            return parent::_getAttributeCodes($model);
         }
 
         if (!isset($this->_sortedAttributeCodes[$attributeSetId])) {
