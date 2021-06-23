@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 class EasyTranslate_Connector_Model_Content_Generator_Product
-    extends EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
+    extends EasyTranslate_Connector_Model_Content_Generator_AbstractEavGenerator
 {
     public const ENTITY_CODE = 'catalog_product';
 
