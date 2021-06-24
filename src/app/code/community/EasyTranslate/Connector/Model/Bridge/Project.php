@@ -65,7 +65,7 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
 
     public function getContent(): array
     {
-        $storeId           = $this->_magentoProject->getData('source_store_id');
+        $storeId           = (int)$this->_magentoProject->getData('source_store_id');
         $cmsBlocksContent  = $this->_getCmsBlocksContent($storeId);
         $cmsPagesContent   = $this->_getCmsPagesContent($storeId);
         $categoriesContent = $this->_getCategoriesContent($storeId);
