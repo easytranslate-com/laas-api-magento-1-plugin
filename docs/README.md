@@ -119,7 +119,7 @@ The uninstallation procedure depends on your setup:
 ## Support
 
 If you have any issues with this extension, feel free to open an issue
-on [GitHub](https://github.com/easytranslate-com/laas-api-magento-plugin/issues).
+on [GitHub](https://github.com/easytranslate-com/laas-api-magento-1-plugin/issues).
 
 ## Licence
 
