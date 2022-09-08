@@ -8,7 +8,10 @@ abstract class EasyTranslate_Connector_Model_Locale_AbstractMapper
 
     public function isMagentoCodeSupported(string $magentoCode): bool
     {
-        return isset(static::INTERNAL_TO_EXTERNAL[$magentoCode]);
+        // extract it into a variable first for PHP 5.6 support
+        $mapping = static::INTERNAL_TO_EXTERNAL;
+
+        return isset($mapping[$magentoCode]);
     }
 
     public function isExternalCodeSupported(string $externalCode): bool
