@@ -16,13 +16,6 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporte
         $this->_bulkSave();
     }
 
-    abstract protected function _importObject(
-        string $id,
-        array $attributes,
-        int $sourceStoreId,
-        int $targetStoreId
-    ): void;
-
     protected function _bulkSave(): void
     {
         if ($this->_objects === null) {
