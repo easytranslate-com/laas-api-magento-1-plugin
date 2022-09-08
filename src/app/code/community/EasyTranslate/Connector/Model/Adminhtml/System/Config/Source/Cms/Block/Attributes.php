@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Adminhtml_System_Config_Source_Cms_Block_Attributes
 {
-    public function toOptionArray(): array
+    /**
+     * @return mixed[]
+     */
+    public function toOptionArray()
     {
         /** @var Mage_Cms_Helper_Data $helper */
         $helper = Mage::helper('cms');

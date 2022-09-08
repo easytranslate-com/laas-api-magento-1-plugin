@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
     public function __construct()
@@ -13,7 +11,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
         $this->setSaveParametersInSession(true);
     }
 
-    protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+     */
+    protected function _prepareCollection()
     {
         $collection = Mage::getModel('easytranslate/project')->getCollection();
         $this->setCollection($collection);
@@ -21,7 +22,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
         return parent::_prepareCollection();
     }
 
-    protected function _prepareColumns(): EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+     */
+    protected function _prepareColumns()
     {
         $this->addColumn('project_id',
             [
@@ -93,14 +97,20 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
         return parent::_prepareColumns();
     }
 
-    protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+     */
+    protected function _afterLoadCollection()
     {
         $this->getCollection()->walk('afterLoad');
 
         return parent::_afterLoadCollection();
     }
 
-    protected function _filterTargetStoreCondition($collection, $column): void
+    /**
+     * @return void
+     */
+    protected function _filterTargetStoreCondition($collection, $column)
     {
         $value = $column->getFilter()->getValue();
         if (!$value) {
@@ -110,12 +120,18 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Grid extends Mage_Adminhtm
         $collection->addTargetStoreFilter((int)$value);
     }
 
-    public function getRowUrl($row): string
+    /**
+     * @return string
+     */
+    public function getRowUrl($row)
     {
         return $this->getUrl('*/*/edit', ['project_id' => $row->getId()]);
     }
 
-    protected function _prepareMassaction(): EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Grid
+     */
+    protected function _prepareMassaction()
     {
         $modelPk = Mage::getModel('easytranslate/project')->getResource()->getIdFieldName();
         $this->setMassactionIdField($modelPk);

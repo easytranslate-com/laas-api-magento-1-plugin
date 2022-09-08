@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
     public function __construct()
@@ -35,7 +33,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         }
     }
 
-    public function getHeaderText(): string
+    /**
+     * @return string
+     */
+    public function getHeaderText()
     {
         $project = Mage::registry('current_project');
         if ($project && $project->getId()) {
@@ -45,7 +46,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         return $this->_getHelper()->__('New Project');
     }
 
-    protected function _addSaveAndContinueEditButton(): void
+    /**
+     * @return void
+     */
+    protected function _addSaveAndContinueEditButton()
     {
         $this->_addButton('save_and_continue', [
             'label'   => $this->_getHelper()->__('Save and Continue Edit'),
@@ -59,7 +63,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         ";
     }
 
-    protected function _addSendButton(): void
+    /**
+     * @return void
+     */
+    protected function _addSendButton()
     {
         $this->_addButton('send', [
             'label'   => $this->_getHelper()->__('Send To EasyTranslate'),
@@ -74,7 +81,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         ";
     }
 
-    protected function _addAcceptPriceButton(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _addAcceptPriceButton(EasyTranslate_Connector_Model_Project $project)
     {
         $confirmMessage = $this->_getHelper()->__('Are you sure you want to accept the price for this project?');
         $acceptPriceUrl = $this->getUrl('*/*/acceptPrice', ['project_id' => $project->getId()]);
@@ -86,7 +96,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         ]);
     }
 
-    protected function _addDeclinePriceButton(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _addDeclinePriceButton(EasyTranslate_Connector_Model_Project $project)
     {
         $confirmMessage  = $this->_getHelper()->__('Are you sure you want to decline the price for this project?');
         $declinePriceUrl = $this->getUrl('*/*/declinePrice', ['project_id' => $project->getId()]);
@@ -98,12 +111,18 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit extends Mage_Adminhtm
         ]);
     }
 
-    protected function _getHelper(): EasyTranslate_Connector_Helper_Data
+    /**
+     * @return \EasyTranslate_Connector_Helper_Data
+     */
+    protected function _getHelper()
     {
         return Mage::helper('easytranslate');
     }
 
-    protected function _addImportButtonIfAvailable(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _addImportButtonIfAvailable(EasyTranslate_Connector_Model_Project $project)
     {
         if ((bool)$project->getData('automatic_import') === false
             && $project->getTaskCollection()->addFieldToFilter('processed_at', ['null' => true])->getSize()) {

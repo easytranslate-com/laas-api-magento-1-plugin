@@ -1,16 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
 abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
 {
-    public function import(array $data, int $sourceStoreId, int $targetStoreId): void
+    /**
+     * @return void
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     */
+    public function import(array $data, $sourceStoreId, $targetStoreId)
     {
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         $lastId     = null;
         $attributes = [];
         foreach ($data as $key => $content) {
             $delimiter = EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator::KEY_SEPARATOR;
-            [$entityCode, $currentId, $attributeCode] = explode($delimiter, $key);
+            list($entityCode, $currentId, $attributeCode) = explode($delimiter, $key);
             if ($lastId !== null && $currentId !== $lastId) {
                 $this->_importObject($lastId, $attributes, $sourceStoreId, $targetStoreId);
                 $attributes = [];
@@ -24,10 +29,16 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
         }
     }
 
+    /**
+     * @return void
+     * @param string $id
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     */
     abstract protected function _importObject(
-        string $id,
+        $id,
         array $attributes,
-        int $sourceStoreId,
-        int $targetStoreId
-    ): void;
+        $sourceStoreId,
+        $targetStoreId
+    );
 }

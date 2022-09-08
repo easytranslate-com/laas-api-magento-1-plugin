@@ -1,11 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Resource_Catalog_Category_Collection
     extends Mage_Catalog_Model_Resource_Category_Collection
 {
-    public function getSelectCountSql(): Varien_Db_Select
+    /**
+     * @return \Varien_Db_Select
+     */
+    public function getSelectCountSql()
     {
         $countSelect = parent::getSelectCountSql();
 

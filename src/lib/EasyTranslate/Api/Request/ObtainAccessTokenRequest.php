@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Request;
 
 use EasyTranslate\Api\Configuration;
 
 class ObtainAccessTokenRequest extends AbstractRequest
 {
-    private const GRANT_TYPE = 'password';
+    const GRANT_TYPE = 'password';
 
-    private const SCOPE = 'dashboard';
+    const SCOPE = 'dashboard';
 
     /**
      * @var Configuration
@@ -22,17 +20,26 @@ class ObtainAccessTokenRequest extends AbstractRequest
         $this->configuration = $configuration;
     }
 
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getType()
     {
         return self::TYPE_POST;
     }
 
-    public function getResource(): string
+    /**
+     * @return string
+     */
+    public function getResource()
     {
         return 'oauth/token';
     }
 
-    public function getData(): array
+    /**
+     * @return mixed[]
+     */
+    public function getData()
     {
         return [
             'client_id'     => $this->configuration->getClientId(),
@@ -44,7 +51,10 @@ class ObtainAccessTokenRequest extends AbstractRequest
         ];
     }
 
-    public function requiresAuthentication(): bool
+    /**
+     * @return bool
+     */
+    public function requiresAuthentication()
     {
         return false;
     }

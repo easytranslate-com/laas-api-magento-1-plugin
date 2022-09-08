@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 use EasyTranslate\Api\ApiException;
@@ -20,7 +18,11 @@ class TaskCompletedResponse extends AbstractResponse
      */
     private $projectId;
 
-    public function mapFields(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data)
     {
         parent::mapFields($data);
         if (!isset($data['data']['type'], $data['data']['id']) || $data['data']['type'] !== 'task') {
@@ -34,12 +36,18 @@ class TaskCompletedResponse extends AbstractResponse
         $this->task = $task;
     }
 
-    public function getTask(): TaskInterface
+    /**
+     * @return \EasyTranslate\TaskInterface
+     */
+    public function getTask()
     {
         return $this->task;
     }
 
-    public function getProjectId(): string
+    /**
+     * @return string
+     */
+    public function getProjectId()
     {
         return $this->projectId;
     }

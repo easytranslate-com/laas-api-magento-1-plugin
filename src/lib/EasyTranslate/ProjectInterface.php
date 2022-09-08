@@ -1,34 +1,71 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate;
 
 interface ProjectInterface
 {
-    public function getId(): string;
+    /**
+     * @return string
+     */
+    public function getId();
 
-    public function getTeam(): string;
+    /**
+     * @return string
+     */
+    public function getTeam();
 
-    public function getSourceLanguage(): string;
+    /**
+     * @return string
+     */
+    public function getSourceLanguage();
 
-    public function getTargetLanguages(): array;
+    /**
+     * @return mixed[]
+     */
+    public function getTargetLanguages();
 
-    public function getCallbackUrl(): ?string;
+    /**
+     * @return string|null
+     */
+    public function getCallbackUrl();
 
-    public function getContent(): ?array;
+    /**
+     * @return mixed[]|null
+     */
+    public function getContent();
 
-    public function getWorkflow(): string;
+    /**
+     * @return string
+     */
+    public function getWorkflow();
 
-    public function getFolderId(): ?string;
+    /**
+     * @return string|null
+     */
+    public function getFolderId();
 
-    public function getFolderName(): ?string;
+    /**
+     * @return string|null
+     */
+    public function getFolderName();
 
-    public function getName(): ?string;
+    /**
+     * @return string|null
+     */
+    public function getName();
 
-    public function getTasks(): array;
+    /**
+     * @return mixed[]
+     */
+    public function getTasks();
 
-    public function getPrice(): ?float;
+    /**
+     * @return float|null
+     */
+    public function getPrice();
 
-    public function getCurrency(): ?string;
+    /**
+     * @return string|null
+     */
+    public function getCurrency();
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 use EasyTranslate\Api\ApiException;
@@ -16,7 +14,11 @@ class CreateProjectResponse extends AbstractResponse
      */
     private $project;
 
-    public function mapFields(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data)
     {
         parent::mapFields($data);
         if (!isset($data['data']['type'], $data['data']['id']) || $data['data']['type'] !== 'project') {
@@ -41,7 +43,10 @@ class CreateProjectResponse extends AbstractResponse
         $this->project = $project;
     }
 
-    private function extractTeam(array $data): string
+    /**
+     * @return string
+     */
+    private function extractTeam(array $data)
     {
         if (!isset($data['included'])) {
             return '';
@@ -56,7 +61,10 @@ class CreateProjectResponse extends AbstractResponse
         return '';
     }
 
-    private function extractTasks(array $data, ProjectInterface $project): array
+    /**
+     * @return mixed[]
+     */
+    private function extractTasks(array $data, ProjectInterface $project)
     {
         $tasks = [];
         if (!isset($data['included'])) {
@@ -77,7 +85,10 @@ class CreateProjectResponse extends AbstractResponse
         return $tasks;
     }
 
-    public function getProject(): ProjectInterface
+    /**
+     * @return \EasyTranslate\ProjectInterface
+     */
+    public function getProject()
     {
         return $this->project;
     }

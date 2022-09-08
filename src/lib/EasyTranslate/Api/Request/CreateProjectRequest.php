@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Request;
 
 use EasyTranslate\ProjectInterface;
@@ -18,17 +16,26 @@ class CreateProjectRequest extends AbstractRequest
         $this->project = $project;
     }
 
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getType()
     {
         return self::TYPE_POST;
     }
 
-    public function getResource(): string
+    /**
+     * @return string
+     */
+    public function getResource()
     {
         return sprintf('api/v1/teams/%s/projects', $this->project->getTeam());
     }
 
-    public function getData(): array
+    /**
+     * @return mixed[]
+     */
+    public function getData()
     {
         $data = [
             'type'       => 'project',

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\ProjectInterface;
 
 class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
@@ -28,17 +26,26 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
         $this->_targetLocaleMapper = Mage::getModel('easytranslate/locale_targetMapper');
     }
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->_magentoProject->getData('external_id');
     }
 
-    public function getTeam(): string
+    /**
+     * @return string
+     */
+    public function getTeam()
     {
         return $this->_magentoProject->getData('team');
     }
 
-    public function getSourceLanguage(): string
+    /**
+     * @return string
+     */
+    public function getSourceLanguage()
     {
         $sourceStoreId = $this->_magentoProject->getData('source_store_id');
         $sourceLocale  = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $sourceStoreId);
@@ -46,7 +53,10 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
         return $this->_sourceLocaleMapper->mapMagentoCodeToExternalCode($sourceLocale);
     }
 
-    public function getTargetLanguages(): array
+    /**
+     * @return mixed[]
+     */
+    public function getTargetLanguages()
     {
         $targetLanguages = [];
         $targetStores    = $this->_magentoProject->getData('target_stores');
@@ -58,12 +68,18 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
         return array_values(array_unique($targetLanguages));
     }
 
-    public function getCallbackUrl(): string
+    /**
+     * @return string
+     */
+    public function getCallbackUrl()
     {
         return Mage::getModel('easytranslate/callback_linkGenerator')->generateLink($this->_magentoProject);
     }
 
-    public function getContent(): array
+    /**
+     * @return mixed[]
+     */
+    public function getContent()
     {
         $storeId           = (int)$this->_magentoProject->getData('source_store_id');
         $cmsBlocksContent  = $this->_getCmsBlocksContent($storeId);
@@ -74,65 +90,106 @@ class EasyTranslate_Connector_Model_Bridge_Project implements ProjectInterface
         return array_merge($cmsBlocksContent, $cmsPagesContent, $categoriesContent, $productsContent);
     }
 
-    protected function _getCmsBlocksContent(int $storeId): array
+    /**
+     * @param int $storeId
+     * @return mixed[]
+     */
+    protected function _getCmsBlocksContent($storeId)
     {
+        $storeId = (int) $storeId;
         $cmsBlockIds = $this->_magentoProject->getCmsBlocks();
 
         return Mage::getModel('easytranslate/content_generator_cmsBlock')->getContent($cmsBlockIds, $storeId);
     }
 
-    protected function _getCmsPagesContent(int $storeId): array
+    /**
+     * @param int $storeId
+     * @return mixed[]
+     */
+    protected function _getCmsPagesContent($storeId)
     {
+        $storeId = (int) $storeId;
         $cmsPageIds = $this->_magentoProject->getCmsPages();
 
         return Mage::getModel('easytranslate/content_generator_cmsPage')->getContent($cmsPageIds, $storeId);
     }
 
-    protected function _getCategoriesContent(int $storeId): array
+    /**
+     * @param int $storeId
+     * @return mixed[]
+     */
+    protected function _getCategoriesContent($storeId)
     {
+        $storeId = (int) $storeId;
         $categoryIds = $this->_magentoProject->getCategories();
 
         return Mage::getModel('easytranslate/content_generator_category')->getContent($categoryIds, $storeId);
     }
 
-    protected function _getProductsContent(int $storeId): array
+    /**
+     * @param int $storeId
+     * @return mixed[]
+     */
+    protected function _getProductsContent($storeId)
     {
+        $storeId = (int) $storeId;
         $productIds = $this->_magentoProject->getProducts();
 
         return Mage::getModel('easytranslate/content_generator_product')->getContent($productIds, $storeId);
     }
 
-    public function getWorkflow(): string
+    /**
+     * @return string
+     */
+    public function getWorkflow()
     {
         return $this->_magentoProject->getData('workflow');
     }
 
-    public function getFolderId(): ?string
+    /**
+     * @return string|null
+     */
+    public function getFolderId()
     {
         return null;
     }
 
-    public function getFolderName(): ?string
+    /**
+     * @return string|null
+     */
+    public function getFolderName()
     {
         return null;
     }
 
-    public function getName(): ?string
+    /**
+     * @return string|null
+     */
+    public function getName()
     {
         return $this->_magentoProject->getData('name');
     }
 
-    public function getTasks(): array
+    /**
+     * @return mixed[]
+     */
+    public function getTasks()
     {
         return $this->_magentoProject->getTasks();
     }
 
-    public function getPrice(): ?float
+    /**
+     * @return float|null
+     */
+    public function getPrice()
     {
         return (float)$this->_magentoProject->getData('price');
     }
 
-    public function getCurrency(): ?string
+    /**
+     * @return string|null
+     */
+    public function getCurrency()
     {
         return $this->_magentoProject->getData('currency');
     }

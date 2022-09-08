@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 abstract class AbstractResponse implements ResponseInterface
@@ -16,12 +14,19 @@ abstract class AbstractResponse implements ResponseInterface
         $this->mapFields($data);
     }
 
-    public function getData(): array
+    /**
+     * @return mixed[]
+     */
+    public function getData()
     {
         return $this->data;
     }
 
-    public function mapFields(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data)
     {
         $this->data = $data;
     }

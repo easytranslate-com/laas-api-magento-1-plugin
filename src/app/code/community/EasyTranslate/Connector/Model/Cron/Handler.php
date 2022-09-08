@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Api\TaskApi;
 
 class EasyTranslate_Connector_Model_Cron_Handler
@@ -11,7 +9,10 @@ class EasyTranslate_Connector_Model_Cron_Handler
         EasyTranslate_Connector_Model_Autoloader::createAndRegister();
     }
 
-    public function handle(): void
+    /**
+     * @return void
+     */
+    public function handle()
     {
         /** @var EasyTranslate_Connector_Model_Task $task */
         $task = Mage::getModel('easytranslate/task')
@@ -40,13 +41,16 @@ class EasyTranslate_Connector_Model_Cron_Handler
         $task->save();
     }
 
+    /**
+     * @return mixed[]
+     */
     protected function _loadTargetContent(
         EasyTranslate_Connector_Model_Project $project,
         EasyTranslate_Connector_Model_Task $task
-    ): array {
+    ) {
         $contentLink   = $task->getData('content_link');
         $initialTaskId = $task->getData('external_id');
-        $currentTaskId = $this->_retrieveTaskIdFromLink($contentLink) ?? $initialTaskId;
+        $currentTaskId = $this->_retrieveTaskIdFromLink($contentLink) !== null ? $this->_retrieveTaskIdFromLink($contentLink) : $initialTaskId;
         // make sure that we retrieve the content with the current task ID, not the initial one!
         $task->setData('external_id', $currentTaskId);
 
@@ -64,8 +68,13 @@ class EasyTranslate_Connector_Model_Cron_Handler
         return $targetContent;
     }
 
-    protected function _retrieveTaskIdFromLink(string $link): ?string
+    /**
+     * @return string|null
+     * @param string $link
+     */
+    protected function _retrieveTaskIdFromLink($link)
     {
+        $link = (string) $link;
         $matches = [];
         if (preg_match('/\/tasks\/([^\/]*)\//', $link, $matches) && count($matches) > 1) {
             return $matches[1];

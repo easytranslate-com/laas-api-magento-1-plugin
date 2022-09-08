@@ -1,22 +1,29 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Request;
 
 abstract class AbstractRequest implements RequestInterface
 {
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getType()
     {
         return self::TYPE_GET;
     }
 
-    public function getData(): array
+    /**
+     * @return mixed[]
+     */
+    public function getData()
     {
         return [];
     }
 
-    public function requiresAuthentication(): bool
+    /**
+     * @return bool
+     */
+    public function requiresAuthentication()
     {
         return true;
     }

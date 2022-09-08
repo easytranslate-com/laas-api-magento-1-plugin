@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 class FetchAuthenticatedUserResponse extends AbstractResponse
@@ -11,7 +9,11 @@ class FetchAuthenticatedUserResponse extends AbstractResponse
      */
     private $teams = [];
 
-    public function mapFields(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data)
     {
         foreach ((array)$data['included'] as $includedAccount) {
             if ($includedAccount['type'] === 'account'
@@ -23,7 +25,10 @@ class FetchAuthenticatedUserResponse extends AbstractResponse
         parent::mapFields($data);
     }
 
-    public function getTeams(): array
+    /**
+     * @return mixed[]
+     */
+    public function getTeams()
     {
         return $this->teams;
     }

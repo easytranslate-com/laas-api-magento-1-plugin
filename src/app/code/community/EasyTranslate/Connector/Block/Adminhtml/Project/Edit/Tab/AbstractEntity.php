@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 abstract class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
     extends Mage_Adminhtml_Block_Widget_Grid implements Mage_Adminhtml_Block_Widget_Tab_Interface
 {
@@ -11,32 +9,50 @@ abstract class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Abstract
         $this->setData('use_ajax', true);
     }
 
-    public function getRowUrl($item): string
+    /**
+     * @return string
+     */
+    public function getRowUrl($item)
     {
         return '';
     }
 
-    protected function _getHelper(): EasyTranslate_Connector_Helper_Data
+    /**
+     * @return \EasyTranslate_Connector_Helper_Data
+     */
+    protected function _getHelper()
     {
         return $this->helper('easytranslate');
     }
 
-    protected function _getProject(): ?EasyTranslate_Connector_Model_Project
+    /**
+     * @return \EasyTranslate_Connector_Model_Project|null
+     */
+    protected function _getProject()
     {
         return Mage::registry('current_project');
     }
 
-    public function canShowTab(): bool
+    /**
+     * @return bool
+     */
+    public function canShowTab()
     {
         return true;
     }
 
-    public function isHidden(): bool
+    /**
+     * @return bool
+     */
+    public function isHidden()
     {
         return $this->_getProject() === null || !$this->_getProject()->getId();
     }
 
-    protected function _afterLoadCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
+     */
+    protected function _afterLoadCollection()
     {
         foreach ($this->_collection as $item) {
             $translatedStores = $item->getData('translated_stores');

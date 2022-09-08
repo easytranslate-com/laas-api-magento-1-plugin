@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate;
 
 class Task implements TaskInterface
@@ -26,42 +24,70 @@ class Task implements TaskInterface
      */
     private $targetLanguage;
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getProject(): ProjectInterface
+    /**
+     * @return \EasyTranslate\ProjectInterface
+     */
+    public function getProject()
     {
         return $this->project;
     }
 
-    public function getTargetContent(): ?string
+    /**
+     * @return string|null
+     */
+    public function getTargetContent()
     {
         return $this->targetContent;
     }
 
-    public function getTargetLanguage(): string
+    /**
+     * @return string
+     */
+    public function getTargetLanguage()
     {
         return $this->targetLanguage;
     }
 
-    public function setId(string $id): void
+    /**
+     * @param string $id
+     * @return void
+     */
+    public function setId($id)
     {
         $this->id = $id;
     }
 
-    public function setProject(ProjectInterface $project): void
+    /**
+     * @param \EasyTranslate\ProjectInterface $project
+     * @return void
+     */
+    public function setProject($project)
     {
         $this->project = $project;
     }
 
-    public function setTargetContent(string $targetContent): void
+    /**
+     * @param string $targetContent
+     * @return void
+     */
+    public function setTargetContent($targetContent)
     {
         $this->targetContent = $targetContent;
     }
 
-    public function setTargetLanguage(string $targetLanguage): void
+    /**
+     * @param string $targetLanguage
+     * @return void
+     */
+    public function setTargetLanguage($targetLanguage)
     {
         $this->targetLanguage = $targetLanguage;
     }

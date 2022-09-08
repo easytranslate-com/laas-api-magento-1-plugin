@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
     extends EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_AbstractEntity
 {
@@ -14,9 +12,12 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
         $this->setData('checkbox_check_callback', $this->getJsObjectName() . '.easyTranslateCheckboxCheckCallback');
     }
 
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
+     */
     protected function _addColumnFilterToCollection(
         $column
-    ): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories {
+    ) {
         if (!$this->getCollection() || $column->getId() !== 'in_project') {
             return parent::_addColumnFilterToCollection($column);
         }
@@ -34,7 +35,10 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
         return $this;
     }
 
-    protected function _prepareCollection(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
+     */
+    protected function _prepareCollection()
     {
         $this->setDefaultFilter(['in_project' => 1]);
         $collection = Mage::getResourceModel('easytranslate/catalog_category_collection')
@@ -70,12 +74,18 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
         return parent::_prepareCollection();
     }
 
-    public function getMultipleRows($item): array
+    /**
+     * @return mixed[]
+     */
+    public function getMultipleRows($item)
     {
         return [];
     }
 
-    protected function _prepareColumns(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
+     */
+    protected function _prepareColumns()
     {
         if (!$this->_getProject() || $this->_getProject()->canEditDetails()) {
             $this->addColumn('in_project', [
@@ -118,22 +128,31 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
         return parent::_prepareColumns();
     }
 
+    /**
+     * @return void
+     */
     protected function _filterTranslatedCondition(
         Mage_Catalog_Model_Resource_Category_Collection $collection,
         Mage_Adminhtml_Block_Widget_Grid_Column $column
-    ): void {
+    ) {
         $value = $column->getFilter()->getValue();
         if ($value) {
             $collection->getSelect()->where('etpts.target_store_id=?', $value);
         }
     }
 
-    public function getGridUrl(): string
+    /**
+     * @return string
+     */
+    public function getGridUrl()
     {
         return $this->getUrl('*/*/categoryGrid', ['_current' => true]);
     }
 
-    protected function _getSelectedCategoryIds(): array
+    /**
+     * @return mixed[]
+     */
+    protected function _getSelectedCategoryIds()
     {
         $categories = $this->getRequest()->getPost('included_categories');
         if (is_null($categories)) {
@@ -147,12 +166,18 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_Categories
         return explode(',', $categories);
     }
 
-    public function getTabLabel(): string
+    /**
+     * @return string
+     */
+    public function getTabLabel()
     {
         return $this->_getHelper()->__('Categories');
     }
 
-    public function getTabTitle(): string
+    /**
+     * @return string
+     */
+    public function getTabTitle()
     {
         return $this->_getHelper()->__('Categories');
     }

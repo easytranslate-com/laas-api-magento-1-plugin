@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 use EasyTranslate\Api\ApiException;
@@ -23,7 +21,11 @@ class PriceApprovalResponse extends AbstractResponse
      */
     private $currency = '';
 
-    public function mapFields(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data)
     {
         parent::mapFields($data);
         if (!isset($data['data']['type'], $data['data']['id']) || $data['data']['type'] !== 'project') {
@@ -37,17 +39,26 @@ class PriceApprovalResponse extends AbstractResponse
         }
     }
 
-    public function getProjectId(): string
+    /**
+     * @return string
+     */
+    public function getProjectId()
     {
         return $this->projectId;
     }
 
-    public function getPrice(): float
+    /**
+     * @return float
+     */
+    public function getPrice()
     {
         return $this->price;
     }
 
-    public function getCurrency(): string
+    /**
+     * @return string
+     */
+    public function getCurrency()
     {
         return $this->currency;
     }

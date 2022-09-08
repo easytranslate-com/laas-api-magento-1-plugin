@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Task extends Mage_Core_Model_Abstract
 {
     /**
@@ -9,12 +7,18 @@ class EasyTranslate_Connector_Model_Task extends Mage_Core_Model_Abstract
      */
     protected $_project;
 
-    protected function _construct(): void
+    /**
+     * @return void
+     */
+    protected function _construct()
     {
         $this->_init('easytranslate/task');
     }
 
-    public function getProject(): EasyTranslate_Connector_Model_Project
+    /**
+     * @return \EasyTranslate_Connector_Model_Project
+     */
+    public function getProject()
     {
         if ($this->_project === null) {
             $this->_project = Mage::getModel('easytranslate/project');
@@ -27,7 +31,10 @@ class EasyTranslate_Connector_Model_Task extends Mage_Core_Model_Abstract
         return $this->_project;
     }
 
-    public function afterCommitCallback(): EasyTranslate_Connector_Model_Task
+    /**
+     * @return \EasyTranslate_Connector_Model_Task
+     */
+    public function afterCommitCallback()
     {
         parent::afterCommitCallback();
 

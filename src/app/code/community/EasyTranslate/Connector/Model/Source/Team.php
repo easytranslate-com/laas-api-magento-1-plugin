@@ -1,13 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Api\ApiException;
 use EasyTranslate\Api\TeamApi;
 
 class EasyTranslate_Connector_Model_Source_Team
 {
-    public function getOptions(): array
+    /**
+     * @return mixed[]
+     */
+    public function getOptions()
     {
         $apiConfiguration = Mage::getModel('easytranslate/config')->getApiConfiguration();
         $teamsApi         = new TeamApi($apiConfiguration);
@@ -21,7 +22,10 @@ class EasyTranslate_Connector_Model_Source_Team
         return $userResponse->getTeams();
     }
 
-    public function toOptionArray(): array
+    /**
+     * @return mixed[]
+     */
+    public function toOptionArray()
     {
         $options = [];
         foreach ($this->getOptions() as $value => $label) {

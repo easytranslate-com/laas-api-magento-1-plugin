@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Api\Callback\DataConverter\PriceApprovalConverter;
 
 class EasyTranslate_Connector_Model_Callback_PriceApprovalRequestHandler
 {
-    public function handle(array $data): void
+    /**
+     * @return void
+     */
+    public function handle(array $data)
     {
         $secret    = $data[EasyTranslate_Connector_Model_Callback_LinkGenerator::SECRET_PARAM];
         $converter = new PriceApprovalConverter();

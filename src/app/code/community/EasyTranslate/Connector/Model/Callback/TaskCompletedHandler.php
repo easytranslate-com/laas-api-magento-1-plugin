@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Api\Callback\DataConverter\TaskCompletedConverter;
 
 class EasyTranslate_Connector_Model_Callback_TaskCompletedHandler
 {
-    public function handle(array $data): void
+    /**
+     * @return void
+     */
+    public function handle(array $data)
     {
         $secret    = $data[EasyTranslate_Connector_Model_Callback_LinkGenerator::SECRET_PARAM];
         $converter = new TaskCompletedConverter();

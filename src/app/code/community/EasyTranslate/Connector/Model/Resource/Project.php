@@ -1,15 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Resource_Db_Abstract
 {
-    protected function _construct(): void
+    /**
+     * @return void
+     */
+    protected function _construct()
     {
         $this->_init('easytranslate/project', 'project_id');
     }
 
-    protected function _beforeSave(Mage_Core_Model_Abstract $project): EasyTranslate_Connector_Model_Resource_Project
+    /**
+     * @return \EasyTranslate_Connector_Model_Resource_Project
+     */
+    protected function _beforeSave(Mage_Core_Model_Abstract $project)
     {
         if (!$project->getId()) {
             $project->setCreatedAt(Mage::getSingleton('core/date')->gmtDate());
@@ -29,7 +33,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         return parent::_beforeSave($project);
     }
 
-    protected function _afterSave(Mage_Core_Model_Abstract $project): EasyTranslate_Connector_Model_Resource_Project
+    /**
+     * @return \EasyTranslate_Connector_Model_Resource_Project
+     */
+    protected function _afterSave(Mage_Core_Model_Abstract $project)
     {
         $this->_saveProjectStores($project);
         $this->_saveProjectProducts($project);
@@ -40,7 +47,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         return parent::_afterSave($project);
     }
 
-    protected function _saveProjectStores(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _saveProjectStores(EasyTranslate_Connector_Model_Project $project)
     {
         $projectId       = (int)$project->getId();
         $oldTargetStores = $this->_lookupTargetStoreIds($projectId);
@@ -73,7 +83,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
-    protected function _saveProjectProducts(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _saveProjectProducts(EasyTranslate_Connector_Model_Project $project)
     {
         $projectId   = (int)$project->getId();
         $newProducts = $project->getData('posted_products');
@@ -112,7 +125,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
-    protected function _saveProjectCategories(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _saveProjectCategories(EasyTranslate_Connector_Model_Project $project)
     {
         $projectId     = (int)$project->getId();
         $newCategories = $project->getData('posted_categories');
@@ -150,7 +166,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
-    protected function _saveProjectCmsBlocks(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _saveProjectCmsBlocks(EasyTranslate_Connector_Model_Project $project)
     {
         $projectId    = (int)$project->getId();
         $newCmsBlocks = $project->getData('posted_cmsBlocks');
@@ -188,7 +207,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
-    protected function _saveProjectCmsPages(EasyTranslate_Connector_Model_Project $project): void
+    /**
+     * @return void
+     */
+    protected function _saveProjectCmsPages(EasyTranslate_Connector_Model_Project $project)
     {
         $projectId   = (int)$project->getId();
         $newCmsPages = $project->getData('posted_cmsPages');
@@ -226,7 +248,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         }
     }
 
-    public function getProducts(EasyTranslate_Connector_Model_Project $project): array
+    /**
+     * @return mixed[]
+     */
+    public function getProducts(EasyTranslate_Connector_Model_Project $project)
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_product'), ['product_id'])
@@ -236,7 +261,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         return $this->_getWriteAdapter()->fetchCol($select, $bind);
     }
 
-    public function getCategories(EasyTranslate_Connector_Model_Project $project): array
+    /**
+     * @return mixed[]
+     */
+    public function getCategories(EasyTranslate_Connector_Model_Project $project)
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_category'), ['category_id'])
@@ -246,7 +274,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         return $this->_getWriteAdapter()->fetchCol($select, $bind);
     }
 
-    public function getCmsBlocks(EasyTranslate_Connector_Model_Project $project): array
+    /**
+     * @return mixed[]
+     */
+    public function getCmsBlocks(EasyTranslate_Connector_Model_Project $project)
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_cms_block'), ['block_id'])
@@ -256,7 +287,10 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         return $this->_getWriteAdapter()->fetchCol($select, $bind);
     }
 
-    public function getCmsPages(EasyTranslate_Connector_Model_Project $project): array
+    /**
+     * @return mixed[]
+     */
+    public function getCmsPages(EasyTranslate_Connector_Model_Project $project)
     {
         $select = $this->_getReadAdapter()->select()
             ->from($this->getTable('easytranslate/project_cms_page'), ['page_id'])
@@ -276,8 +310,13 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         return parent::_afterLoad($project);
     }
 
-    protected function _lookupTargetStoreIds(int $id): array
+    /**
+     * @param int $id
+     * @return mixed[]
+     */
+    protected function _lookupTargetStoreIds($id)
     {
+        $id = (int) $id;
         $adapter = $this->_getReadAdapter();
 
         $select = $adapter->select()

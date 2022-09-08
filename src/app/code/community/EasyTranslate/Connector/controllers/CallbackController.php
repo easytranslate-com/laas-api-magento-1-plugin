@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Api\Callback\Event;
 
 class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Front_Action
 {
-    protected const VALID_CALLBACK_EVENTS
+    const VALID_CALLBACK_EVENTS
         = [
             Event::PRICE_APPROVAL_NEEDED,
             Event::TASK_COMPLETED
@@ -17,7 +15,10 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
      */
     protected $_params;
 
-    public function executeAction(): void
+    /**
+     * @return void
+     */
+    public function executeAction()
     {
         $request = $this->getRequest();
         if (!$this->_validateRequest($request)) {
@@ -46,7 +47,10 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
         $this->_successResponse();
     }
 
-    protected function _validateRequest(Mage_Core_Controller_Request_Http $request): bool
+    /**
+     * @return bool
+     */
+    protected function _validateRequest(Mage_Core_Controller_Request_Http $request)
     {
         if (!$request->isPost()) {
             return false;
@@ -73,12 +77,18 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
         return true;
     }
 
-    protected function _getCoreHttpHelper(): Mage_Core_Helper_Http
+    /**
+     * @return \Mage_Core_Helper_Http
+     */
+    protected function _getCoreHttpHelper()
     {
         return Mage::helper('core/http');
     }
 
-    protected function _validateParams(): bool
+    /**
+     * @return bool
+     */
+    protected function _validateParams()
     {
         if (empty($this->_params)) {
             return false;
@@ -99,8 +109,13 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
         return true;
     }
 
-    protected function _badRequestResponse(string $message): void
+    /**
+     * @return void
+     * @param string $message
+     */
+    protected function _badRequestResponse($message)
     {
+        $message = (string) $message;
         $params = [
             'success' => false,
             'message' => 'Bad Request: ' . $message
@@ -108,7 +123,10 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
         $this->_setJsonResponse($params, 400);
     }
 
-    protected function _successResponse(): void
+    /**
+     * @return void
+     */
+    protected function _successResponse()
     {
         $params = [
             'success' => true,
@@ -116,7 +134,10 @@ class EasyTranslate_Connector_CallbackController extends Mage_Core_Controller_Fr
         $this->_setJsonResponse($params);
     }
 
-    protected function _setJsonResponse(array $params, $responseCode = 200): void
+    /**
+     * @return void
+     */
+    protected function _setJsonResponse(array $params, $responseCode = 200)
     {
         $this->getResponse()->setHeader('Content-type', 'application/json', true);
         $this->getResponse()->setHttpResponseCode($responseCode);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 use EasyTranslate\Api\ApiException;
@@ -13,7 +11,11 @@ class ObtainAccessTokenResponse extends AbstractResponse
      */
     private $accessToken;
 
-    public function mapFields(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data)
     {
         parent::mapFields($data);
         if (!isset($data['access_token'])) {
@@ -22,7 +24,10 @@ class ObtainAccessTokenResponse extends AbstractResponse
         $this->accessToken = $data['access_token'];
     }
 
-    public function getAccessToken(): string
+    /**
+     * @return string
+     */
+    public function getAccessToken()
     {
         return $this->accessToken;
     }

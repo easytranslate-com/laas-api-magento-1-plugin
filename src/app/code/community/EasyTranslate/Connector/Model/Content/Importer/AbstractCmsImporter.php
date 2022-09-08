@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporter
     extends EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
 {
@@ -10,13 +8,23 @@ abstract class EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporte
      */
     protected $_objects;
 
-    public function import(array $data, int $sourceStoreId, int $targetStoreId): void
+    /**
+     * @return void
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     */
+    public function import(array $data, $sourceStoreId, $targetStoreId)
     {
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         parent::import($data, $sourceStoreId, $targetStoreId);
         $this->_bulkSave();
     }
 
-    protected function _bulkSave(): void
+    /**
+     * @return void
+     */
+    protected function _bulkSave()
     {
         if ($this->_objects === null) {
             return;

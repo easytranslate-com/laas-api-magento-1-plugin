@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api;
 
 use EasyTranslate\Api\Request\ObtainAccessTokenRequest;
@@ -10,7 +8,10 @@ use EasyTranslate\Api\Response\ObtainAccessTokenResponse;
 
 class AuthApi extends AbstractApi
 {
-    public function obtainAccessToken(): ObtainAccessTokenResponse
+    /**
+     * @return \EasyTranslate\Api\Response\ObtainAccessTokenResponse
+     */
+    public function obtainAccessToken()
     {
         $request = new ObtainAccessTokenRequest($this->getConfiguration());
         $data    = $this->sendRequest($request);
@@ -18,7 +19,11 @@ class AuthApi extends AbstractApi
         return new ObtainAccessTokenResponse($data);
     }
 
-    protected function setCurlPostData(RequestInterface $request, $curl): void
+    /**
+     * @param \EasyTranslate\Api\Request\RequestInterface $request
+     * @return void
+     */
+    protected function setCurlPostData($request, $curl)
     {
         if ($request->getData()) {
             $data = json_encode($request->getData());

@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Locale_TargetMapper extends EasyTranslate_Connector_Model_Locale_AbstractMapper
 {
-    protected const INTERNAL_TO_EXTERNAL
+    const INTERNAL_TO_EXTERNAL
         = [
             'af_ZA'  => 'af',
             'ar_DZ'  => 'ar',

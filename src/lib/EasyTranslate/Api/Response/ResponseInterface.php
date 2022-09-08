@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Response;
 
 interface ResponseInterface
@@ -9,7 +7,11 @@ interface ResponseInterface
     /**
      * @return array raw data from the API response
      */
-    public function getData(): array;
+    public function getData();
 
-    public function mapFields(array $data): void;
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function mapFields($data);
 }

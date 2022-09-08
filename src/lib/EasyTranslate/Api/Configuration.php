@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api;
 
 class Configuration
@@ -31,13 +29,25 @@ class Configuration
      */
     private $password;
 
+    /**
+     * @param string $environment
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $username
+     * @param string $password
+     */
     public function __construct(
-        string $environment,
-        string $clientId,
-        string $clientSecret,
-        string $username,
-        string $password
+        $environment,
+        $clientId,
+        $clientSecret,
+        $username,
+        $password
     ) {
+        $environment = (string) $environment;
+        $clientId = (string) $clientId;
+        $clientSecret = (string) $clientSecret;
+        $username = (string) $username;
+        $password = (string) $password;
         $this->environment  = $environment;
         $this->clientId     = $clientId;
         $this->clientSecret = $clientSecret;
@@ -45,27 +55,42 @@ class Configuration
         $this->password     = $password;
     }
 
-    public function getEnvironment(): string
+    /**
+     * @return string
+     */
+    public function getEnvironment()
     {
         return $this->environment;
     }
 
-    public function getClientId(): string
+    /**
+     * @return string
+     */
+    public function getClientId()
     {
         return $this->clientId;
     }
 
-    public function getClientSecret(): string
+    /**
+     * @return string
+     */
+    public function getClientSecret()
     {
         return $this->clientSecret;
     }
 
-    public function getUsername(): string
+    /**
+     * @return string
+     */
+    public function getUsername()
     {
         return $this->username;
     }
 
-    public function getPassword(): string
+    /**
+     * @return string
+     */
+    public function getPassword()
     {
         return $this->password;
     }

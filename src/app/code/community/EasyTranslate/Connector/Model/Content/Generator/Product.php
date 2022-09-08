@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Content_Generator_Product
     extends EasyTranslate_Connector_Model_Content_Generator_AbstractEavGenerator
 {
-    public const ENTITY_CODE = 'catalog_product';
+    const ENTITY_CODE = 'catalog_product';
 
     public function __construct()
     {
@@ -13,8 +11,13 @@ class EasyTranslate_Connector_Model_Content_Generator_Product
         $this->_attributeCodes = $this->_config->getProductsAttributes();
     }
 
-    protected function _getCollection(array $modelIds, int $storeId): Varien_Data_Collection_Db
+    /**
+     * @param int $storeId
+     * @return \Varien_Data_Collection_Db
+     */
+    protected function _getCollection(array $modelIds, $storeId)
     {
+        $storeId = (int) $storeId;
         return Mage::getModel('catalog/product')
             ->getCollection()
             ->setStoreId($storeId)

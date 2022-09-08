@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Request;
 
 use EasyTranslate\ProjectInterface;
@@ -18,12 +16,18 @@ class AcceptPriceRequest extends AbstractRequest
         $this->project = $project;
     }
 
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getType()
     {
         return self::TYPE_POST;
     }
 
-    public function getResource(): string
+    /**
+     * @return string
+     */
+    public function getResource()
     {
         return sprintf('api/v1/teams/%s/projects/%s/accept-price', $this->project->getTeam(), $this->project->getId());
     }

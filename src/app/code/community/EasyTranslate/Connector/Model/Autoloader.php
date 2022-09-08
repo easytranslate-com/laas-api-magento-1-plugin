@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * PSR-4 Autoloader, based on
  * https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
@@ -21,7 +19,7 @@ class EasyTranslate_Connector_Model_Autoloader
      *
      * @return void
      */
-    public function register(): void
+    public function register()
     {
         spl_autoload_register([$this, 'loadClass'], true, true);
     }
@@ -38,8 +36,11 @@ class EasyTranslate_Connector_Model_Autoloader
      *
      * @return void
      */
-    public function addNamespace(string $prefix, string $base_dir, bool $prepend = false): void
+    public function addNamespace($prefix, $base_dir, $prepend = false)
     {
+        $prefix = (string) $prefix;
+        $base_dir = (string) $base_dir;
+        $prepend = (bool) $prepend;
         // normalize namespace prefix
         $prefix = trim($prefix, '\\') . '\\';
 
@@ -67,8 +68,9 @@ class EasyTranslate_Connector_Model_Autoloader
      * @return mixed The mapped file name on success, or boolean false on
      * failure.
      */
-    public function loadClass(string $class)
+    public function loadClass($class)
     {
+        $class = (string) $class;
         // handle pseudo namespaces
         if (strpos($class, '\\') === false) {
             $class = str_replace('_', '\\', $class);
@@ -109,8 +111,10 @@ class EasyTranslate_Connector_Model_Autoloader
      * @return mixed Boolean false if no mapped file can be loaded, or the
      * name of the mapped file that was loaded.
      */
-    protected function loadMappedFile(string $prefix, string $relative_class)
+    protected function loadMappedFile($prefix, $relative_class)
     {
+        $prefix = (string) $prefix;
+        $relative_class = (string) $relative_class;
         // are there any base directories for this namespace prefix?
         if (isset($this->prefixes[$prefix]) === false) {
             return false;
@@ -143,8 +147,9 @@ class EasyTranslate_Connector_Model_Autoloader
      *
      * @return bool True if the file exists, false if not.
      */
-    protected function requireFile(string $file): bool
+    protected function requireFile($file)
     {
+        $file = (string) $file;
         if (file_exists($file)) {
             require $file;
 
@@ -154,7 +159,10 @@ class EasyTranslate_Connector_Model_Autoloader
         return false;
     }
 
-    public static function createAndRegister(): void
+    /**
+     * @return void
+     */
+    public static function createAndRegister()
     {
         static $registered = false;
         if (!$registered) {

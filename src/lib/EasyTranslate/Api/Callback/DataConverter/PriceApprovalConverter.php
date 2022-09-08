@@ -1,14 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Callback\DataConverter;
 
 use EasyTranslate\Api\Response\PriceApprovalResponse;
 
 class PriceApprovalConverter
 {
-    public function convert(array $data): PriceApprovalResponse
+    /**
+     * @param mixed[] $data
+     * @return \EasyTranslate\Api\Response\PriceApprovalResponse
+     */
+    public function convert($data)
     {
         return new PriceApprovalResponse($data);
     }

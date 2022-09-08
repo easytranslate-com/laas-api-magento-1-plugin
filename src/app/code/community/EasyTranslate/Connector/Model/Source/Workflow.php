@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Workflow;
 
 class EasyTranslate_Connector_Model_Source_Workflow
 {
-    public function getOptions(): array
+    /**
+     * @return mixed[]
+     */
+    public function getOptions()
     {
         /** @var EasyTranslate_Connector_Helper_Data $helper */
         $helper = Mage::helper('easytranslate');
@@ -18,7 +19,10 @@ class EasyTranslate_Connector_Model_Source_Workflow
         ];
     }
 
-    public function toOptionArray(): array
+    /**
+     * @return mixed[]
+     */
+    public function toOptionArray()
     {
         $options = [];
         foreach ($this->getOptions() as $value => $label) {

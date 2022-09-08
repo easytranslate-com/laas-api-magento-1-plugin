@@ -1,12 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
     extends EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporter
 {
-    protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
+    /**
+     * @return void
+     * @param string $id
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     */
+    protected function _importObject($id, array $attributes, $sourceStoreId, $targetStoreId)
     {
+        $id = (string) $id;
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         $block = $this->_loadBaseBlock($id, $sourceStoreId, $targetStoreId);
         if ($block->isObjectNew()) {
             // entity has been deleted in the meantime, do nothing
@@ -26,8 +33,17 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         }
     }
 
-    protected function _loadBaseBlock(string $id, int $sourceStoreId, int $targetStoreId): Mage_Cms_Model_Block
+    /**
+     * @param string $id
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     * @return \Mage_Cms_Model_Block
+     */
+    protected function _loadBaseBlock($id, $sourceStoreId, $targetStoreId)
     {
+        $id = (string) $id;
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         $blockFromTargetStore = $this->_loadExistingBlock($id, $targetStoreId);
         if ($blockFromTargetStore->getId()) {
             // if there is already a block in the target store, use it as a base
@@ -38,8 +54,15 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         return $this->_loadExistingBlock($id, $sourceStoreId);
     }
 
-    protected function _loadExistingBlock(string $id, int $storeId): Mage_Cms_Model_Block
+    /**
+     * @param string $id
+     * @param int $storeId
+     * @return \Mage_Cms_Model_Block
+     */
+    protected function _loadExistingBlock($id, $storeId)
     {
+        $id = (string) $id;
+        $storeId = (int) $storeId;
         $block = Mage::getModel('cms/block');
         $block->setData('store_id', $storeId);
         $block->load($id, 'identifier');
@@ -47,25 +70,38 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         return $block;
     }
 
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
     protected function _handleExistingGlobalBlock(
         Mage_Cms_Model_Block $block,
         array $newData,
-        int $targetStoreId
-    ): void {
+        $targetStoreId
+    ) {
+        $targetStoreId = (int) $targetStoreId;
         $this->_createNewBlockForStore($block, $newData, $targetStoreId);
     }
 
-    protected function _handleExistingUniqueBlock(Mage_Cms_Model_Block $block, array $newData): void
+    /**
+     * @return void
+     */
+    protected function _handleExistingUniqueBlock(Mage_Cms_Model_Block $block, array $newData)
     {
         $block->addData($newData);
         $this->_objects[] = $block;
     }
 
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
     protected function _handleExistingBlockWithMultipleStores(
         Mage_Cms_Model_Block $block,
         array $newData,
-        int $targetStoreId
-    ): void {
+        $targetStoreId
+    ) {
+        $targetStoreId = (int) $targetStoreId;
         // first remove the current store ID from the existing CMS block, because blocks must be unique per store
         $storeIds    = (array)$block->getData('stores');
         $newStoreIds = array_diff($storeIds, [$targetStoreId]);
@@ -77,16 +113,26 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsBlock
         $this->_createNewBlockForStore($block, $newData, $targetStoreId);
     }
 
-    protected function _handleNonExistingBlock(Mage_Cms_Model_Block $block, array $newData, int $targetStoreId): void
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
+    protected function _handleNonExistingBlock(Mage_Cms_Model_Block $block, array $newData, $targetStoreId)
     {
+        $targetStoreId = (int) $targetStoreId;
         $this->_createNewBlockForStore($block, $newData, $targetStoreId);
     }
 
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
     protected function _createNewBlockForStore(
         Mage_Cms_Model_Block $baseBlock,
         array $newData,
-        int $targetStoreId
-    ): void {
+        $targetStoreId
+    ) {
+        $targetStoreId = (int) $targetStoreId;
         $newBlock = Mage::getModel('cms/block');
         $newBlock->addData($baseBlock->getData());
         $newBlock->addData($newData);

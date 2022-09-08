@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Content_Generator_CmsPage
     extends EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
 {
-    public const ENTITY_CODE = 'cms_page';
+    const ENTITY_CODE = 'cms_page';
 
     /**
      * @var string
@@ -18,8 +16,13 @@ class EasyTranslate_Connector_Model_Content_Generator_CmsPage
         $this->_attributeCodes = $this->_config->getCmsPagesAttributes();
     }
 
-    protected function _getCollection(array $modelIds, int $storeId): Varien_Data_Collection_Db
+    /**
+     * @param int $storeId
+     * @return \Varien_Data_Collection_Db
+     */
+    protected function _getCollection(array $modelIds, $storeId)
     {
+        $storeId = (int) $storeId;
         // re-load CMS pages based on identifiers (a language-specific one may have been added after project creation)
         $identifiers = Mage::getModel('cms/page')
             ->getCollection()

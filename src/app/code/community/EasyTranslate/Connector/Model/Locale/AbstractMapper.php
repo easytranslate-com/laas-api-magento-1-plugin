@@ -1,28 +1,41 @@
 <?php
 
-declare(strict_types=1);
-
 abstract class EasyTranslate_Connector_Model_Locale_AbstractMapper
 {
-    protected const INTERNAL_TO_EXTERNAL = [];
+    const INTERNAL_TO_EXTERNAL = [];
 
-    public function isMagentoCodeSupported(string $magentoCode): bool
+    /**
+     * @param string $magentoCode
+     * @return bool
+     */
+    public function isMagentoCodeSupported($magentoCode)
     {
+        $magentoCode = (string) $magentoCode;
         // extract it into a variable first for PHP 5.6 support
         $mapping = static::INTERNAL_TO_EXTERNAL;
 
         return isset($mapping[$magentoCode]);
     }
 
-    public function isExternalCodeSupported(string $externalCode): bool
+    /**
+     * @param string $externalCode
+     * @return bool
+     */
+    public function isExternalCodeSupported($externalCode)
     {
+        $externalCode = (string) $externalCode;
         $mapping = array_flip(static::INTERNAL_TO_EXTERNAL);
 
         return isset($mapping[$externalCode]);
     }
 
-    public function mapExternalCodeToMagentoCode(string $externalCode): string
+    /**
+     * @param string $externalCode
+     * @return string
+     */
+    public function mapExternalCodeToMagentoCode($externalCode)
     {
+        $externalCode = (string) $externalCode;
         $mapping = array_flip(static::INTERNAL_TO_EXTERNAL);
         if (!$this->isExternalCodeSupported($externalCode)) {
             Mage::throwException('Unsupported locale code.');
@@ -31,8 +44,13 @@ abstract class EasyTranslate_Connector_Model_Locale_AbstractMapper
         return $mapping[$externalCode];
     }
 
-    public function mapMagentoCodeToExternalCode(string $magentoCode): string
+    /**
+     * @param string $magentoCode
+     * @return string
+     */
+    public function mapMagentoCodeToExternalCode($magentoCode)
     {
+        $magentoCode = (string) $magentoCode;
         if (!$this->isMagentoCodeSupported($magentoCode)) {
             Mage::throwException('Unsupported locale code.');
         }

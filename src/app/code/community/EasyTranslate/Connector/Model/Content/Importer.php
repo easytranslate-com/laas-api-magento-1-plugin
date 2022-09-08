@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Content_Importer
 {
-    protected const IMPORTERS
+    const IMPORTERS
         = [
             EasyTranslate_Connector_Model_Content_Generator_CmsBlock::ENTITY_CODE => 'easytranslate/content_importer_cmsBlock',
             EasyTranslate_Connector_Model_Content_Generator_CmsPage::ENTITY_CODE  => 'easytranslate/content_importer_cmsPage',
@@ -12,8 +10,15 @@ class EasyTranslate_Connector_Model_Content_Importer
             EasyTranslate_Connector_Model_Content_Generator_Category::ENTITY_CODE => 'easytranslate/content_importer_category',
         ];
 
-    public function import(array $data, int $sourceStoreId, int $targetStoreId): void
+    /**
+     * @return void
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     */
+    public function import(array $data, $sourceStoreId, $targetStoreId)
     {
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         foreach (static::IMPORTERS as $code => $importer) {
             $importerData = array_filter($data, static function ($key) use ($code) {
                 // if the key starts with the importer code, the importer can handle the data
@@ -23,8 +28,13 @@ class EasyTranslate_Connector_Model_Content_Importer
         }
     }
 
-    protected function _getImporterModel(string $modelClass
-    ): EasyTranslate_Connector_Model_Content_Importer_AbstractImporter {
+    /**
+     * @param string $modelClass
+     * @return \EasyTranslate_Connector_Model_Content_Importer_AbstractImporter
+     */
+    protected function _getImporterModel($modelClass
+    ) {
+        $modelClass = (string) $modelClass;
         return Mage::getModel($modelClass);
     }
 }

@@ -1,12 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Content_Importer_CmsPage
     extends EasyTranslate_Connector_Model_Content_Importer_AbstractCmsImporter
 {
-    protected function _importObject(string $id, array $attributes, int $sourceStoreId, int $targetStoreId): void
+    /**
+     * @return void
+     * @param string $id
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     */
+    protected function _importObject($id, array $attributes, $sourceStoreId, $targetStoreId)
     {
+        $id = (string) $id;
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         $page = $this->_loadBasePage($id, $sourceStoreId, $targetStoreId);
         if ($page->isObjectNew()) {
             // entity has been deleted in the meantime, do nothing
@@ -26,8 +33,17 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         }
     }
 
-    protected function _loadBasePage(string $id, int $sourceStoreId, int $targetStoreId): Mage_Cms_Model_Page
+    /**
+     * @param string $id
+     * @param int $sourceStoreId
+     * @param int $targetStoreId
+     * @return \Mage_Cms_Model_Page
+     */
+    protected function _loadBasePage($id, $sourceStoreId, $targetStoreId)
     {
+        $id = (string) $id;
+        $sourceStoreId = (int) $sourceStoreId;
+        $targetStoreId = (int) $targetStoreId;
         $pageFromTargetStore = $this->_loadExistingPage($id, $targetStoreId);
         if ($pageFromTargetStore->getId()) {
             // if there is already a page in the target store, use it as a base
@@ -38,8 +54,15 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         return $this->_loadExistingPage($id, $sourceStoreId);
     }
 
-    protected function _loadExistingPage(string $id, int $storeId): Mage_Cms_Model_Page
+    /**
+     * @param string $id
+     * @param int $storeId
+     * @return \Mage_Cms_Model_Page
+     */
+    protected function _loadExistingPage($id, $storeId)
     {
+        $id = (string) $id;
+        $storeId = (int) $storeId;
         $page = Mage::getModel('cms/page');
         $page->setData('store_id', $storeId);
         $page->load($id, 'identifier');
@@ -47,15 +70,23 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         return $page;
     }
 
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
     protected function _handleExistingGlobalPage(
         Mage_Cms_Model_Page $page,
         array $newData,
-        int $targetStoreId
-    ): void {
+        $targetStoreId
+    ) {
+        $targetStoreId = (int) $targetStoreId;
         $this->_createNewPageForStore($page, $newData, $targetStoreId);
     }
 
-    protected function _handleExistingUniquePage(Mage_Cms_Model_Page $page, array $newData): void
+    /**
+     * @return void
+     */
+    protected function _handleExistingUniquePage(Mage_Cms_Model_Page $page, array $newData)
     {
         $page->addData($newData);
         // workaround for a Magento bug - stores are not set in _afterLoad, but checked in _beforeSave / getIsUniquePageToStores
@@ -63,11 +94,16 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         $this->_objects[] = $page;
     }
 
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
     protected function _handleExistingPageWithMultipleStores(
         Mage_Cms_Model_Page $page,
         array $newData,
-        int $targetStoreId
-    ): void {
+        $targetStoreId
+    ) {
+        $targetStoreId = (int) $targetStoreId;
         // first remove the current store ID from the existing CMS page, because pages must be unique per store
         $storeIds    = (array)$page->getData('store_id');
         $newStoreIds = array_diff($storeIds, [$targetStoreId]);
@@ -79,16 +115,26 @@ class EasyTranslate_Connector_Model_Content_Importer_CmsPage
         $this->_createNewPageForStore($page, $newData, $targetStoreId);
     }
 
-    protected function _handleNonExistingPage(Mage_Cms_Model_Page $page, array $newData, int $targetStoreId): void
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
+    protected function _handleNonExistingPage(Mage_Cms_Model_Page $page, array $newData, $targetStoreId)
     {
+        $targetStoreId = (int) $targetStoreId;
         $this->_createNewPageForStore($page, $newData, $targetStoreId);
     }
 
+    /**
+     * @return void
+     * @param int $targetStoreId
+     */
     protected function _createNewPageForStore(
         Mage_Cms_Model_Page $basePage,
         array $newData,
-        int $targetStoreId
-    ): void {
+        $targetStoreId
+    ) {
+        $targetStoreId = (int) $targetStoreId;
         $newPage = Mage::getModel('cms/page');
         $newPage->addData($basePage->getData());
         $newPage->addData($newData);

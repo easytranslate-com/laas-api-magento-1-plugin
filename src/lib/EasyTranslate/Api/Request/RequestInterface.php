@@ -1,20 +1,30 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api\Request;
 
 interface RequestInterface
 {
-    public const TYPE_GET = 'GET';
-    public const TYPE_POST = 'POST';
-    public const TYPE_PUT = 'PUT';
+    const TYPE_GET = 'GET';
+    const TYPE_POST = 'POST';
+    const TYPE_PUT = 'PUT';
 
-    public function getType(): string;
+    /**
+     * @return string
+     */
+    public function getType();
 
-    public function getResource(): string;
+    /**
+     * @return string
+     */
+    public function getResource();
 
-    public function getData(): array;
+    /**
+     * @return mixed[]
+     */
+    public function getData();
 
-    public function requiresAuthentication(): bool;
+    /**
+     * @return bool
+     */
+    public function requiresAuthentication();
 }

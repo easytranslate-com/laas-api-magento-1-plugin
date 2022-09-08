@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate;
 
 class Project implements ProjectInterface
@@ -71,132 +69,223 @@ class Project implements ProjectInterface
      */
     private $currency;
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getTeam(): string
+    /**
+     * @return string
+     */
+    public function getTeam()
     {
         return $this->team;
     }
 
-    public function getSourceLanguage(): string
+    /**
+     * @return string
+     */
+    public function getSourceLanguage()
     {
         return $this->sourceLanguage;
     }
 
-    public function getTargetLanguages(): array
+    /**
+     * @return mixed[]
+     */
+    public function getTargetLanguages()
     {
         return $this->targetLanguages;
     }
 
-    public function getCallbackUrl(): ?string
+    /**
+     * @return string|null
+     */
+    public function getCallbackUrl()
     {
         return $this->callbackUrl;
     }
 
-    public function getContent(): ?array
+    /**
+     * @return mixed[]|null
+     */
+    public function getContent()
     {
         return $this->content;
     }
 
-    public function getWorkflow(): string
+    /**
+     * @return string
+     */
+    public function getWorkflow()
     {
         return $this->workflow;
     }
 
-    public function getFolderId(): ?string
+    /**
+     * @return string|null
+     */
+    public function getFolderId()
     {
         return $this->folderId;
     }
 
-    public function getFolderName(): ?string
+    /**
+     * @return string|null
+     */
+    public function getFolderName()
     {
         return $this->folderName;
     }
 
-    public function getName(): ?string
+    /**
+     * @return string|null
+     */
+    public function getName()
     {
         return $this->name;
     }
 
-    public function getTasks(): array
+    /**
+     * @return mixed[]
+     */
+    public function getTasks()
     {
         return $this->tasks;
     }
 
-    public function getPrice(): ?float
+    /**
+     * @return float|null
+     */
+    public function getPrice()
     {
         return $this->price;
     }
 
-    public function getCurrency(): ?string
+    /**
+     * @return string|null
+     */
+    public function getCurrency()
     {
         return $this->currency;
     }
 
-    public function setId(string $id): void
+    /**
+     * @param string $id
+     * @return void
+     */
+    public function setId($id)
     {
         $this->id = $id;
     }
 
-    public function setTeam(string $team): void
+    /**
+     * @param string $team
+     * @return void
+     */
+    public function setTeam($team)
     {
         $this->team = $team;
     }
 
-    public function setSourceLanguage(string $sourceLanguage): void
+    /**
+     * @param string $sourceLanguage
+     * @return void
+     */
+    public function setSourceLanguage($sourceLanguage)
     {
         $this->sourceLanguage = $sourceLanguage;
     }
 
-    public function setTargetLanguages(array $targetLanguages): void
+    /**
+     * @param mixed[] $targetLanguages
+     * @return void
+     */
+    public function setTargetLanguages($targetLanguages)
     {
         $this->targetLanguages = $targetLanguages;
     }
 
-    public function setCallbackUrl(?string $callbackUrl): void
+    /**
+     * @param string|null $callbackUrl
+     * @return void
+     */
+    public function setCallbackUrl($callbackUrl)
     {
         $this->callbackUrl = $callbackUrl;
     }
 
-    public function setContent(?array $content): void
+    /**
+     * @param mixed[]|null $content
+     * @return void
+     */
+    public function setContent($content)
     {
         $this->content = $content;
     }
 
-    public function setWorkflow(string $workflow): void
+    /**
+     * @param string $workflow
+     * @return void
+     */
+    public function setWorkflow($workflow)
     {
         $this->workflow = $workflow;
     }
 
-    public function setFolderId(?string $folderId): void
+    /**
+     * @param string|null $folderId
+     * @return void
+     */
+    public function setFolderId($folderId)
     {
         $this->folderId = $folderId;
     }
 
-    public function setFolderName(?string $folderName): void
+    /**
+     * @param string|null $folderName
+     * @return void
+     */
+    public function setFolderName($folderName)
     {
         $this->folderName = $folderName;
     }
 
-    public function setName(?string $name): void
+    /**
+     * @param string|null $name
+     * @return void
+     */
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    public function setTasks(array $tasks): void
+    /**
+     * @param mixed[] $tasks
+     * @return void
+     */
+    public function setTasks($tasks)
     {
         $this->tasks = $tasks;
     }
 
-    public function setPrice(?float $price): void
+    /**
+     * @param float|null $price
+     * @return void
+     */
+    public function setPrice($price)
     {
         $this->price = $price;
     }
 
-    public function setCurrency(?string $currency): void
+    /**
+     * @param string|null $currency
+     * @return void
+     */
+    public function setCurrency($currency)
     {
         $this->currency = $currency;
     }

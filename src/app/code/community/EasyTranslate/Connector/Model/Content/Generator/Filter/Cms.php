@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Content_Generator_Filter_Cms
 {
     /**
@@ -27,7 +25,7 @@ class EasyTranslate_Connector_Model_Content_Generator_Filter_Cms
             if (count($entitiesWithIdentifier) > 2) {
                 Mage::throwException('The collection has more than two entities per identifier.');
             }
-            [$entityWithIdentifier1, $entityWithIdentifier2] = $entitiesWithIdentifier;
+            list($entityWithIdentifier1, $entityWithIdentifier2) = $entitiesWithIdentifier;
             if (in_array(Mage_Core_Model_App::ADMIN_STORE_ID, $entityWithIdentifier1->getData('store_id'), false)) {
                 $entityToRemove = $entityWithIdentifier1;
             } else {

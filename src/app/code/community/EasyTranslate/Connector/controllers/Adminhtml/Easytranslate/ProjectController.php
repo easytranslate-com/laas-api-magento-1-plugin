@@ -1,13 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\Api\ApiException;
 use EasyTranslate\Api\ProjectApi;
 
 class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends Mage_Adminhtml_Controller_Action
 {
-    public function indexAction(): void
+    /**
+     * @return void
+     */
+    public function indexAction()
     {
         $this->loadLayout();
         $this->_setActiveMenu('system/easytranslate');
@@ -15,7 +16,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->renderLayout();
     }
 
-    protected function _initProject(): EasyTranslate_Connector_Model_Project
+    /**
+     * @return \EasyTranslate_Connector_Model_Project
+     */
+    protected function _initProject()
     {
         $this->_title($this->__('System'))
             ->_title($this->__('EasyTranslate Projects'));
@@ -29,12 +33,18 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         return $project;
     }
 
-    public function newAction(): void
+    /**
+     * @return void
+     */
+    public function newAction()
     {
         $this->_forward('edit');
     }
 
-    public function editAction(): void
+    /**
+     * @return void
+     */
+    public function editAction()
     {
         $project = $this->_initProject();
         if ($project->getId()) {
@@ -60,7 +70,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->renderLayout();
     }
 
-    public function saveAction(): void
+    /**
+     * @return void
+     */
+    public function saveAction()
     {
         $redirectBack = $this->getRequest()->getParam('back', false);
         $data         = $this->getRequest()->getPost();
@@ -96,7 +109,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirect('*/*/index');
     }
 
-    protected function _saveProjectPostData(EasyTranslate_Connector_Model_Project $project, array $data): void
+    /**
+     * @return void
+     */
+    protected function _saveProjectPostData(EasyTranslate_Connector_Model_Project $project, array $data)
     {
         if (empty($data)) {
             Mage::throwException('Invalid POST data.');
@@ -136,7 +152,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
     }
 
-    protected function _validateStoreViews(array $data): bool
+    /**
+     * @return bool
+     */
+    protected function _validateStoreViews(array $data)
     {
         if (!isset($data['source_store_id'], $data['target_stores']) || !is_array($data['target_stores'])) {
             return true;
@@ -145,7 +164,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         return !in_array($data['source_store_id'], $data['target_stores'], true);
     }
 
-    protected function _validateLocales(EasyTranslate_Connector_Model_Project $project): bool
+    /**
+     * @return bool
+     */
+    protected function _validateLocales(EasyTranslate_Connector_Model_Project $project)
     {
         $sourceMapper     = Mage::getModel('easytranslate/locale_sourceMapper');
         $sourceStoreId    = $project->getData('source_store_id');
@@ -166,35 +188,50 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         return true;
     }
 
-    public function productGridAction(): void
+    /**
+     * @return void
+     */
+    public function productGridAction()
     {
         $this->_initProject();
         $this->loadLayout(false);
         $this->renderLayout();
     }
 
-    public function categoryGridAction(): void
+    /**
+     * @return void
+     */
+    public function categoryGridAction()
     {
         $this->_initProject();
         $this->loadLayout(false);
         $this->renderLayout();
     }
 
-    public function cmsBlocksGridAction(): void
+    /**
+     * @return void
+     */
+    public function cmsBlocksGridAction()
     {
         $this->_initProject();
         $this->loadLayout(false);
         $this->renderLayout();
     }
 
-    public function cmsPagesGridAction(): void
+    /**
+     * @return void
+     */
+    public function cmsPagesGridAction()
     {
         $this->_initProject();
         $this->loadLayout(false);
         $this->renderLayout();
     }
 
-    public function sendAction(): void
+    /**
+     * @return void
+     */
+    public function sendAction()
     {
         $magentoProject = $this->_initProject();
         $data           = $this->getRequest()->getPost();
@@ -231,7 +268,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirectReferer();
     }
 
-    public function acceptPriceAction(): void
+    /**
+     * @return void
+     */
+    public function acceptPriceAction()
     {
         $magentoProject = $this->_initProject();
         $project        = Mage::getModel('easytranslate/bridge_project', $magentoProject);
@@ -249,7 +289,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirectReferer();
     }
 
-    public function declinePriceAction(): void
+    /**
+     * @return void
+     */
+    public function declinePriceAction()
     {
         $magentoProject = $this->_initProject();
         $project        = Mage::getModel('easytranslate/bridge_project', $magentoProject);
@@ -267,7 +310,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirectReferer();
     }
 
-    public function deleteAction(): void
+    /**
+     * @return void
+     */
+    public function deleteAction()
     {
         $projectId = $this->getRequest()->getParam('project_id');
         if (!$projectId) {
@@ -293,7 +339,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         }
     }
 
-    public function massDeleteAction(): void
+    /**
+     * @return void
+     */
+    public function massDeleteAction()
     {
         $projectIds = $this->getRequest()->getParam('project_ids');
 
@@ -336,7 +385,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirect('*/*/index');
     }
 
-    public function scheduleImportAction(): void
+    /**
+     * @return void
+     */
+    public function scheduleImportAction()
     {
         $magentoProject = $this->_initProject();
         $magentoProject->setData('automatic_import', 1)->save();
@@ -344,7 +396,10 @@ class EasyTranslate_Connector_Adminhtml_Easytranslate_ProjectController extends 
         $this->_redirectReferer();
     }
 
-    protected function _isAllowed(): bool
+    /**
+     * @return bool
+     */
+    protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed('system/easytranslate');
     }

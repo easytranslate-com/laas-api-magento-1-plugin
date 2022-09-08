@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace EasyTranslate\Api;
 
 use EasyTranslate\Api\Request\RequestInterface;
@@ -9,11 +7,11 @@ use Exception;
 
 abstract class AbstractApi
 {
-    private const SANDBOX_URL = 'https://api.platform.sandbox.easytranslate.com/';
+    const SANDBOX_URL = 'https://api.platform.sandbox.easytranslate.com/';
 
-    private const LIVE_URL = 'https://api.platform.easytranslate.com/';
+    const LIVE_URL = 'https://api.platform.easytranslate.com/';
 
-    private const DEFAULT_CURL_OPTIONS
+    const DEFAULT_CURL_OPTIONS
         = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => false,
@@ -33,12 +31,19 @@ abstract class AbstractApi
         $this->configuration = $configuration;
     }
 
-    protected function getConfiguration(): Configuration
+    /**
+     * @return \EasyTranslate\Api\Configuration
+     */
+    protected function getConfiguration()
     {
         return $this->configuration;
     }
 
-    protected function sendRequest(RequestInterface $request): array
+    /**
+     * @param \EasyTranslate\Api\Request\RequestInterface $request
+     * @return mixed[]
+     */
+    protected function sendRequest($request)
     {
         $curl = curl_init();
 
@@ -59,7 +64,10 @@ abstract class AbstractApi
         return json_decode($jsonResponse, true);
     }
 
-    private function setCurlUrl($curl, RequestInterface $request): void
+    /**
+     * @return void
+     */
+    private function setCurlUrl($curl, RequestInterface $request)
     {
         $url = self::SANDBOX_URL;
         if ($this->configuration->getEnvironment() === Environment::LIVE) {
@@ -69,7 +77,10 @@ abstract class AbstractApi
         curl_setopt($curl, CURLOPT_URL, $url);
     }
 
-    private function setCurlRequestType($curl, RequestInterface $request): void
+    /**
+     * @return void
+     */
+    private function setCurlRequestType($curl, RequestInterface $request)
     {
         switch ($request->getType()) {
             case RequestInterface::TYPE_GET:
@@ -83,7 +94,10 @@ abstract class AbstractApi
         }
     }
 
-    private function setCurlOptions($curl, RequestInterface $request): void
+    /**
+     * @return void
+     */
+    private function setCurlOptions($curl, RequestInterface $request)
     {
         $options = self::DEFAULT_CURL_OPTIONS;
         if ($request->requiresAuthentication()) {
@@ -99,7 +113,11 @@ abstract class AbstractApi
         }
     }
 
-    protected function setCurlPostData(RequestInterface $request, $curl): void
+    /**
+     * @param \EasyTranslate\Api\Request\RequestInterface $request
+     * @return void
+     */
+    protected function setCurlPostData($request, $curl)
     {
         if ($request->getData()) {
             $data = json_encode(['data' => $request->getData()]);

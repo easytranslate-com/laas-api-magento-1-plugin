@@ -1,23 +1,32 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Model_Resource_Project_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
-    protected function _construct(): void
+    /**
+     * @return void
+     */
+    protected function _construct()
     {
         $this->_init('easytranslate/project');
         $this->_map['fields']['target_store'] = 'target_store_table.target_store_id';
     }
 
-    public function addTargetStoreFilter(int $store): EasyTranslate_Connector_Model_Resource_Project_Collection
+    /**
+     * @param int $store
+     * @return \EasyTranslate_Connector_Model_Resource_Project_Collection
+     */
+    public function addTargetStoreFilter($store)
     {
+        $store = (int) $store;
         $this->addFilter('target_store', $store, 'public');
 
         return $this;
     }
 
-    protected function _renderFiltersBefore(): void
+    /**
+     * @return void
+     */
+    protected function _renderFiltersBefore()
     {
         if ($this->getFilter('target_store')) {
             $this->getSelect()->join(

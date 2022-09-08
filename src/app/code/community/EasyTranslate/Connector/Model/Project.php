@@ -1,18 +1,22 @@
 <?php
 
-declare(strict_types=1);
-
 use EasyTranslate\ProjectInterface;
 use EasyTranslate\TaskInterface;
 
 class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
 {
-    protected function _construct(): void
+    /**
+     * @return void
+     */
+    protected function _construct()
     {
         $this->_init('easytranslate/project');
     }
 
-    public function getProducts(): array
+    /**
+     * @return mixed[]
+     */
+    public function getProducts()
     {
         if (!$this->getId()) {
             return [];
@@ -27,7 +31,10 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $products;
     }
 
-    public function getCategories(): array
+    /**
+     * @return mixed[]
+     */
+    public function getCategories()
     {
         if (!$this->getId()) {
             return [];
@@ -42,7 +49,10 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $categories;
     }
 
-    public function getCmsBlocks(): array
+    /**
+     * @return mixed[]
+     */
+    public function getCmsBlocks()
     {
         if (!$this->getId()) {
             return [];
@@ -57,7 +67,10 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $cmsBlocks;
     }
 
-    public function getCmsPages(): array
+    /**
+     * @return mixed[]
+     */
+    public function getCmsPages()
     {
         if (!$this->getId()) {
             return [];
@@ -72,7 +85,10 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $cmsPages;
     }
 
-    public function getTasks(): array
+    /**
+     * @return mixed[]
+     */
+    public function getTasks()
     {
         if (!$this->getId()) {
             return [];
@@ -87,25 +103,37 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $tasks;
     }
 
-    public function getTaskCollection(): EasyTranslate_Connector_Model_Resource_Task_Collection
+    /**
+     * @return \EasyTranslate_Connector_Model_Resource_Task_Collection
+     */
+    public function getTaskCollection()
     {
         return Mage::getModel('easytranslate/task')
             ->getCollection()
             ->addFieldToFilter('project_id', $this->getId());
     }
 
-    public function canEditDetails(): bool
+    /**
+     * @return bool
+     */
+    public function canEditDetails()
     {
         return !$this->getId() || $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::OPEN;
     }
 
-    public function requiresPriceApproval(): bool
+    /**
+     * @return bool
+     */
+    public function requiresPriceApproval()
     {
         return $this->getId()
             && $this->getData('status') === EasyTranslate_Connector_Model_Source_Status::PRICE_APPROVAL_REQUEST;
     }
 
-    public function importDataFromExternalProject(ProjectInterface $externalProject): void
+    /**
+     * @return void
+     */
+    public function importDataFromExternalProject(ProjectInterface $externalProject)
     {
         $this->setData('external_id', $externalProject->getId());
         $this->setData('price', $externalProject->getPrice());
@@ -128,8 +156,13 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         $this->unsetData('tasks');
     }
 
-    protected function _getStoreIdsByTargetLanguage(string $targetLanguage): array
+    /**
+     * @param string $targetLanguage
+     * @return mixed[]
+     */
+    protected function _getStoreIdsByTargetLanguage($targetLanguage)
     {
+        $targetLanguage = (string) $targetLanguage;
         $targetMagentoLocale = Mage::getModel('easytranslate/locale_targetMapper')
             ->mapExternalCodeToMagentoCode($targetLanguage);
         $storeIds            = [];
@@ -145,7 +178,10 @@ class EasyTranslate_Connector_Model_Project extends Mage_Core_Model_Abstract
         return $storeIds;
     }
 
-    public function updateTasksStatus(): EasyTranslate_Connector_Model_Project
+    /**
+     * @return \EasyTranslate_Connector_Model_Project
+     */
+    public function updateTasksStatus()
     {
         $numberOfTasks = $this->getTaskCollection()->getSize();
         if ($numberOfTasks === 0) {

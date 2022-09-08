@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
 {
-    public const ENTITY_CODE = '';
+    const ENTITY_CODE = '';
 
-    public const KEY_SEPARATOR = '###';
+    const KEY_SEPARATOR = '###';
 
     /**
      * @var EasyTranslate_Connector_Model_Config
@@ -28,10 +26,19 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
         $this->_config = Mage::getModel('easytranslate/config');
     }
 
-    abstract protected function _getCollection(array $modelIds, int $storeId): Varien_Data_Collection_Db;
+    /**
+     * @param int $storeId
+     * @return \Varien_Data_Collection_Db
+     */
+    abstract protected function _getCollection(array $modelIds, $storeId);
 
-    public function getContent(array $modelIds, int $storeId): array
+    /**
+     * @param int $storeId
+     * @return mixed[]
+     */
+    public function getContent(array $modelIds, $storeId)
     {
+        $storeId = (int) $storeId;
         $content = [];
         $models  = $this->_getCollection($modelIds, $storeId);
         foreach ($models as $model) {
@@ -44,7 +51,10 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
         return $content;
     }
 
-    protected function _getSingleContent(Mage_Core_Model_Abstract $model): array
+    /**
+     * @return mixed[]
+     */
+    protected function _getSingleContent(Mage_Core_Model_Abstract $model)
     {
         $content = [];
         foreach ($this->_getAttributeCodes($model) as $attributeCode) {
@@ -60,7 +70,10 @@ abstract class EasyTranslate_Connector_Model_Content_Generator_AbstractGenerator
         return $content;
     }
 
-    protected function _getAttributeCodes(Mage_Core_Model_Abstract $model): array
+    /**
+     * @return mixed[]
+     */
+    protected function _getAttributeCodes(Mage_Core_Model_Abstract $model)
     {
         return $this->_attributeCodes;
     }

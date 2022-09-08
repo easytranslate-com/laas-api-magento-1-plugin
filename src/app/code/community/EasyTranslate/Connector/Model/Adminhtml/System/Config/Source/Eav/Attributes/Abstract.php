@@ -1,14 +1,18 @@
 <?php
 
-declare(strict_types=1);
-
 abstract class EasyTranslate_Connector_Model_Adminhtml_System_Config_Source_Eav_Attributes_Abstract
 {
-    protected const EXCLUDED_ATTRIBUTES = [];
+    const EXCLUDED_ATTRIBUTES = [];
 
-    abstract public function toOptionArray(): array;
+    /**
+     * @return mixed[]
+     */
+    abstract public function toOptionArray();
 
-    protected function _getEntityAttributes($entityTypeCode): Mage_Eav_Model_Resource_Entity_Attribute_Collection
+    /**
+     * @return \Mage_Eav_Model_Resource_Entity_Attribute_Collection
+     */
+    protected function _getEntityAttributes($entityTypeCode)
     {
         $entityType = Mage::getSingleton('eav/config')->getEntityType($entityTypeCode);
 
@@ -19,9 +23,12 @@ abstract class EasyTranslate_Connector_Model_Adminhtml_System_Config_Source_Eav_
             ->setOrder('frontend_label', Varien_Data_Collection_Db::SORT_ORDER_ASC);
     }
 
+    /**
+     * @return mixed[]
+     */
     public function _convertEntityAttributesToOptionArray(
         Mage_Eav_Model_Resource_Entity_Attribute_Collection $attributes
-    ): array {
+    ) {
         $options = [];
         /** @var Mage_Catalog_Helper_Data $helper */
         $helper = Mage::helper('catalog');

@@ -1,16 +1,20 @@
 <?php
 
-declare(strict_types=1);
-
 class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends Mage_Adminhtml_Block_Widget_Form
     implements Mage_Adminhtml_Block_Widget_Tab_Interface
 {
-    protected function _getHelper(): EasyTranslate_Connector_Helper_Data
+    /**
+     * @return \EasyTranslate_Connector_Helper_Data
+     */
+    protected function _getHelper()
     {
         return $this->helper('easytranslate');
     }
 
-    protected function _prepareForm(): EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General
+    /**
+     * @return \EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General
+     */
+    protected function _prepareForm()
     {
         /** @var EasyTranslate_Connector_Model_Project $project */
         $project = Mage::registry('current_project');
@@ -141,22 +145,34 @@ class EasyTranslate_Connector_Block_Adminhtml_Project_Edit_Tab_General extends M
         return parent::_prepareForm();
     }
 
-    public function getTabLabel(): string
+    /**
+     * @return string
+     */
+    public function getTabLabel()
     {
         return $this->_getHelper()->__('General');
     }
 
-    public function getTabTitle(): string
+    /**
+     * @return string
+     */
+    public function getTabTitle()
     {
         return $this->_getHelper()->__('General');
     }
 
-    public function canShowTab(): bool
+    /**
+     * @return bool
+     */
+    public function canShowTab()
     {
         return true;
     }
 
-    public function isHidden(): bool
+    /**
+     * @return bool
+     */
+    public function isHidden()
     {
         return false;
     }
