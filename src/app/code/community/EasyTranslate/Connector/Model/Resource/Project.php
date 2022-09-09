@@ -17,7 +17,7 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         $project->setUpdatedAt(Mage::getSingleton('core/date')->gmtDate());
 
         if ($project->getData('secret') === null) {
-            $project->setData('secret', bin2hex(random_bytes(32)));
+            $project->setData('secret', bin2hex($this->randomiseString()));
         }
 
         // make sure that we do not translate from and to the same language
@@ -289,5 +289,15 @@ class EasyTranslate_Connector_Model_Resource_Project extends Mage_Core_Model_Res
         ];
 
         return $adapter->fetchCol($select, $binds);
+    }
+
+    private function randomiseString()
+    {
+        $strong_result = true;
+        if (function_exists('random_bytes')) {
+            return random_bytes(32);
+        }
+
+        return openssl_random_pseudo_bytes(32, $strong_result);
     }
 }
